@@ -1,8 +1,7 @@
 import React, { PropTypes } from 'react';
+// import { SelectionState } from 'draft-js';
 import setChecked from '../modifiers/setChecked';
 import { uncheckedCheckbox, checkedCheckbox } from '../regexp';
-
-let entityKeyIndex = 0;
 
 export default class Checkbox extends React.Component {
   static propTypes = {
@@ -11,20 +10,13 @@ export default class Checkbox extends React.Component {
 
   static displayName = 'MarkdownCheckbox';
 
-  constructor(props) {
-    super(props);
-    this.entityKey = `md-checkbox-${entityKeyIndex += 1}`;
-    this.state = { checked: false };
-  }
   onChange(e) {
     const { checked } = e.target;
-    this.setState({ checked });
-    const { onChangeCheckbox, store } = this.props;
+    const { onChangeCheckbox, store, offsetKey } = this.props;
     const { setEditorState, getEditorState } = store;
     const editorState = getEditorState();
     const content = editorState.getCurrentContent();
-    console.info(content.getBlockMap());
-    const contentBlock = content.getBlockForKey(this.entityKey);
+    const contentBlock = content.getBlockForKey(offsetKey.replace(/^([^-]+)-.*$/, '$1'));
     if (typeof onChangeCheckbox === 'function') {
       onChangeCheckbox(e);
     }
@@ -34,28 +26,17 @@ export default class Checkbox extends React.Component {
     const {
       decoratedText = '',
       component,
-      onChangeCheckbox, // eslint-disable-line no-unused-vars
-      store, // eslint-disable-line no-unused-vars
-      dir, // eslint-disable-line no-unused-vars
-      entityKey, // eslint-disable-line no-unused-vars
-      getEditorState, // eslint-disable-line no-unused-vars
-      offsetKey, // eslint-disable-line no-unused-vars
-      setEditorState, // eslint-disable-line no-unused-vars
-      ...otherProps
     } = this.props;
     const checked = checkedCheckbox.test(decoratedText);
     const text = decoratedText
       .replace(uncheckedCheckbox, '$1')
       .replace(checkedCheckbox, '$1');
-    let textIndent = (text.length - decoratedText.length) / 4;
-    if (checked) {
-      textIndent -= 0.3;
-    }
-    textIndent = `${textIndent}em`;
     return component ? React.createElement(component, this.props) : (
-      <div className={checked ? 'checked' : ''} key={this.entityKey}>
-        <input type="checkbox" checked={checked} onChange={(...args) => this.onChange(...args)} readOnly style={{ position: 'relative', top: '-5px' }} />
-        <span style={{ textIndent, overflow: 'hidden', display: 'inline-block' }} {...otherProps} />
+      <div className={checked ? 'checked' : ''}>
+        <input type="checkbox" checked={checked} onChange={(...args) => this.onChange(...args)} contentEditable="false" />
+        <span style={{ visibility: 'hidden', fontSize: '0px' }}>- [{ checked ? 'x' : ' ' }]</span>
+        {' '}
+        {text}
       </div>
     );
   }

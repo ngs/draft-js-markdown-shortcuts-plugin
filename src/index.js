@@ -1,3 +1,4 @@
+import { getDefaultKeyBinding } from 'draft-js';
 import createCheckboxDecorator from './checkboxDecorator';
 
 const store = {};
@@ -11,6 +12,10 @@ const createMarkdownShortcutsPlugin = (config = {}) => ({
     store.getEditorState = getEditorState;
     store.setEditorState = setEditorState;
     store.getEditorRef = getEditorRef;
+  },
+  handleReturn(e) {
+    console.info(e);
+    return 'not-handled';
   }
 });
 
