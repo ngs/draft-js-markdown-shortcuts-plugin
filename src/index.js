@@ -1,11 +1,18 @@
-import { getDefaultKeyBinding } from 'draft-js';
+// import { getDefaultKeyBinding } from 'draft-js';
 import createCheckboxDecorator from './checkboxDecorator';
+import createHeadingDecorator from './headingDecorator';
 
 const store = {};
 
 const createMarkdownShortcutsPlugin = (config = {}) => ({
   decorators: [
-    createCheckboxDecorator(config, store)
+    createCheckboxDecorator(config, store),
+    createHeadingDecorator({ level: 1 }, store),
+    createHeadingDecorator({ level: 2 }, store),
+    createHeadingDecorator({ level: 3 }, store),
+    createHeadingDecorator({ level: 4 }, store),
+    createHeadingDecorator({ level: 5 }, store),
+    createHeadingDecorator({ level: 6 }, store),
   ],
   initialize: (props) => {
     const { getEditorState, setEditorState, getEditorRef } = props;
