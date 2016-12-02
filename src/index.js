@@ -1,12 +1,14 @@
 // import { getDefaultKeyBinding } from 'draft-js';
 import createCheckboxDecorator from './checkboxDecorator';
 import createHeadingDecorator from './headingDecorator';
+import createImageDecorator from './imageDecorator';
 import createLinkDecorator from './linkDecorator';
 
 const store = {};
 
 const createMarkdownShortcutsPlugin = (config = {}) => ({
   decorators: [
+    createImageDecorator(config, store),
     createCheckboxDecorator(config, store),
     createLinkDecorator(config, store),
     createHeadingDecorator({ level: 1 }, store),
@@ -25,6 +27,10 @@ const createMarkdownShortcutsPlugin = (config = {}) => ({
   handleReturn(e) {
     console.info(e);
     return 'not-handled';
+  },
+  onChange(editorState) {
+    console.info(editorState);
+    return editorState;
   }
 });
 
