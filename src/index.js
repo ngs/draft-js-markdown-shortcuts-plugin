@@ -1,12 +1,14 @@
 // import { getDefaultKeyBinding } from 'draft-js';
 import createCheckboxDecorator from './checkboxDecorator';
 import createHeadingDecorator from './headingDecorator';
+import createLinkDecorator from './linkDecorator';
 
 const store = {};
 
 const createMarkdownShortcutsPlugin = (config = {}) => ({
   decorators: [
     createCheckboxDecorator(config, store),
+    createLinkDecorator(config, store),
     createHeadingDecorator({ level: 1 }, store),
     createHeadingDecorator({ level: 2 }, store),
     createHeadingDecorator({ level: 3 }, store),

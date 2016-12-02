@@ -7,7 +7,9 @@ const replaceLeafContent = (leaf, replaceFn) => {
     ...props
   } = leaf.props;
   const replacedText = replaceFn(text);
-  props.text = zeroWidthSpaces(text.length - replacedText.length) + replacedText;
+  const textIndex = text.indexOf(replacedText);
+
+  props.text = zeroWidthSpaces(textIndex) + replacedText + zeroWidthSpaces(text.length - replacedText.length - textIndex);
   return React.createElement(leaf.type, props);
 };
 

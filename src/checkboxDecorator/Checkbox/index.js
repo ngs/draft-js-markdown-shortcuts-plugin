@@ -32,9 +32,9 @@ export default class Checkbox extends React.Component {
       return React.createElement(component, this.props);
     }
     const checked = checkedCheckbox.test(decoratedText);
-    const leaf = replaceLeafContent(children[0], (text) => ` ${text
+    const leaf = replaceLeafContent(children[0], (text) => text
       .replace(uncheckedCheckbox, '$1')
-      .replace(checkedCheckbox, '$1')}`);
+      .replace(checkedCheckbox, '$1'));
     return (
       <div className={checked ? 'checked' : ''}>
         <input type="checkbox" checked={checked} onChange={(...args) => this.onChange(...args)} contentEditable="false" />
