@@ -24,6 +24,7 @@ export default class Checkbox extends React.Component {
   }
   render() {
     const {
+      children,
       decoratedText = '',
       component,
     } = this.props;
@@ -31,12 +32,16 @@ export default class Checkbox extends React.Component {
     const text = decoratedText
       .replace(uncheckedCheckbox, '$1')
       .replace(checkedCheckbox, '$1');
+    const child = children[0];
+    const {
+      decoratedText: decoratedText2, // eslint-disable-line no-unused-vars
+      ...childProps
+    } = child.props;
+    childProps.text = `\u200B\u200B\u200B\u200B\u200B ${text}`;
     return component ? React.createElement(component, this.props) : (
       <div className={checked ? 'checked' : ''}>
         <input type="checkbox" checked={checked} onChange={(...args) => this.onChange(...args)} contentEditable="false" />
-        <span style={{ visibility: 'hidden', fontSize: '0px' }}>- [{ checked ? 'x' : ' ' }]</span>
-        {' '}
-        {text}
+        {React.createElement(child.type, childProps)}
       </div>
     );
   }
