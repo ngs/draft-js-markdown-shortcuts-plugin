@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-// import { SelectionState } from 'draft-js';
 import setChecked from '../modifiers/setChecked';
 import { uncheckedCheckbox, checkedCheckbox } from '../regexp';
+import replaceLeafContent from '../../utils/replaceLeafContent';
 
 export default class Checkbox extends React.Component {
   static propTypes = {
@@ -28,20 +28,17 @@ export default class Checkbox extends React.Component {
       decoratedText = '',
       component,
     } = this.props;
+    if (component) {
+      return React.createElement(component, this.props);
+    }
     const checked = checkedCheckbox.test(decoratedText);
-    const text = decoratedText
+    const leaf = replaceLeafContent(children[0], (text) => ` ${text
       .replace(uncheckedCheckbox, '$1')
-      .replace(checkedCheckbox, '$1');
-    const child = children[0];
-    const {
-      decoratedText: decoratedText2, // eslint-disable-line no-unused-vars
-      ...childProps
-    } = child.props;
-    childProps.text = `\u200B\u200B\u200B\u200B\u200B ${text}`;
-    return component ? React.createElement(component, this.props) : (
+      .replace(checkedCheckbox, '$1')}`);
+    return (
       <div className={checked ? 'checked' : ''}>
         <input type="checkbox" checked={checked} onChange={(...args) => this.onChange(...args)} contentEditable="false" />
-        {React.createElement(child.type, childProps)}
+        {leaf}
       </div>
     );
   }
