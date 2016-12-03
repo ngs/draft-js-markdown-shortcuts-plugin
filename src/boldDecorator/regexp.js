@@ -1,1 +1,1 @@
-export const bold = /\*\*([^*]+)\*\*/g;
+export const bold = /(\*\*|__)([^\1]+)\1/g;

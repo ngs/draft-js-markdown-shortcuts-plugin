@@ -4,6 +4,8 @@ import createHeadingDecorator from './headingDecorator';
 import createImageDecorator from './imageDecorator';
 import createLinkDecorator from './linkDecorator';
 import createBoldDecorator from './boldDecorator';
+import createEmphasisDecorator from './emphasisDecorator';
+import createStriketroughDecorator from './strikethroughDecorator';
 
 const store = {};
 
@@ -13,6 +15,8 @@ const createMarkdownShortcutsPlugin = (config = {}) => ({
     createCheckboxDecorator(config, store),
     createLinkDecorator(config, store),
     createBoldDecorator(config, store),
+    createEmphasisDecorator(config, store),
+    createStriketroughDecorator(config, store),
     createHeadingDecorator({ level: 1 }, store),
     createHeadingDecorator({ level: 2 }, store),
     createHeadingDecorator({ level: 3 }, store),

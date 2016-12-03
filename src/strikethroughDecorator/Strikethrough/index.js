@@ -1,10 +1,10 @@
 import React from 'react';
-import { bold as boldRE } from '../regexp';
+import { strikethrough as strikethroughRE } from '../regexp';
 import replaceLeafContent from '../../utils/replaceLeafContent';
 
-export default class Bold extends React.Component {
+export default class Strikethrough extends React.Component {
 
-  static displayName = 'MarkdownBold';
+  static displayName = 'MarkdownStrikethrough';
 
   render() {
     const { component, children } = this.props;
@@ -12,6 +12,6 @@ export default class Bold extends React.Component {
       return React.createElement(component, this.props);
     }
     const leaf = children[0];
-    return <strong>{replaceLeafContent(leaf, (text) => text.replace(boldRE, '$2'))}</strong>;
+    return <del>{replaceLeafContent(leaf, (text) => text.replace(strikethroughRE, '$2'))}</del>;
   }
 }
