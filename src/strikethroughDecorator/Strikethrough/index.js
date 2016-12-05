@@ -12,6 +12,6 @@ export default class Strikethrough extends React.Component {
       return React.createElement(component, this.props);
     }
     const leaf = children[0];
-    return <del>{replaceLeafContent(leaf, (text) => text.replace(strikethroughRE, '$2'))}</del>;
+    return <del>{replaceLeafContent(leaf, (text) => text.replace(strikethroughRE, '$1'))}</del>;
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { bold as boldRE } from '../regexp';
+import { bold1, bold2 } from '../regexp';
 import replaceLeafContent from '../../utils/replaceLeafContent';
 
 export default class Bold extends React.Component {
@@ -12,6 +12,6 @@ export default class Bold extends React.Component {
       return React.createElement(component, this.props);
     }
     const leaf = children[0];
-    return <strong>{replaceLeafContent(leaf, (text) => text.replace(boldRE, '$2'))}</strong>;
+    return <strong>{replaceLeafContent(leaf, (text) => text.replace(bold1, '$1').replace(bold2, '$1'))}</strong>;
   }
 }

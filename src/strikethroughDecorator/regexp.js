@@ -1,1 +1,1 @@
-export const strikethrough = /(~~)([^\1]+)\1/g;
+export const strikethrough = /~~([^(?:~~)]+)~~/g;

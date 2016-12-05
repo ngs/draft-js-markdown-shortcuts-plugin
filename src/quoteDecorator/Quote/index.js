@@ -1,10 +1,10 @@
 import React from 'react';
-import { emphasis1, emphasis2 } from '../regexp';
+import { quote as quoteRE } from '../regexp';
 import replaceLeafContent from '../../utils/replaceLeafContent';
 
-export default class Emphasis extends React.Component {
+export default class Quote extends React.Component {
 
-  static displayName = 'MarkdownEmphasis';
+  static displayName = 'MarkdownQuote';
 
   render() {
     const { component, children } = this.props;
@@ -12,6 +12,6 @@ export default class Emphasis extends React.Component {
       return React.createElement(component, this.props);
     }
     const leaf = children[0];
-    return <em>{replaceLeafContent(leaf, (text) => text.replace(emphasis1, '$1').replace(emphasis2, '$1'))}</em>;
+    return <q>{replaceLeafContent(leaf, (text) => text.replace(quoteRE, '$1'))}</q>;
   }
 }
