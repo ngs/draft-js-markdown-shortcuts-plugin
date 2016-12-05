@@ -1,15 +1,11 @@
-import { RichUtils, genKey, ContentBlock, EditorState } from 'draft-js';
+import { genKey, ContentBlock, EditorState } from 'draft-js';
 import { List } from 'immutable';
 
-const handleClearBlockType = (editorState) => {
-  const currentBlockType = RichUtils.getCurrentBlockType(editorState);
+const insertEmptyBlock = (editorState) => {
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
   const currentBlock = contentState.getBlockForKey(key);
-  if (['blockquote', 'code-block'].indexOf(currentBlockType) === -1) {
-    return editorState;
-  }
   const emptyBlockKey = genKey();
   const emptyBlock = new ContentBlock({
     characterList: List(),
@@ -51,4 +47,4 @@ const handleClearBlockType = (editorState) => {
   );
 };
 
-export default handleClearBlockType;
+export default insertEmptyBlock;

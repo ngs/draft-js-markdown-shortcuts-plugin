@@ -6,15 +6,15 @@ import adjustBlockDepth from './modifiers/adjustBlockDepth';
 import handleBlockType from './modifiers/handleBlockType';
 import handleInlineStyle from './modifiers/handleInlineStyle';
 import handleNewCodeBlock from './modifiers/handleNewCodeBlock';
-import handleClearBlockType from './modifiers/handleClearBlockType';
+import insertEmptyBlock from './modifiers/insertEmptyBlock';
 
 const createMarkdownShortcutsPlugin = () => ({
   blockRenderMap,
   handleReturn(ev, { setEditorState, getEditorState }) {
     const editorState = getEditorState();
     let newEditorState = handleNewCodeBlock(editorState);
-    if (editorState === newEditorState && ev.ctrlKey) {
-      newEditorState = handleClearBlockType(editorState);
+    if (editorState === newEditorState && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey)) {
+      newEditorState = insertEmptyBlock(editorState);
     }
     if (editorState !== newEditorState) {
       setEditorState(newEditorState);
