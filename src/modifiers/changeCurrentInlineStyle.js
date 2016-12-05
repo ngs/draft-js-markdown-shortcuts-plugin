@@ -5,11 +5,11 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
   const { index } = matchArr;
-  const focusOffset = index + matchArr[0].length;
   const blockMap = currentContent.getBlockMap();
   const block = blockMap.get(key);
   const currentInlineStyle = block.getInlineStyleAt(index).merge();
   const newStyle = currentInlineStyle.merge([style]);
+  const focusOffset = index + matchArr[0].length;
   const wordSelection = SelectionState.createEmpty(key).merge({
     anchorOffset: index,
     focusOffset

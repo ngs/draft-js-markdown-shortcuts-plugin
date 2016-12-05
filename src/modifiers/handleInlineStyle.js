@@ -18,20 +18,19 @@ const handleInlineStyle = (editorState, character) => {
   const key = editorState.getSelection().getStartKey();
   const text = editorState.getCurrentContent().getBlockForKey(key).getText();
   const line = `${text}${character}`;
-  let newEditorState = null;
+  let newEditorState = editorState;
   Object.keys(inlineMatchers).some((k) => {
     inlineMatchers[k].some((re) => {
       let matchArr;
       do {
         matchArr = re.exec(line);
         if (matchArr) {
-          newEditorState = changeCurrentInlineStyle(editorState, matchArr, k);
-          return true;
+          newEditorState = changeCurrentInlineStyle(newEditorState, matchArr, k);
         }
       } while (matchArr);
-      return false;
+      return newEditorState !== editorState;
     });
-    return !!newEditorState;
+    return newEditorState !== editorState;
   });
   return newEditorState || editorState;
 };
