@@ -22,3 +22,11 @@ figure {
 #root {
   height: 100%;
 }
+
+.checkable-list-item-block__checkbox, .checkable-list-item-block__text, .checkable-list-item-block__text div {
+  display: inline-block;
+}
+
+.checkable-list-item-block__text {
+  text-indent: .5em;
+}

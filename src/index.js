@@ -1,45 +1,70 @@
-// import { getDefaultKeyBinding } from 'draft-js';
-import createCheckboxDecorator from './checkboxDecorator';
-import createHeadingDecorator from './headingDecorator';
-import createImageDecorator from './imageDecorator';
-import createLinkDecorator from './linkDecorator';
-import createBoldDecorator from './boldDecorator';
-import createEmphasisDecorator from './emphasisDecorator';
-import createStriketroughDecorator from './strikethroughDecorator';
-import createQuoteDecorator from './quoteDecorator';
+import {
+  blockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
+} from 'draft-js-checkable-list-item';
 
-const store = {};
+import adjustBlockDepth from './modifiers/adjustBlockDepth';
+import handleBlockType from './modifiers/handleBlockType';
+import handleInlineStyle from './modifiers/handleInlineStyle';
+import handleNewCodeBlock from './modifiers/handleNewCodeBlock';
+import handleClearBlockType from './modifiers/handleClearBlockType';
 
-const createMarkdownShortcutsPlugin = (config = {}) => ({
-  decorators: [
-    createImageDecorator(config, store),
-    createCheckboxDecorator(config, store),
-    createLinkDecorator(config, store),
-    createBoldDecorator(config, store),
-    createQuoteDecorator(config, store),
-    createEmphasisDecorator(config, store),
-    createStriketroughDecorator(config, store),
-    createHeadingDecorator({ level: 1 }, store),
-    createHeadingDecorator({ level: 2 }, store),
-    createHeadingDecorator({ level: 3 }, store),
-    createHeadingDecorator({ level: 4 }, store),
-    createHeadingDecorator({ level: 5 }, store),
-    createHeadingDecorator({ level: 6 }, store),
-  ],
-  initialize: (props) => {
-    const { getEditorState, setEditorState, getEditorRef } = props;
-    store.getEditorState = getEditorState;
-    store.setEditorState = setEditorState;
-    store.getEditorRef = getEditorRef;
-  },
-  handleReturn(e) {
-    console.info(e);
+const createMarkdownShortcutsPlugin = () => ({
+  blockRenderMap,
+  handleReturn(ev, { setEditorState, getEditorState }) {
+    const editorState = getEditorState();
+    let newEditorState = handleNewCodeBlock(editorState);
+    if (editorState === newEditorState && ev.ctrlKey) {
+      newEditorState = handleClearBlockType(editorState);
+    }
+    if (editorState !== newEditorState) {
+      setEditorState(newEditorState);
+      return 'handled';
+    }
     return 'not-handled';
   },
-  onChange(editorState) {
-    // console.info(editorState.toJS());
-    window.editorState = editorState;
-    return editorState;
+  blockStyleFn(block) {
+    if (block.getType() === CHECKABLE_LIST_ITEM) {
+      return CHECKABLE_LIST_ITEM;
+    }
+    return null;
+  },
+  blockRendererFn(block, { setEditorState, getEditorState }) {
+    if (block.getType() === CHECKABLE_LIST_ITEM) {
+      return {
+        component: CheckableListItem,
+        props: {
+          onChangeChecked: () => setEditorState(
+            CheckableListItemUtils.toggleChecked(getEditorState(), block)
+          ),
+          checked: !!block.getData().get('checked'),
+        },
+      };
+    }
+    return null;
+  },
+  onTab(ev, { getEditorState, setEditorState }) {
+    const editorState = getEditorState();
+    const newEditorState = adjustBlockDepth(editorState, ev);
+    if (newEditorState !== editorState) {
+      setEditorState(newEditorState);
+      return 'handled';
+    }
+    return 'not-handled';
+  },
+  handleBeforeInput(character, { getEditorState, setEditorState }) {
+    if (character !== ' ') {
+      return 'not-handled';
+    }
+    const editorState = getEditorState();
+    let newEditorState = handleBlockType(editorState, character);
+    if (editorState === newEditorState) {
+      newEditorState = handleInlineStyle(editorState, character);
+    }
+    if (editorState !== newEditorState) {
+      setEditorState(newEditorState);
+      return 'handled';
+    }
+    return 'not-handled';
   }
 });
 
