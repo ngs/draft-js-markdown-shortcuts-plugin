@@ -2,6 +2,6 @@
 // import { shallow } from 'enzyme';
 // import { expect } from 'chai';
 
-describe('checkbox', () => {
+describe('draft-js-markdown-shortcuts-plugin', () => {
   it('is pending');
 });

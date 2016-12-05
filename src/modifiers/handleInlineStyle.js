@@ -11,6 +11,9 @@ const inlineMatchers = {
   ],
   CODE: [
     /`([^`]+)`/g
+  ],
+  STRIKETHROUGH: [
+    /~~([^(?:~~)]+)~~/g
   ]
 };
 
