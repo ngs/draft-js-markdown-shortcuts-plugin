@@ -8,13 +8,18 @@ import handleInlineStyle from './modifiers/handleInlineStyle';
 import handleNewCodeBlock from './modifiers/handleNewCodeBlock';
 import insertEmptyBlock from './modifiers/insertEmptyBlock';
 import handleLink from './modifiers/handleLink';
+import handleImage from './modifiers/handleImage';
 import createLinkDecorator from './decorators/link';
+import createImageDecorator from './decorators/image';
 
 const createMarkdownShortcutsPlugin = (config = {}) => {
   const store = {};
   return {
     blockRenderMap,
-    decorators: [createLinkDecorator(config, store)],
+    decorators: [
+      createLinkDecorator(config, store),
+      createImageDecorator(config, store)
+    ],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;
@@ -67,10 +72,13 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       const editorState = getEditorState();
       let newEditorState = handleBlockType(editorState, character);
       if (editorState === newEditorState) {
-        newEditorState = handleInlineStyle(editorState, character);
+        newEditorState = handleImage(editorState, character);
       }
       if (editorState === newEditorState) {
         newEditorState = handleLink(editorState, character);
+      }
+      if (editorState === newEditorState) {
+        newEditorState = handleInlineStyle(editorState, character);
       }
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
