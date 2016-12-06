@@ -1,0 +1,32 @@
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-size: 15px;
+  line-height: 1.4;
+  font-family: 'Open Sans', sans-serif;
+  color: #555;
+  height: 100%;
+}
+
+figure {
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+}
+
+.checkable-list-item-block__checkbox, .checkable-list-item-block__text, .checkable-list-item-block__text div {
+  display: inline-block;
+}
+
+.checkable-list-item-block__text {
+  text-indent: .5em;
+}
