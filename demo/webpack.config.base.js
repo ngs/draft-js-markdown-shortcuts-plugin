@@ -22,13 +22,14 @@ module.exports = {
         test: /\.js$/,
         loaders: ['babel'],
         include: [
+          path.join(__dirname),
           path.join(__dirname, '..', 'src'),
           path.join(__dirname, 'client')
         ],
       }, {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss-loader'),
-        include: path.join(__dirname, 'client/components'),
+        include: path.join(__dirname, 'client', 'components'),
       }
     ],
   },

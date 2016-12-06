@@ -1,6 +1,10 @@
+import React from 'react';
 import {
-  blockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
+  blockRenderMap as checkboxBlockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
 } from 'draft-js-checkable-list-item';
+import PrismDecorator from 'draft-js-prism';
+
+import { Map } from 'immutable';
 
 import adjustBlockDepth from './modifiers/adjustBlockDepth';
 import handleBlockType from './modifiers/handleBlockType';
@@ -9,16 +13,31 @@ import handleNewCodeBlock from './modifiers/handleNewCodeBlock';
 import insertEmptyBlock from './modifiers/insertEmptyBlock';
 import handleLink from './modifiers/handleLink';
 import handleImage from './modifiers/handleImage';
+import leaveList from './modifiers/leaveList';
 import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
+
 
 const createMarkdownShortcutsPlugin = (config = {}) => {
   const store = {};
   return {
-    blockRenderMap,
+    blockRenderMap: Map({
+      'code-block': {
+        element: 'code',
+        wrapper: <pre spellCheck={'false'} />
+      }
+    }).merge(checkboxBlockRenderMap),
     decorators: [
       createLinkDecorator(config, store),
-      createImageDecorator(config, store)
+      createImageDecorator(config, store),
+      new PrismDecorator({
+        getSyntax(block) {
+          return block.getData().get('language');
+        },
+        render({ type, children }) {
+          return <span className={`prism-token token ${type}`}>{children}</span>;
+        }
+      })
     ],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
@@ -26,9 +45,22 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     },
     handleReturn(ev, { setEditorState, getEditorState }) {
       const editorState = getEditorState();
-      let newEditorState = handleNewCodeBlock(editorState);
-      if (editorState === newEditorState && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey)) {
+      let newEditorState = editorState;
+      const contentState = editorState.getCurrentContent();
+      const selection = editorState.getSelection();
+      const key = selection.getStartKey();
+      const currentBlock = contentState.getBlockForKey(key);
+      const type = currentBlock.getType();
+      const text = currentBlock.getText();
+      if (/-list-item$/.test(type) && text === '') {
+        newEditorState = leaveList(editorState);
+      }
+      if (newEditorState === editorState &&
+        (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type))) {
         newEditorState = insertEmptyBlock(editorState);
+      }
+      if (newEditorState === editorState) {
+        newEditorState = handleNewCodeBlock(editorState);
       }
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
@@ -37,24 +69,31 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       return 'not-handled';
     },
     blockStyleFn(block) {
-      if (block.getType() === CHECKABLE_LIST_ITEM) {
-        return CHECKABLE_LIST_ITEM;
+      switch (block.getType()) {
+        case CHECKABLE_LIST_ITEM:
+          return CHECKABLE_LIST_ITEM;
+        default:
+          break;
       }
       return null;
     },
+
     blockRendererFn(block, { setEditorState, getEditorState }) {
-      if (block.getType() === CHECKABLE_LIST_ITEM) {
-        return {
-          component: CheckableListItem,
-          props: {
-            onChangeChecked: () => setEditorState(
-              CheckableListItemUtils.toggleChecked(getEditorState(), block)
-            ),
-            checked: !!block.getData().get('checked'),
-          },
-        };
+      switch (block.getType()) {
+        case CHECKABLE_LIST_ITEM: {
+          return {
+            component: CheckableListItem,
+            props: {
+              onChangeChecked: () => setEditorState(
+                CheckableListItemUtils.toggleChecked(getEditorState(), block)
+              ),
+              checked: !!block.getData().get('checked'),
+            },
+          };
+        }
+        default:
+          return null;
       }
-      return null;
     },
     onTab(ev, { getEditorState, setEditorState }) {
       const editorState = getEditorState();
@@ -86,7 +125,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     }
-}
+  };
 };
 
 export default createMarkdownShortcutsPlugin;

@@ -1,7 +1,7 @@
 import { genKey, ContentBlock, EditorState } from 'draft-js';
 import { List } from 'immutable';
 
-const insertEmptyBlock = (editorState) => {
+const insertEmptyBlock = (editorState, blockType = 'unstyled', data = {}) => {
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
@@ -12,7 +12,8 @@ const insertEmptyBlock = (editorState) => {
     depth: 0,
     key: emptyBlockKey,
     text: '',
-    type: 'unstyled',
+    type: blockType,
+    data
   });
   const blockMap = contentState.getBlockMap();
   const blocksBefore = blockMap.toSeq().takeUntil((value) => value === currentBlock);

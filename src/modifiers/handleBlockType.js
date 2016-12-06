@@ -21,26 +21,32 @@ const blockTypes = [
 ];
 
 const handleBlockType = (editorState, character) => {
-  const key = editorState.getSelection().getStartKey();
+  const currentSelection = editorState.getSelection();
+  const key = currentSelection.getStartKey();
   const text = editorState.getCurrentContent().getBlockForKey(key).getText();
-  const line = `${text}${character}`;
+  const position = currentSelection.getAnchorOffset();
+  const line = [text.slice(0, position), character, text.slice(position)].join('');
   const blockType = RichUtils.getCurrentBlockType(editorState);
   for (let i = 1; i <= 6; i += 1) {
-    if (line === `${sharps(i)} `) {
-      return changeCurrentBlockType(editorState, blockTypes[i]);
+    if (line.indexOf(`${sharps(i)} `) === 0) {
+      return changeCurrentBlockType(editorState, blockTypes[i], line.replace(/^#+\s/, ''));
     }
   }
-  if (/^[*-] $/.test(line)) {
-    return changeCurrentBlockType(editorState, 'unordered-list-item');
+  let matchArr = line.match(/^[*-] (.*)$/);
+  if (matchArr) {
+    return changeCurrentBlockType(editorState, 'unordered-list-item', matchArr[1]);
   }
-  if (/^[\d]\. $/.test(line)) {
-    return changeCurrentBlockType(editorState, 'ordered-list-item');
+  matchArr = line.match(/^[\d]\. (.*)$/);
+  if (matchArr) {
+    return changeCurrentBlockType(editorState, 'ordered-list-item', matchArr[1]);
   }
-  if (/^> $/.test(line)) {
-    return changeCurrentBlockType(editorState, 'blockquote');
+  matchArr = line.match(/^> (.*)$/);
+  if (matchArr) {
+    return changeCurrentBlockType(editorState, 'blockquote', matchArr[1]);
   }
-  if (blockType === 'unordered-list-item' && /^\[[x ]] $/.test(line)) {
-    return changeCurrentBlockType(editorState, CHECKABLE_LIST_ITEM);
+  matchArr = line.match(/^\[([x ])] (.*)$/i);
+  if (blockType === 'unordered-list-item' && matchArr) {
+    return changeCurrentBlockType(editorState, CHECKABLE_LIST_ITEM, matchArr[2], { checked: matchArr[1] !== ' ' });
   }
   return editorState;
 };

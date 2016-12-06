@@ -24,15 +24,13 @@ const contentState = ContentState.createFromText('');
 export default class DemoEditor extends Component {
 
   state = {
-    editorState: EditorState.createWithContent(contentState),
+    editorState: EditorState.createWithContent(contentState)
   };
 
   onChange = (editorState) => {
     this.setState({
       editorState,
     });
-
-    // console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
   };
 
   render() {

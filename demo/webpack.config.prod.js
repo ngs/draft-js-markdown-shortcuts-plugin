@@ -2,14 +2,15 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var StaticSitePlugin = require('react-static-webpack-plugin');
+var StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
 var webpackBaseConfig = require('./webpack.config.base');
 
 module.exports = Object.assign(webpackBaseConfig, {
   devtool: 'source-map',
 
   entry: {
-    app: ['./client/index.js'],
+    app: [path.join(__dirname, 'client', 'index.js')],
+    main: [path.join(__dirname, 'index.html.js')],
   },
 
   output: {
@@ -31,11 +32,6 @@ module.exports = Object.assign(webpackBaseConfig, {
       screw_ie8: true,
       compressor: { warnings: false },
     }),
-    new StaticSitePlugin({
-      src: 'app',
-      stylesheet: '/app.css',
-      favicon: '/favicon.ico',
-      template: path.join(__dirname, 'index.html.js'),
-    }),
+    new StaticSiteGeneratorPlugin('main', ['/'], {}),
   ],
 });
