@@ -59,6 +59,7 @@ export default class DemoEditor extends Component {
   }
 
   onChange = (editorState) => {
+    window.editorState = editorState;
     this.setState({
       editorState,
     });
