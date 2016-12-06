@@ -1,10 +1,20 @@
 .root {
   background: #FFF;
   height: 100%;
+  position: relative;
 }
 
 .editor {
   margin: 2.5% auto 0 auto;
   height: 95%;
   width: 95%;
+}
+
+.placeholder {
+  color: #ccc;
+  font-size: 1em;
+  position: absolute;
+  width: 95%;
+  top: 0;
+  left: 2.5%;
 }

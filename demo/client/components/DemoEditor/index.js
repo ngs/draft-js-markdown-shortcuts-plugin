@@ -27,6 +27,12 @@ export default class DemoEditor extends Component {
     editorState: EditorState.createWithContent(contentState)
   };
 
+  componentDidMount = () => {
+    if (this.editor) {
+      this.editor.focus();
+    }
+  }
+
   onChange = (editorState) => {
     this.setState({
       editorState,
@@ -34,8 +40,11 @@ export default class DemoEditor extends Component {
   };
 
   render() {
+    const { editorState } = this.state;
+    const placeholder = editorState.getCurrentContent().hasText() ? null : <div className={styles.placeholder}>Write something here...</div>;
     return (
       <div className={styles.root}>
+        {placeholder}
         <div className={styles.editor} onClick={this.focus}>
           <Editor
             editorState={this.state.editorState}
