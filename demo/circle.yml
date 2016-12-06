@@ -1,0 +1,10 @@
+general:
+  branches:
+    ignore:
+      - gh-pages
+deployment:
+  production:
+    branch: master
+    commands:
+      - npm run build:demo
+      - npm run deploy:demo
