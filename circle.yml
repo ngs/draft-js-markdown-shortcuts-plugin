@@ -1,3 +1,8 @@
+machine:
+  timezone: UTC
+  pre:
+    - "git config --global user.name 'Circle CI'"
+    - "git config --global user.email 'a+circleci@ngs.io'"
 general:
   branches:
     ignore:
