@@ -1,6 +1,9 @@
 draft-js-markdown-shortcuts-plugin
 ==================================
 
+[![CircleCI](https://circleci.com/gh/ngs/draft-js-markdown-shortcuts-plugin.svg?style=svg)](https://circleci.com/gh/ngs/draft-js-markdown-shortcuts-plugin)
+[![npm](https://img.shields.io/npm/v/draft-js-markdown-shortcuts-plugin.svg)][npm]
+
 A [DraftJS] plugin for supporting Markdown syntax shortcuts
 
 This plugin works with [DraftJS Plugins] wrapper component.
@@ -66,3 +69,4 @@ MIT. See [LICENSE]
 [DraftJS]: https://facebook.github.io/draft-js/
 [DraftJS Plugins]: https://github.com/draft-js-plugins/draft-js-plugins
 [LICENSE]: ./LICENSE
+[npm]: https://www.npmjs.com/package/draft-js-markdown-shortcuts-plugin
