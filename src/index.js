@@ -2,7 +2,6 @@ import React from 'react';
 import {
   blockRenderMap as checkboxBlockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
 } from 'draft-js-checkable-list-item';
-import PrismDecorator from 'draft-js-prism';
 
 import { Map } from 'immutable';
 
@@ -29,15 +28,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     }).merge(checkboxBlockRenderMap),
     decorators: [
       createLinkDecorator(config, store),
-      createImageDecorator(config, store),
-      new PrismDecorator({
-        getSyntax(block) {
-          return block.getData().get('language');
-        },
-        render({ type, children }) {
-          return <span className={`prism-token token ${type}`}>{children}</span>;
-        }
-      })
+      createImageDecorator(config, store)
     ],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
