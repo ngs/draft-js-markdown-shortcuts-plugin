@@ -15,14 +15,16 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin'; // eslint-disable-line
-import {
-  // convertToRaw,
+import Draft, {
+  convertToRaw,
   // convertFromRaw,
   ContentState,
   EditorState,
 } from 'draft-js';
 import styles from './styles.css';
 // import initialState from './initialState';
+
+window.Draft = Draft;
 
 const plugins = [createMarkdownShortcutsPlugin()];
 
@@ -60,6 +62,8 @@ export default class DemoEditor extends Component {
 
   onChange = (editorState) => {
     window.editorState = editorState;
+    window.rawContent = convertToRaw(editorState.getCurrentContent());
+
     this.setState({
       editorState,
     });
