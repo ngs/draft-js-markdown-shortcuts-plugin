@@ -4,6 +4,7 @@
   "description": "A DraftJS plugin for supporting Markdown syntax shortcuts",
   "main": "lib/index.js",
   "scripts": {
+    "eslint": "node_modules/.bin/eslint .",
     "build": "npm run clean && npm run build:js",
     "build:demo": "NODE_ENV=production webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
     "build:js": "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",

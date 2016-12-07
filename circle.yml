@@ -10,6 +10,9 @@ general:
     ignore:
       - gh-pages
 test:
+  override:
+    - npm test
+    - npm run eslint -- --max-warnings 0
   post:
     - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
     - cp -R lib $CIRCLE_ARTIFACTS/
