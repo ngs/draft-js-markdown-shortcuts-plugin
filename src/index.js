@@ -71,7 +71,6 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     },
 
     blockRendererFn(block, { setEditorState, getEditorState }) {
-      console.info(block);
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
           return {
