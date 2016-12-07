@@ -30,6 +30,7 @@ const plugins = [createMarkdownShortcutsPlugin()];
 
 const decorators = [
   new PrismDecorator({
+    prism: Prism,
     getSyntax(block) {
       const language = block.getData().get('language');
       if (typeof Prism.languages[language] === 'object') {
