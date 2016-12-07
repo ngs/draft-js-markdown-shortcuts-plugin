@@ -1,6 +1,5 @@
 import { EditorState, RichUtils, SelectionState, Entity, Modifier } from 'draft-js';
 
-
 const insertLink = (editorState, matchArr) => {
   const currentContent = editorState.getCurrentContent();
   const selection = editorState.getSelection();

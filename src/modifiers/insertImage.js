@@ -1,7 +1,6 @@
 import { EditorState, RichUtils, SelectionState, Entity, Modifier } from 'draft-js';
 
-
-const insertLink = (editorState, matchArr) => {
+const insertImage = (editorState, matchArr) => {
   const currentContent = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
@@ -42,4 +41,4 @@ const insertLink = (editorState, matchArr) => {
   return EditorState.forceSelection(newEditorState, newContentState.getSelectionAfter());
 };
 
-export default insertLink;
+export default insertImage;

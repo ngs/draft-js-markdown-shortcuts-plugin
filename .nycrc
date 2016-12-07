@@ -1,0 +1,14 @@
+{
+  "exclude": [
+    "src/**/__test__/*.js",
+    "testHelper.js"
+  ],
+  "reporter": [
+    "lcov",
+    "text-summary",
+		"html"
+  ],
+  "require": [
+    "./testHelper.js"
+  ]
+}

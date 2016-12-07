@@ -35,7 +35,7 @@ const handleInlineStyle = (editorState, character) => {
     });
     return newEditorState !== editorState;
   });
-  return newEditorState || editorState;
+  return newEditorState;
 };
 
 export default handleInlineStyle;

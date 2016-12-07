@@ -6,10 +6,7 @@ const changeCurrentBlockType = (editorState, type, text, blockMetadata = {}) => 
   const key = selection.getStartKey();
   const blockMap = currentContent.getBlockMap();
   const block = blockMap.get(key);
-  let data = block.getData();
-  if (data && data.merge) {
-    data = data.merge(blockMetadata);
-  }
+  const data = block.getData().merge(blockMetadata);
   const newBlock = block.merge({ type, data, text: text || '' });
   const newSelection = selection.merge({
     anchorOffset: 0,

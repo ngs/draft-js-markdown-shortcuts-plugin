@@ -8,8 +8,12 @@ const handleNewCodeBlock = (editorState) => {
   const currentBlock = contentState.getBlockForKey(key);
   const matchData = /^```([\w-]+)?$/.exec(currentBlock.getText());
   if (matchData && selection.getEndOffset() === currentBlock.getLength()) {
+    const data = {};
     const language = matchData[1];
-    return changeCurrentBlockType(editorState, 'code-block', '', { language });
+    if (language) {
+      data.language = language;
+    }
+    return changeCurrentBlockType(editorState, 'code-block', '', data);
   }
   const type = currentBlock.getType();
   if (type === 'code-block') {

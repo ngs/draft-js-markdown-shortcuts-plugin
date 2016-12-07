@@ -1,5 +1,4 @@
 import { RichUtils } from 'draft-js';
-// import insertEmptyBlock from './insertEmptyBlock';
 
 const leaveList = (editorState) => {
   const contentState = editorState.getCurrentContent();

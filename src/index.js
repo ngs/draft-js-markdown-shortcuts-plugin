@@ -20,6 +20,7 @@ import createImageDecorator from './decorators/image';
 const createMarkdownShortcutsPlugin = (config = {}) => {
   const store = {};
   return {
+    store,
     blockRenderMap: Map({
       'code-block': {
         element: 'code',
@@ -70,6 +71,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     },
 
     blockRendererFn(block, { setEditorState, getEditorState }) {
+      console.info(block);
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
           return {

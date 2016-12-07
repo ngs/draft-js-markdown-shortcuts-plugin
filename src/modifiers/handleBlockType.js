@@ -45,7 +45,7 @@ const handleBlockType = (editorState, character) => {
     return changeCurrentBlockType(editorState, 'blockquote', matchArr[1]);
   }
   matchArr = line.match(/^\[([x ])] (.*)$/i);
-  if (blockType === 'unordered-list-item' && matchArr) {
+  if (matchArr && blockType === 'unordered-list-item') {
     return changeCurrentBlockType(editorState, CHECKABLE_LIST_ITEM, matchArr[2], { checked: matchArr[1] !== ' ' });
   }
   return editorState;
