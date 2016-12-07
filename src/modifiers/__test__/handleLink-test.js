@@ -1,16 +1,16 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 import Draft, { EditorState, SelectionState } from 'draft-js';
-import handleImage from '../handleImage';
+import handleLink from '../handleLink';
 
-describe('handleImage', () => {
+describe('handleLink', () => {
   let beforeRawContentState;
   let afterRawContentState;
   let selection;
-  let fakeInsertImage;
+  let fakeInsertLink;
 
   after(() => {
-    handleImage.__ResetDependency__('../insertImage'); // eslint-disable-line no-underscore-dangle
+    handleLink.__ResetDependency__('../insertLink'); // eslint-disable-line no-underscore-dangle
   });
 
   const createEditorState = (text) => {
@@ -54,35 +54,34 @@ describe('handleImage', () => {
     const newContentState = Draft.convertFromRaw(afterRawContentState);
     const newEditorState = EditorState.push(editorState, newContentState, 'insert-image');
 
-    fakeInsertImage = sinon.spy(() => newEditorState);
+    fakeInsertLink = sinon.spy(() => newEditorState);
 
-    handleImage.__Rewire__('insertImage', fakeInsertImage); // eslint-disable-line no-underscore-dangle
+    handleLink.__Rewire__('insertLink', fakeInsertLink); // eslint-disable-line no-underscore-dangle
 
     return editorState;
   };
 
   [
-    ['if matches src only', '![](http://cultofthepartyparrot.com/parrots/aussieparrot.gif)'],
-    ['if matches src and alt', '![alt](http://cultofthepartyparrot.com/parrots/aussieparrot.gif)'],
-    ['if matches src, alt and title', '![alt](http://cultofthepartyparrot.com/parrots/aussieparrot.gif "party")']
+    ['if href only', '[hello](http://cultofthepartyparrot.com/)'],
+    ['if href and title', '[hello](http://cultofthepartyparrot.com/ "world")']
   ].forEach(([condition, text]) => {
     describe(condition, () => {
       it('returns new editor state', () => {
         const editorState = createEditorState(text);
-        const newEditorState = handleImage(editorState, ' ');
+        const newEditorState = handleLink(editorState, ' ');
         expect(newEditorState).not.to.equal(editorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent()))
           .to.deep.equal(afterRawContentState);
-        expect(fakeInsertImage).to.have.callCount(1);
+        expect(fakeInsertLink).to.have.callCount(1);
       });
     });
   });
   describe('if does not match', () => {
     it('returns old editor state', () => {
       const editorState = createEditorState('yo');
-      const newEditorState = handleImage(editorState, ' ');
+      const newEditorState = handleLink(editorState, ' ');
       expect(newEditorState).to.equal(editorState);
-      expect(fakeInsertImage).not.to.have.been.called();
+      expect(fakeInsertLink).not.to.have.been.called();
     });
   });
 });
