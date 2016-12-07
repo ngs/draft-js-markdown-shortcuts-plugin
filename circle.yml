@@ -9,6 +9,11 @@ general:
   branches:
     ignore:
       - gh-pages
+test:
+  post:
+    - cp -R lib $CIRCLE_ARTIFACTS/
+    - cp -R coverage $CIRCLE_ARTIFACTS/
+    - mkdir -p $CIRCLE_TEST_REPORTS/nyc && cp test-results.xml $CIRCLE_TEST_REPORTS/nyc
 deployment:
   production:
     branch: master

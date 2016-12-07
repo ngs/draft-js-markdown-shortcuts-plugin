@@ -12,8 +12,10 @@
     "start:dev": "node_modules/.bin/babel-node ./demo/server.js",
     "start": "npm run start:dev",
     "deploy:demo": "COMMIT=$(git rev-parse --short HEAD) && BRANCH=gh-pages && GIT_URL=$(git remote get-url origin) && DIR=.deploy; rm -rf $DIR; (git clone $GIT_URL -b $BRANCH $DIR || (git init $DIR && cd $DIR && git remote add origin $GIT_URL && git checkout -b $BRANCH)) && rm -rf ${DIR}/* && cp -R ${DIR}/../demo/public/* $DIR && cd $DIR && git add -A && git commit -m \"Built artifacts of ${COMMIT} [ci skip]\" && git push origin $BRANCH",
-    "test": "mocha --compilers js:babel-core/register --recursive --require testHelper.js src/**/__test__/*.js",
-    "test:watch": "npm test -- --watch"
+    "test:mocha": "mocha --opts .mocha.opts $(find src -name '*-test.js')",
+    "test:watch": "npm run test:mocha -- --watch",
+    "test:coverage": "node_modules/.bin/nyc --require babel-core/register npm run test:mocha",
+    "test": "npm run test:coverage"
   },
   "repository": {
     "type": "git",
@@ -63,6 +65,9 @@
     "history": "^2.0.0",
     "jsdom": "^9.8.3",
     "mocha": "^3.2.0",
+    "mocha-junit-reporter": "^1.12.1",
+    "mocha-multi-reporters": "^1.1.1",
+    "nyc": "^10.0.0",
     "postcss-loader": "^1.1.1",
     "prismjs": "^1.6.0",
     "react-addons-pure-render-mixin": "^15.4.1",

@@ -1,0 +1,11 @@
+verbose: false
+instrumentation:
+    root: src
+    extensions:
+        - .js
+    es-modules: true
+reporting:
+    print: summary
+    reports:
+        - html
+    dir: ./coverage

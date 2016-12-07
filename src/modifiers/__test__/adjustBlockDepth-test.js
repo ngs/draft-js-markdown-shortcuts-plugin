@@ -38,12 +38,29 @@ describe('adjustBlockDepth', () => {
       EditorState.createWithContent(contentState),
       selectionState);
   };
+  describe('non list item', () => {
+    it('does not add depth', () => {
+      const event = createEvent();
+      const editorState = createEditorState('unstyled', 0, 0);
+      const newEditorState = adjustBlockDepth(editorState, event);
+      expect(
+        newEditorState
+      ).to.equal(
+        editorState
+      );
+      expect(
+        Draft.convertToRaw(newEditorState.getCurrentContent())
+      ).to.deep.equal(
+        rawContentState('unstyled', 0, 0)
+      );
+    });
+  });
   [
     'unordered-list-item',
     'ordered-list-item',
     'checkable-list-item'
   ].forEach((type) => {
-    describe('unordered list item', () => {
+    describe(type, () => {
       it('adds depth', () => {
         const event = createEvent();
         const editorState = createEditorState(type, 0, 0);
