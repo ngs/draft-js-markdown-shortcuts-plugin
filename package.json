@@ -62,7 +62,7 @@
     "css-modules-require-hook": "^4.0.5",
     "dirty-chai": "^1.2.2",
     "draft-js-plugins-editor": "2.0.0-beta7",
-    "draft-js-prism": "^1.0.3",
+    "draft-js-prism": "ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb",
     "enzyme": "^2.6.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
