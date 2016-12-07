@@ -57,7 +57,12 @@ describe('handleNewCodeBlock', () => {
   });
 
   describe('in code block', () => {
-    sinon.stub(Draft, 'genKey').returns('item2');
+    before(() => {
+      sinon.stub(Draft, 'genKey').returns('item2');
+    });
+    after(() => {
+      Draft.genKey.restore();
+    });
     const beforeRawContentState = {
       entityMap: {},
       blocks: [{
