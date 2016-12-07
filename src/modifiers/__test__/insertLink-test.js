@@ -2,8 +2,8 @@
 
 import { expect } from 'chai';
 import Draft, { EditorState, SelectionState } from 'draft-js';
-import handleImage from '../handleImage';
+import insertLink from '../insertLink';
 
-describe('handleImage', () => {
+describe('insertLink', () => {
   it('is pending');
 });

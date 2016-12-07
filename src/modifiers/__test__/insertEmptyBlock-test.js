@@ -2,8 +2,8 @@
 
 import { expect } from 'chai';
 import Draft, { EditorState, SelectionState } from 'draft-js';
-import handleImage from '../handleImage';
+import insertEmptyBlock from '../insertEmptyBlock';
 
-describe('handleImage', () => {
+describe('insertEmptyBlock', () => {
   it('is pending');
 });
