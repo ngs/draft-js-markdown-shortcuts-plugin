@@ -55,6 +55,7 @@
     "babel-preset-stage-0": "^6.16.0",
     "chai": "^3.5.0",
     "chai-enzyme": "^0.6.1",
+    "cheerio": "^0.22.0",
     "css-loader": "^0.26.0",
     "css-modules-require-hook": "^4.0.5",
     "dirty-chai": "^1.2.2",
