@@ -1,4 +1,7 @@
 {
+  "exclude": [
+    "src/**/__test__/*.js"
+  ],
   "reporter": [
     "lcov",
     "text-summary",

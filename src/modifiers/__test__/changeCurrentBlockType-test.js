@@ -40,4 +40,15 @@ describe('changeCurrentBlockType', () => {
       rawContentState('Hello world', 'header-one', { foo: 'bar' })
     );
   });
+  it('changes block type even if data is null', () => {
+    const editorState = createEditorState('Yo', 'unstyled');
+    const newEditorState = changeCurrentBlockType(
+      editorState, 'header-one', 'Hello world', null);
+    expect(newEditorState).not.to.equal(editorState);
+    expect(
+      Draft.convertToRaw(newEditorState.getCurrentContent())
+    ).to.deep.equal(
+      rawContentState('Hello world', 'header-one', {})
+    );
+  });
 });

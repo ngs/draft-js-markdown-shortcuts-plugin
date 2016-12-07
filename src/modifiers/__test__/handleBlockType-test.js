@@ -8,7 +8,7 @@ describe('handleBlockType', () => {
       entityMap: {},
       blocks: [{
         key: 'item1',
-        text: 'Test',
+        text: '[ ]',
         type: 'unstyled',
         depth: 0,
         inlineStyleRanges: [],
@@ -19,9 +19,9 @@ describe('handleBlockType', () => {
     const contentState = Draft.convertFromRaw(rawContentState);
     const selection = new SelectionState({
       anchorKey: 'item1',
-      anchorOffset: 6,
+      anchorOffset: 3,
       focusKey: 'item1',
-      focusOffset: 6,
+      focusOffset: 3,
       isBackward: false,
       hasFocus: true
     });
