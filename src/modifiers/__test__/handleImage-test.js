@@ -10,7 +10,7 @@ describe('handleImage', () => {
   let fakeInsertImage;
 
   after(() => {
-    handleImage.__ResetDependency__('../insertImage'); // eslint-disable-line no-underscore-dangle
+    handleImage.__ResetDependency__('insertImage'); // eslint-disable-line no-underscore-dangle
   });
 
   const createEditorState = (text) => {
