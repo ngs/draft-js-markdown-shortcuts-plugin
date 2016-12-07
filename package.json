@@ -12,7 +12,8 @@
     "start:dev": "node_modules/.bin/babel-node ./demo/server.js",
     "start": "npm run start:dev",
     "deploy:demo": "COMMIT=$(git rev-parse --short HEAD) && BRANCH=gh-pages && GIT_URL=$(git remote get-url origin) && DIR=.deploy; rm -rf $DIR; (git clone $GIT_URL -b $BRANCH $DIR || (git init $DIR && cd $DIR && git remote add origin $GIT_URL && git checkout -b $BRANCH)) && rm -rf ${DIR}/* && cp -R ${DIR}/../demo/public/* $DIR && cd $DIR && git add -A && git commit -m \"Built artifacts of ${COMMIT} [ci skip]\" && git push origin $BRANCH",
-    "test": "mocha --compilers js:babel-core/register --recursive --require testHelper.js src/**/__test__/*.js"
+    "test": "mocha --compilers js:babel-core/register --recursive --require testHelper.js src/**/__test__/*.js",
+    "test:watch": "npm test -- --watch"
   },
   "repository": {
     "type": "git",
