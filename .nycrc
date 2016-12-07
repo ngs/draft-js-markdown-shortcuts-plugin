@@ -1,6 +1,7 @@
 {
   "exclude": [
-    "src/**/__test__/*.js"
+    "src/**/__test__/*.js",
+    "testHelper.js"
   ],
   "reporter": [
     "lcov",
