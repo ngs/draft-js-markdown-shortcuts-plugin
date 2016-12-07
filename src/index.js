@@ -20,6 +20,7 @@ import createImageDecorator from './decorators/image';
 const createMarkdownShortcutsPlugin = (config = {}) => {
   const store = {};
   return {
+    store,
     blockRenderMap: Map({
       'code-block': {
         element: 'code',
