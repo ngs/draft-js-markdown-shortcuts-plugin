@@ -20,7 +20,7 @@ test:
     - mkdir -p $CIRCLE_TEST_REPORTS/nyc && cp test-results.xml $CIRCLE_TEST_REPORTS/nyc
 deployment:
   production:
-    branch: ['master', 'fix-prism']
+    branch: /master|deploy-.+/
     commands:
       - npm run build:demo
       - npm run deploy:demo
