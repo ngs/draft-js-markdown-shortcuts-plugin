@@ -167,8 +167,8 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
             entityMap: {},
             blocks: [{
               key: 'item1',
-              text: '',
-              type: '```',
+              text: '```',
+              type: 'unstyled',
               depth: 0,
               inlineStyleRanges: [],
               entityRanges: [],
