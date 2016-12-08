@@ -106,6 +106,7 @@
     "decorate-component-with-props": "^1.0.2",
     "draft-js": "^0.9.1",
     "draft-js-checkable-list-item": "^2.0.2",
+    "immutable": "^3.8.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   }
