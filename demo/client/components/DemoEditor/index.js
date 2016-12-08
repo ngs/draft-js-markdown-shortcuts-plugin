@@ -8,12 +8,15 @@ import Draft, {
   ContentState,
   EditorState,
 } from 'draft-js';
+
 import styles from './styles.css';
 import prismPlugin from '../../plugins/prism';
+import codePlugin from '../../plugins/code';
 
 window.Draft = Draft;
 
 const plugins = [
+  codePlugin,
   prismPlugin,
   createMarkdownShortcutsPlugin()
 ];
