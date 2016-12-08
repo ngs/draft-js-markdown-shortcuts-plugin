@@ -96,23 +96,42 @@ describe('handleNewCodeBlock', () => {
       }]
     };
     const contentState = Draft.convertFromRaw(beforeRawContentState);
-    const selection = new SelectionState({
-      anchorKey: 'item1',
-      anchorOffset: 21,
-      focusKey: 'item1',
-      focusOffset: 21,
-      isBackward: false,
-      hasFocus: true
-    });
-    const editorState = EditorState.forceSelection(
-      EditorState.createWithContent(contentState), selection);
     it('adds new line inside code block', () => {
+      const selection = new SelectionState({
+        anchorKey: 'item1',
+        anchorOffset: 21,
+        focusKey: 'item1',
+        focusOffset: 21,
+        isBackward: false,
+        hasFocus: true
+      });
+      const editorState = EditorState.forceSelection(
+        EditorState.createWithContent(contentState), selection);
       const newEditorState = handleNewCodeBlock(editorState);
       expect(newEditorState).not.to.equal(editorState);
       expect(
         Draft.convertToRaw(newEditorState.getCurrentContent())
       ).to.deep.equal(
         afterRawContentState
+      );
+    });
+    it('does not add new line even inside code block', () => {
+      const selection = new SelectionState({
+        anchorKey: 'item1',
+        anchorOffset: 10,
+        focusKey: 'item1',
+        focusOffset: 10,
+        isBackward: false,
+        hasFocus: true
+      });
+      const editorState = EditorState.forceSelection(
+        EditorState.createWithContent(contentState), selection);
+      const newEditorState = handleNewCodeBlock(editorState);
+      expect(newEditorState).to.equal(editorState);
+      expect(
+        Draft.convertToRaw(newEditorState.getCurrentContent())
+      ).to.deep.equal(
+        beforeRawContentState
       );
     });
   });
