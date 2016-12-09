@@ -179,6 +179,24 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           expect(modifierSpy).to.have.been.calledOnce();
           expect(store.setEditorState).to.have.been.calledWith(newEditorState);
         });
+        it('insert new line char from code-block', () => {
+          createMarkdownShortcutsPlugin.__Rewire__('insertText', modifierSpy); // eslint-disable-line no-underscore-dangle
+          currentRawContentState = {
+            entityMap: {},
+            blocks: [{
+              key: 'item1',
+              text: 'const foo = a => a',
+              type: 'code-block',
+              depth: 0,
+              inlineStyleRanges: [],
+              entityRanges: [],
+              data: {}
+            }]
+          };
+          expect(subject()).to.equal('handled');
+          expect(modifierSpy).to.have.been.calledOnce();
+          expect(store.setEditorState).to.have.been.calledWith(newEditorState);
+        });
       });
       describe('blockStyleFn', () => {
         let type;
