@@ -13,6 +13,7 @@ import insertEmptyBlock from './modifiers/insertEmptyBlock';
 import handleLink from './modifiers/handleLink';
 import handleImage from './modifiers/handleImage';
 import leaveList from './modifiers/leaveList';
+import insertText from './modifiers/insertText';
 import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
 
@@ -50,6 +51,9 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       if (newEditorState === editorState &&
         (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type))) {
         newEditorState = insertEmptyBlock(editorState);
+      }
+      if (newEditorState === editorState && type === 'code-block') {
+        newEditorState = insertText(editorState, '\n');
       }
       if (newEditorState === editorState) {
         newEditorState = handleNewCodeBlock(editorState);
