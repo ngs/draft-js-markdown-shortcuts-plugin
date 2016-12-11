@@ -9,6 +9,8 @@ A [DraftJS] plugin for supporting Markdown syntax shortcuts
 
 This plugin works with [DraftJS Plugins] wrapper component.
 
+![screen](screen.gif)
+
 [View Demo][Demo]
 
 Usage
