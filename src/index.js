@@ -151,6 +151,9 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
           newEditorState = addEmptyBlock(newEditorState);
           newEditorState = _handleReturn(newEditorState, {});
           buffer.length = 0;
+        } else if (i === text.length - 1) {
+          newEditorState = addText(newEditorState, buffer.join('') + text[i]);
+          buffer.length = 0;
         } else {
           buffer.push(text[i]);
         }
