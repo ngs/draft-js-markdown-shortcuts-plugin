@@ -49,7 +49,11 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
         newEditorState = leaveList(editorState);
       }
       if (newEditorState === editorState &&
-        (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type))) {
+        (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || (
+          /^header-/.test(type) &&
+          selection.isCollapsed() &&
+          currentBlock.getLength() === selection.getStartOffset() // is cursor at end
+        ))) {
         newEditorState = insertEmptyBlock(editorState);
       }
       if (newEditorState === editorState && type === 'code-block') {
