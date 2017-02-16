@@ -26,7 +26,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
   let newEditorState;
   let currentRawContentState;
   let newRawContentState;
-  let currentSelectionState;
+  let currentRawSelectionState;
   let subject;
   let event;
 
@@ -41,14 +41,14 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
 
       event = new window.KeyboardEvent('keydown');
       sinon.spy(event, 'preventDefault');
-      currentSelectionState = new SelectionState({
+      currentRawSelectionState = {
         anchorKey: 'item1',
         anchorOffset: 0,
         focusKey: 'item1',
         focusOffset: 0,
         isBackward: false,
         hasFocus: true
-      });
+      };
 
       newRawContentState = {
         entityMap: {},
@@ -70,7 +70,8 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           const contentState = Draft.convertFromRaw(currentRawContentState);
           currentEditorState = EditorState.forceSelection(
             EditorState.createWithContent(contentState),
-            currentSelectionState);
+            new SelectionState(currentRawSelectionState)
+          );
           return currentEditorState;
         })
       };
@@ -142,12 +143,24 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               data: {}
             }]
           };
+          currentRawSelectionState = {
+            anchorKey: 'item1',
+            anchorOffset: currentRawContentState.blocks[0].text.length,
+            focusKey: 'item1',
+            focusOffset: currentRawContentState.blocks[0].text.length,
+            isBackward: false,
+            hasFocus: true
+          };
           expect(subject()).to.equal('handled');
           expect(modifierSpy).to.have.been.calledOnce();
           expect(store.setEditorState).to.have.been.calledWith(newEditorState);
         };
         ['one', 'two', 'three', 'four', 'five', 'six'].forEach((level) => {
           describe(`on header-${level}`, () => {
+            const defaultCurrentRawSelectionState = currentRawSelectionState;
+            after(() => {
+              currentRawSelectionState = defaultCurrentRawSelectionState;
+            });
             it('inserts new empty block', testInsertNewBlock(`header-${level}`));
           });
         });
