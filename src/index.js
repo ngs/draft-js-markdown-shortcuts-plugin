@@ -140,20 +140,20 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     handlePastedText(text, html, { getEditorState, setEditorState }) {
       const editorState = getEditorState();
       let newEditorState = editorState;
-      const buffer = [];
+      let buffer = [];
       for (let i = 0; i < text.length; i++) {
         if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
           newEditorState = addText(newEditorState, buffer.join('') + text[i]);
           newEditorState = _handleCharacter(newEditorState, text[i]);
-          buffer.length = 0;
+          buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
           newEditorState = addText(newEditorState, buffer.join(''));
           newEditorState = addEmptyBlock(newEditorState);
           newEditorState = _handleReturn(newEditorState, {});
-          buffer.length = 0;
+          buffer = [];
         } else if (i === text.length - 1) {
           newEditorState = addText(newEditorState, buffer.join('') + text[i]);
-          buffer.length = 0;
+          buffer = [];
         } else {
           buffer.push(text[i]);
         }
