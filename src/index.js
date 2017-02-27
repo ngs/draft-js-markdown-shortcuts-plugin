@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle,no-plusplus */
-
 import React from 'react';
 import {
   blockRenderMap as checkboxBlockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
