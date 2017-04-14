@@ -42,7 +42,7 @@ describe('imageStrategy', () => {
     const strategy = createImageStrategy();
     const cb = sinon.spy();
     expect(block).to.be.an('object');
-    strategy(block, cb);
+    strategy(block, cb, contentState);
     expect(cb).to.have.been.calledWith(0, 1);
   });
 });

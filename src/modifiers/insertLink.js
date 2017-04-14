@@ -1,4 +1,4 @@
-import { EditorState, RichUtils, SelectionState, Entity, Modifier } from 'draft-js';
+import { EditorState, RichUtils, SelectionState, Modifier } from 'draft-js';
 
 const insertLink = (editorState, matchArr) => {
   const currentContent = editorState.getCurrentContent();
@@ -16,13 +16,14 @@ const insertLink = (editorState, matchArr) => {
     anchorOffset: index,
     focusOffset
   });
-  const entityKey = Entity.create(
+  const nextContent = currentContent.createEntity(
     'LINK',
     'MUTABLE',
     { href, title }
   );
+  const entityKey = nextContent.getLastCreatedEntityKey();
   let newContentState = Modifier.replaceText(
-    currentContent,
+    nextContent,
     wordSelection,
     text,
     null,

@@ -41,7 +41,7 @@ describe('linkStrategy', () => {
     const strategy = createLinkStrategy();
     const cb = sinon.spy();
     expect(block).to.be.an('object');
-    strategy(block, cb);
+    strategy(block, cb, contentState);
     expect(cb).to.have.been.calledWith(7, 12);
   });
 });
