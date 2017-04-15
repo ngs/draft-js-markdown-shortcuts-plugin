@@ -24,7 +24,7 @@ describe('utils test', () => {
     let newEditorState = EditorState.createWithContent(Draft.convertFromRaw(newRawContentState));
     const initialBlockSize = newEditorState.getCurrentContent().getBlockMap().size;
     const randomBlockSize = Math.floor((Math.random() * 50) + 1); // random number bettween 1 to 50
-    for (let i = 0; i < randomBlockSize; i++) { // eslint-disable-line
+    for (let i = 0; i < randomBlockSize; i++) { // eslint-disable-line no-plusplus
       newEditorState = addEmptyBlock(newEditorState);
     }
     const finalBlockSize = newEditorState.getCurrentContent().getBlockMap().size;

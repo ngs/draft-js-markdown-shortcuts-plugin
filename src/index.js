@@ -139,7 +139,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       const editorState = getEditorState();
       let newEditorState = editorState;
       let buffer = [];
-      for (let i = 0; i < text.length; i++) { // eslint-disable-line
+      for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
         if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
           newEditorState = addText(newEditorState, buffer.join('') + text[i]);
           newEditorState = checkCharacterForState(newEditorState, text[i]);
