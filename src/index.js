@@ -20,7 +20,7 @@ import { addText, addEmptyBlock } from './utils';
 
 const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
 
-function _handleCharacter(editorState, character) {
+function checkCharacterForState(editorState, character) {
   if (INLINE_STYLE_CHARACTERS.indexOf(character) === -1) { return editorState; }
   let newEditorState = handleBlockType(editorState, character);
   if (editorState === newEditorState) {
@@ -35,7 +35,7 @@ function _handleCharacter(editorState, character) {
   return newEditorState;
 }
 
-function _handleReturn(editorState, ev) {
+function checkReturnForState(editorState, ev) {
   let newEditorState = editorState;
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
@@ -116,7 +116,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     },
     handleReturn(ev, { setEditorState, getEditorState }) {
       const editorState = getEditorState();
-      const newEditorState = _handleReturn(editorState, ev);
+      const newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
         return 'handled';
@@ -128,7 +128,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
         return 'not-handled';
       }
       const editorState = getEditorState();
-      const newEditorState = _handleCharacter(editorState, character);
+      const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
         return 'handled';
@@ -139,15 +139,15 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       const editorState = getEditorState();
       let newEditorState = editorState;
       let buffer = [];
-      for (let i = 0; i < text.length; i++) {
+      for (let i = 0; i < text.length; i++) { // eslint-disable-line
         if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
           newEditorState = addText(newEditorState, buffer.join('') + text[i]);
-          newEditorState = _handleCharacter(newEditorState, text[i]);
+          newEditorState = checkCharacterForState(newEditorState, text[i]);
           buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
           newEditorState = addText(newEditorState, buffer.join(''));
           newEditorState = addEmptyBlock(newEditorState);
-          newEditorState = _handleReturn(newEditorState, {});
+          newEditorState = checkReturnForState(newEditorState, {});
           buffer = [];
         } else if (i === text.length - 1) {
           newEditorState = addText(newEditorState, buffer.join('') + text[i]);
