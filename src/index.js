@@ -16,7 +16,48 @@ import leaveList from './modifiers/leaveList';
 import insertText from './modifiers/insertText';
 import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
+import { addText, addEmptyBlock } from './utils';
 
+const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
+
+function checkCharacterForState(editorState, character) {
+  let newEditorState = handleBlockType(editorState, character);
+  if (editorState === newEditorState) {
+    newEditorState = handleImage(editorState, character);
+  }
+  if (editorState === newEditorState) {
+    newEditorState = handleLink(editorState, character);
+  }
+  if (editorState === newEditorState) {
+    newEditorState = handleInlineStyle(editorState, character);
+  }
+  return newEditorState;
+}
+
+function checkReturnForState(editorState, ev) {
+  let newEditorState = editorState;
+  const contentState = editorState.getCurrentContent();
+  const selection = editorState.getSelection();
+  const key = selection.getStartKey();
+  const currentBlock = contentState.getBlockForKey(key);
+  const type = currentBlock.getType();
+  const text = currentBlock.getText();
+  if (/-list-item$/.test(type) && text === '') {
+    newEditorState = leaveList(editorState);
+  }
+  if (newEditorState === editorState &&
+    (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type))) {
+    newEditorState = insertEmptyBlock(editorState);
+  }
+  if (newEditorState === editorState && type === 'code-block') {
+    newEditorState = insertText(editorState, '\n');
+  }
+  if (newEditorState === editorState) {
+    newEditorState = handleNewCodeBlock(editorState);
+  }
+
+  return newEditorState;
+}
 
 const createMarkdownShortcutsPlugin = (config = {}) => {
   const store = {};
@@ -35,34 +76,6 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;
-    },
-    handleReturn(ev, { setEditorState, getEditorState }) {
-      const editorState = getEditorState();
-      let newEditorState = editorState;
-      const contentState = editorState.getCurrentContent();
-      const selection = editorState.getSelection();
-      const key = selection.getStartKey();
-      const currentBlock = contentState.getBlockForKey(key);
-      const type = currentBlock.getType();
-      const text = currentBlock.getText();
-      if (/-list-item$/.test(type) && text === '') {
-        newEditorState = leaveList(editorState);
-      }
-      if (newEditorState === editorState &&
-        (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type))) {
-        newEditorState = insertEmptyBlock(editorState);
-      }
-      if (newEditorState === editorState && type === 'code-block') {
-        newEditorState = insertText(editorState, '\n');
-      }
-      if (newEditorState === editorState) {
-        newEditorState = handleNewCodeBlock(editorState);
-      }
-      if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
-        return 'handled';
-      }
-      return 'not-handled';
     },
     blockStyleFn(block) {
       switch (block.getType()) {
@@ -100,21 +113,49 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     },
+    handleReturn(ev, { setEditorState, getEditorState }) {
+      const editorState = getEditorState();
+      const newEditorState = checkReturnForState(editorState, ev);
+      if (editorState !== newEditorState) {
+        setEditorState(newEditorState);
+        return 'handled';
+      }
+      return 'not-handled';
+    },
     handleBeforeInput(character, { getEditorState, setEditorState }) {
       if (character !== ' ') {
         return 'not-handled';
       }
       const editorState = getEditorState();
-      let newEditorState = handleBlockType(editorState, character);
-      if (editorState === newEditorState) {
-        newEditorState = handleImage(editorState, character);
+      const newEditorState = checkCharacterForState(editorState, character);
+      if (editorState !== newEditorState) {
+        setEditorState(newEditorState);
+        return 'handled';
       }
-      if (editorState === newEditorState) {
-        newEditorState = handleLink(editorState, character);
+      return 'not-handled';
+    },
+    handlePastedText(text, html, { getEditorState, setEditorState }) {
+      const editorState = getEditorState();
+      let newEditorState = editorState;
+      let buffer = [];
+      for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
+        if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
+          newEditorState = addText(newEditorState, buffer.join('') + text[i]);
+          newEditorState = checkCharacterForState(newEditorState, text[i]);
+          buffer = [];
+        } else if (text[i].charCodeAt(0) === 10) {
+          newEditorState = addText(newEditorState, buffer.join(''));
+          newEditorState = addEmptyBlock(newEditorState);
+          newEditorState = checkReturnForState(newEditorState, {});
+          buffer = [];
+        } else if (i === text.length - 1) {
+          newEditorState = addText(newEditorState, buffer.join('') + text[i]);
+          buffer = [];
+        } else {
+          buffer.push(text[i]);
+        }
       }
-      if (editorState === newEditorState) {
-        newEditorState = handleInlineStyle(editorState, character);
-      }
+
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
         return 'handled';
