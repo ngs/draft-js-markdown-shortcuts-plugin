@@ -21,7 +21,6 @@ import { addText, addEmptyBlock } from './utils';
 const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
 
 function checkCharacterForState(editorState, character) {
-  if (INLINE_STYLE_CHARACTERS.indexOf(character) === -1) { return editorState; }
   let newEditorState = handleBlockType(editorState, character);
   if (editorState === newEditorState) {
     newEditorState = handleImage(editorState, character);
