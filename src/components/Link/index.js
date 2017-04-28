@@ -1,8 +1,7 @@
 import React from 'react';
-import { Entity } from 'draft-js';
 
 const Link = (props) => {
-  const { href, title } = Entity.get(props.entityKey).getData();
+  const { href, title } = props.contentState.getEntity(props.entityKey).getData();
   return (
     <a href={href} title={title}>
       {props.children}

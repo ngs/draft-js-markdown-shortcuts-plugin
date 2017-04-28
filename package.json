@@ -61,7 +61,7 @@
     "css-loader": "^0.26.0",
     "css-modules-require-hook": "^4.0.5",
     "dirty-chai": "^1.2.2",
-    "draft-js-plugins-editor": "2.0.0-beta7",
+    "draft-js-plugins-editor": "2.0.0-beta10",
     "draft-js-prism": "ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb",
     "enzyme": "^2.6.0",
     "eslint": "^3.11.1",
@@ -83,8 +83,10 @@
     "nyc": "^10.0.0",
     "postcss-loader": "^1.1.1",
     "prismjs": "^1.6.0",
+    "react": "^15.4.1",
     "react-addons-pure-render-mixin": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
+    "react-dom": "^15.4.1",
     "react-github-fork-ribbon": "^0.4.4",
     "rimraf": "^2.5.4",
     "sinon": "^1.17.6",
@@ -97,17 +99,17 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
-    "draft-js-plugins-editor": "2.0.0-beta7"
+    "draft-js-plugins-editor": "2.0.0-beta10",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0"
   },
   "contributors": [
     "Atsushi Nagase <a@ngs.io>"
   ],
   "dependencies": {
     "decorate-component-with-props": "^1.0.2",
-    "draft-js": "^0.9.1",
-    "draft-js-checkable-list-item": "^2.0.2",
-    "immutable": "^3.8.1",
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1"
+    "draft-js": "~0.10.0",
+    "draft-js-checkable-list-item": "^2.0.4",
+    "immutable": "~3.7.4"
   }
 }

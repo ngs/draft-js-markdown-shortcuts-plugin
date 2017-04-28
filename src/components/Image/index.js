@@ -1,8 +1,7 @@
 import React from 'react';
-import { Entity } from 'draft-js';
 
-const Image = ({ entityKey, children }) => {
-  const { src, alt, title } = Entity.get(entityKey).getData();
+const Image = ({ entityKey, children, contentState }) => {
+  const { src, alt, title } = contentState.getEntity(entityKey).getData();
   return (
     <span>
       {children}
