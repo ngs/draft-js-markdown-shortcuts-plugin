@@ -305,6 +305,51 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           });
         });
       });
+      describe('handlePastedText', () => {
+        let pastedText;
+        let html;
+        beforeEach(() => {
+          pastedText = `_hello world_
+          Hello`;
+          subject = () => plugin.handlePastedText(pastedText, html, store);
+        });
+        [
+          'addText',
+          'addEmptyBlock',
+          'handleBlockType',
+          'handleImage',
+          'handleLink',
+          'handleInlineStyle'
+        ].forEach((modifier) => {
+          describe(modifier, () => {
+            beforeEach(() => {
+              createMarkdownShortcutsPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
+            });
+            it('returns handled', () => {
+              expect(subject()).to.equal('handled');
+              expect(modifierSpy).to.have.been.called();
+            });
+          });
+        });
+        describe('nothing in clipboard', () => {
+          beforeEach(() => {
+            pastedText = '';
+          });
+          it('returns not-handled', () => {
+            expect(subject()).to.equal('not-handled');
+          });
+        });
+        describe('pasted just text', () => {
+          beforeEach(() => {
+            pastedText = 'hello';
+            createMarkdownShortcutsPlugin.__Rewire__('addText', modifierSpy); // eslint-disable-line no-underscore-dangle
+          });
+          it('returns handled', () => {
+            expect(subject()).to.equal('handled');
+            expect(modifierSpy).to.have.been.calledWith(currentEditorState, 'hello');
+          });
+        });
+      });
     });
   });
 });
