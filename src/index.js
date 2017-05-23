@@ -16,7 +16,7 @@ import leaveList from './modifiers/leaveList';
 import insertText from './modifiers/insertText';
 import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
-import { addText, addEmptyBlock } from './utils';
+import { replaceText, addEmptyBlock } from './utils';
 
 const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
 
@@ -140,16 +140,16 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       let buffer = [];
       for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
         if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
-          newEditorState = addText(newEditorState, buffer.join('') + text[i]);
+          newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
           newEditorState = checkCharacterForState(newEditorState, text[i]);
           buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
-          newEditorState = addText(newEditorState, buffer.join(''));
+          newEditorState = replaceText(newEditorState, buffer.join(''));
           newEditorState = addEmptyBlock(newEditorState);
           newEditorState = checkReturnForState(newEditorState, {});
           buffer = [];
         } else if (i === text.length - 1) {
-          newEditorState = addText(newEditorState, buffer.join('') + text[i]);
+          newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
           buffer = [];
         } else {
           buffer.push(text[i]);
