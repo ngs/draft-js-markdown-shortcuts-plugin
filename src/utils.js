@@ -14,6 +14,11 @@ export function addText(editorState, bufferText) {
   return EditorState.push(editorState, contentState, 'insert-characters');
 }
 
+export function replaceText(editorState, bufferText) {
+  const contentState = Modifier.replaceText(editorState.getCurrentContent(), editorState.getSelection(), bufferText);
+  return EditorState.push(editorState, contentState, 'insert-characters');
+}
+
 export function addEmptyBlock(editorState) {
   let contentState = editorState.getCurrentContent();
   const emptyBlock = getEmptyContentBlock();

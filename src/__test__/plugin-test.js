@@ -314,7 +314,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           subject = () => plugin.handlePastedText(pastedText, html, store);
         });
         [
-          'addText',
+          'replaceText',
           'addEmptyBlock',
           'handleBlockType',
           'handleImage',
@@ -342,7 +342,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
         describe('pasted just text', () => {
           beforeEach(() => {
             pastedText = 'hello';
-            createMarkdownShortcutsPlugin.__Rewire__('addText', modifierSpy); // eslint-disable-line no-underscore-dangle
+            createMarkdownShortcutsPlugin.__Rewire__('replaceText', modifierSpy); // eslint-disable-line no-underscore-dangle
           });
           it('returns handled', () => {
             expect(subject()).to.equal('handled');
