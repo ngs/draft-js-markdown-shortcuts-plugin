@@ -16,7 +16,7 @@ import leaveList from './modifiers/leaveList';
 import insertText from './modifiers/insertText';
 import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
-import { replaceText, addEmptyBlock } from './utils';
+import { replaceText } from './utils';
 
 const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
 
@@ -135,6 +135,9 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       return 'not-handled';
     },
     handlePastedText(text, html, { getEditorState, setEditorState }) {
+      if (html) {
+        return 'not-handled';
+      }
       const editorState = getEditorState();
       let newEditorState = editorState;
       let buffer = [];
@@ -145,7 +148,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
           buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
           newEditorState = replaceText(newEditorState, buffer.join(''));
-          newEditorState = addEmptyBlock(newEditorState);
+          newEditorState = insertEmptyBlock(newEditorState);
           newEditorState = checkReturnForState(newEditorState, {});
           buffer = [];
         } else if (i === text.length - 1) {

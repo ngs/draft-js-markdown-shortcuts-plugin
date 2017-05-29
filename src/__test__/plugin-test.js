@@ -315,7 +315,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
         });
         [
           'replaceText',
-          'addEmptyBlock',
+          'insertEmptyBlock',
           'handleBlockType',
           'handleImage',
           'handleLink',
@@ -347,6 +347,15 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           it('returns handled', () => {
             expect(subject()).to.equal('handled');
             expect(modifierSpy).to.have.been.calledWith(currentEditorState, 'hello');
+          });
+        });
+        describe('passed `html` argument', () => {
+          beforeEach(() => {
+            pastedText = '# hello';
+            html = '<h1>hello</h1>';
+          });
+          it('returns not-handled', () => {
+            expect(subject()).to.equal('not-handled');
           });
         });
       });
