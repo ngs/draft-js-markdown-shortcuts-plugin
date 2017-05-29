@@ -17,8 +17,19 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
     createMarkdownShortcutsPlugin.__ResetDependency__('handleLink');
     createMarkdownShortcutsPlugin.__ResetDependency__('handleImage');
     createMarkdownShortcutsPlugin.__ResetDependency__('leaveList');
+    createMarkdownShortcutsPlugin.__ResetDependency__('changeCurrentBlockType');
+    createMarkdownShortcutsPlugin.__ResetDependency__('replaceText');
+    createMarkdownShortcutsPlugin.__ResetDependency__('checkReturnForState');
     /* eslint-enable no-underscore-dangle */
   });
+
+  const createEditorState = (rawContent, rawSelection) => {
+    const contentState = Draft.convertFromRaw(rawContent);
+    return EditorState.forceSelection(
+      EditorState.createWithContent(contentState),
+      rawSelection
+    );
+  };
 
   let plugin;
   let store;
@@ -67,10 +78,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
       store = {
         setEditorState: sinon.spy(),
         getEditorState: sinon.spy(() => {
-          const contentState = Draft.convertFromRaw(currentRawContentState);
-          currentEditorState = EditorState.forceSelection(
-            EditorState.createWithContent(contentState),
-            currentSelectionState);
+          currentEditorState = createEditorState(currentRawContentState, currentSelectionState);
           return currentEditorState;
         })
       };
@@ -178,6 +186,23 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           expect(subject()).to.equal('handled');
           expect(modifierSpy).to.have.been.calledOnce();
           expect(store.setEditorState).to.have.been.calledWith(newEditorState);
+        });
+        it('handle code block closing', () => {
+          createMarkdownShortcutsPlugin.__Rewire__('changeCurrentBlockType', modifierSpy); // eslint-disable-line no-underscore-dangle
+          currentRawContentState = {
+            entityMap: {},
+            blocks: [{
+              key: 'item1',
+              text: 'foo\n```',
+              type: 'code-block',
+              depth: 0,
+              inlineStyleRanges: [],
+              entityRanges: [],
+              data: {}
+            }]
+          };
+          expect(subject()).to.equal('handled');
+          expect(modifierSpy).to.have.been.calledOnce();
         });
         it('insert new line char from code-block', () => {
           createMarkdownShortcutsPlugin.__Rewire__('insertText', modifierSpy); // eslint-disable-line no-underscore-dangle
@@ -311,6 +336,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
         beforeEach(() => {
           pastedText = `_hello world_
           Hello`;
+          html = undefined;
           subject = () => plugin.handlePastedText(pastedText, html, store);
         });
         [
@@ -347,6 +373,42 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           it('returns handled', () => {
             expect(subject()).to.equal('handled');
             expect(modifierSpy).to.have.been.calledWith(currentEditorState, 'hello');
+          });
+        });
+        describe('pasted just text with new line code', () => {
+          beforeEach(() => {
+            pastedText = 'hello\nworld';
+            const rawContentState = {
+              entityMap: {},
+              blocks: [{
+                key: 'item1',
+                text: '',
+                type: 'unstyled',
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {}
+              }]
+            };
+            const otherRawContentState = {
+              entityMap: {},
+              blocks: [{
+                key: 'item2',
+                text: 'H1',
+                type: 'header-one',
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {}
+              }]
+            };
+            /* eslint-disable no-underscore-dangle */
+            createMarkdownShortcutsPlugin.__Rewire__('replaceText', () => createEditorState(rawContentState, currentSelectionState));
+            createMarkdownShortcutsPlugin.__Rewire__('checkReturnForState', () => createEditorState(otherRawContentState, currentSelectionState));
+            /* eslint-enable no-underscore-dangle */
+          });
+          it('return handled', () => {
+            expect(subject()).to.equal('handled');
           });
         });
         describe('passed `html` argument', () => {

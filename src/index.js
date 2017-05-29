@@ -14,6 +14,7 @@ import handleLink from './modifiers/handleLink';
 import handleImage from './modifiers/handleImage';
 import leaveList from './modifiers/leaveList';
 import insertText from './modifiers/insertText';
+import changeCurrentBlockType from './modifiers/changeCurrentBlockType';
 import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
 import { replaceText } from './utils';
@@ -49,11 +50,16 @@ function checkReturnForState(editorState, ev) {
     (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type))) {
     newEditorState = insertEmptyBlock(editorState);
   }
-  if (newEditorState === editorState && type === 'code-block') {
-    newEditorState = insertText(editorState, '\n');
-  }
-  if (newEditorState === editorState) {
+  if (newEditorState === editorState && type !== 'code-block' && /^```([\w-]+)?$/.test(text)) {
     newEditorState = handleNewCodeBlock(editorState);
+  }
+  if (newEditorState === editorState && type === 'code-block') {
+    if (/```\s*$/.test(text)) {
+      newEditorState = changeCurrentBlockType(newEditorState, type, text.replace(/\n```\s*$/, ''));
+      newEditorState = insertEmptyBlock(newEditorState);
+    } else {
+      newEditorState = insertText(editorState, '\n');
+    }
   }
 
   return newEditorState;
@@ -148,8 +154,12 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
           buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
           newEditorState = replaceText(newEditorState, buffer.join(''));
-          newEditorState = insertEmptyBlock(newEditorState);
-          newEditorState = checkReturnForState(newEditorState, {});
+          const tmpEditorState = checkReturnForState(newEditorState, {});
+          if (newEditorState === tmpEditorState) {
+            newEditorState = insertEmptyBlock(tmpEditorState);
+          } else {
+            newEditorState = tmpEditorState;
+          }
           buffer = [];
         } else if (i === text.length - 1) {
           newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
