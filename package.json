@@ -61,7 +61,7 @@
     "css-loader": "^0.26.0",
     "css-modules-require-hook": "^4.0.5",
     "dirty-chai": "^1.2.2",
-    "draft-js-plugins-editor": "2.0.0-beta10",
+    "draft-js-plugins-editor": "2.0.0-rc2",
     "draft-js-prism": "ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb",
     "enzyme": "^2.6.0",
     "eslint": "^3.11.1",
@@ -99,7 +99,7 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
-    "draft-js-plugins-editor": "2.0.0-beta10",
+    "draft-js-plugins-editor": "2.0.0-rc2",
     "react": "^15.0.0",
     "react-dom": "^15.0.0"
   },
