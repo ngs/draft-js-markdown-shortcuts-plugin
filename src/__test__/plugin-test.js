@@ -99,7 +99,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
       });
       describe('handleReturn', () => {
         beforeEach(() => {
-          subject = () => plugin.handleReturn(event, store);
+          subject = () => plugin.handleReturn(event, store.getEditorState(), store);
         });
         it('does not handle', () => {
           currentRawContentState = {
@@ -298,7 +298,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
         let character;
         beforeEach(() => {
           character = ' ';
-          subject = () => plugin.handleBeforeInput(character, store);
+          subject = () => plugin.handleBeforeInput(character, store.getEditorState(), store);
         });
         [
           'handleBlockType',
@@ -337,7 +337,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           pastedText = `_hello world_
           Hello`;
           html = undefined;
-          subject = () => plugin.handlePastedText(pastedText, html, store);
+          subject = () => plugin.handlePastedText(pastedText, html, store.getEditorState(), store);
         });
         [
           'replaceText',
