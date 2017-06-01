@@ -119,8 +119,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     },
-    handleReturn(ev, { setEditorState, getEditorState }) {
-      const editorState = getEditorState();
+    handleReturn(ev, editorState, { setEditorState, getEditorState }) {
       const newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
@@ -128,11 +127,10 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     },
-    handleBeforeInput(character, { getEditorState, setEditorState }) {
+    handleBeforeInput(character, editorState, { getEditorState, setEditorState }) {
       if (character !== ' ') {
         return 'not-handled';
       }
-      const editorState = getEditorState();
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
@@ -140,11 +138,10 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     },
-    handlePastedText(text, html, { getEditorState, setEditorState }) {
+    handlePastedText(text, html, editorState, { getEditorState, setEditorState }) {
       if (html) {
         return 'not-handled';
       }
-      const editorState = getEditorState();
       let newEditorState = editorState;
       let buffer = [];
       for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
