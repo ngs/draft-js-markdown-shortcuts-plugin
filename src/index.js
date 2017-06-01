@@ -119,7 +119,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     },
-    handleReturn(ev, editorState, { setEditorState, getEditorState }) { // eslint-disable-line no-unused-vars
+    handleReturn(ev, editorState, { setEditorState }) {
       const newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
@@ -127,7 +127,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     },
-    handleBeforeInput(character, editorState, { getEditorState, setEditorState }) { // eslint-disable-line no-unused-vars
+    handleBeforeInput(character, editorState, { setEditorState }) {
       if (character !== ' ') {
         return 'not-handled';
       }
@@ -138,7 +138,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       }
       return 'not-handled';
     },
-    handlePastedText(text, html, editorState, { getEditorState, setEditorState }) { // eslint-disable-line no-unused-vars
+    handlePastedText(text, html, editorState, { setEditorState }) {
       if (html) {
         return 'not-handled';
       }
