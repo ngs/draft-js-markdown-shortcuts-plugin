@@ -1,6 +1,6 @@
 {
   "name": "draft-js-markdown-shortcuts-plugin",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A DraftJS plugin for supporting Markdown syntax shortcuts",
   "main": "lib/index.js",
   "scripts": {
@@ -99,7 +99,7 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
-    "draft-js-plugins-editor": "~2.0.0-rc2",
+    "draft-js-plugins-editor": "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
     "react": "^15.0.0",
     "react-dom": "^15.0.0"
   },
@@ -109,7 +109,7 @@
   "dependencies": {
     "decorate-component-with-props": "^1.0.2",
     "draft-js": "~0.10.1",
-    "draft-js-checkable-list-item": "^2.0.4",
+    "draft-js-checkable-list-item": "^2.0.5",
     "immutable": "~3.7.4"
   }
 }
