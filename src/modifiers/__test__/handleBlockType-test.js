@@ -37,7 +37,40 @@ describe('handleBlockType', () => {
       );
     });
   });
-
+  describe('if current block type is `code-block`', () => {
+    const rawContentState = {
+      entityMap: {},
+      blocks: [{
+        key: 'item1',
+        text: '#code block',
+        type: 'code-block',
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        data: {}
+      }]
+    };
+    const contentState = Draft.convertFromRaw(rawContentState);
+    const selection = new SelectionState({
+      anchorKey: 'item1',
+      anchorOffset: 1,
+      focusKey: 'item1',
+      focusOffset: 1,
+      isBackward: false,
+      hasFocus: true
+    });
+    const editorState = EditorState.forceSelection(
+      EditorState.createWithContent(contentState), selection);
+    it('does not convert block type', () => {
+      const newEditorState = handleBlockType(editorState, ' ');
+      expect(newEditorState).to.equal(editorState);
+      expect(
+        Draft.convertToRaw(newEditorState.getCurrentContent())
+      ).to.deep.equal(
+        rawContentState
+      );
+    });
+  });
   const testCases = {
     'converts from unstyled to header-one': {
       before: {
