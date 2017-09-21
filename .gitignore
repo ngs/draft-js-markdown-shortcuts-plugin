@@ -41,4 +41,3 @@ demo/public
 .deploy
 test-results.xml
 
-yarn.lock
