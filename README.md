@@ -4,9 +4,7 @@ draft-js-markdown-plugin
 [![npm](https://img.shields.io/npm/v/draft-js-markdown-plugin.svg)][npm]
 <!-- [![Coverage Status](https://coveralls.io/repos/github/withspectrum/draft-js-markdown-plugin/badge.svg?branch=master)](https://coveralls.io/github/withspectrum/draft-js-markdown-plugin?branch=master) -->
 
-A [DraftJS] plugin for supporting Markdown syntax shortcuts
-
-This plugin works with [DraftJS Plugins] wrapper component.
+A [DraftJS] plugin for supporting Markdown syntax shortcuts in DraftJS. This plugin works with [DraftJS Plugins], and is a fork of the excellent [`draft-js-markdown-shortcuts-plugin`](https://github.com/ngs/draft-js-markdown-shortcuts-plugin) by [@ngs](https://github.com/ngs).
 
 ![screen](screen.gif)
 
@@ -57,15 +55,15 @@ export default class DemoEditor extends Component {
 }
 ```
 
+## Why fork the `markdown-shortcuts-plugin`?
+
+Writing is a core part of our app, and while the `markdown-shortcuts-plugin` is awesome and battle-tested there are a few opinionated things we wanted to do differently. Rather than bother [@ngs](https://github.com/ngs) with tons of PRs, we figured it'd be better to own that core part of our experience fully. 
+
 ## License
 
 Licensed under the MIT license, Copyright Ⓒ 2017 Space Program Inc. This plugin is forked from the excellent [`draft-js-markdown-shortcuts-plugin`](https://github.com/ngs/draft-js-markdown-shortcuts-plugin) by [Atsushi Nagase](https://github.com/ngs).
 
 See [LICENSE] for the full license text.
-
-## Why fork the `markdown-shortcuts-plugin`?
-
-Writing is a core part of our app, and while the `markdown-shortcuts-plugin` is awesome and battle-tested there are a few opinionated things we wanted to do differently. Rather than bother [@ngs](https://github.com/ngs) with tons of PRs, we figured it'd be better to own that core part of our experience fully. 
 
 [Demo]: https://ngs.github.io/draft-js-markdown-plugin
 [DraftJS]: https://facebook.github.io/draft-js/
