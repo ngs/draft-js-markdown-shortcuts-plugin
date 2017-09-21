@@ -6,22 +6,22 @@ import {
 } from "draft-js-checkable-list-item";
 
 import { Map, List } from "immutable";
-import createMarkdownShortcutsPlugin from "../";
+import createMarkdownPlugin from "../";
 
-describe("draft-js-markdown-shortcuts-plugin", () => {
+describe("draft-js-markdown-plugin", () => {
   afterEach(() => {
     /* eslint-disable no-underscore-dangle */
-    createMarkdownShortcutsPlugin.__ResetDependency__("adjustBlockDepth");
-    createMarkdownShortcutsPlugin.__ResetDependency__("handleBlockType");
-    createMarkdownShortcutsPlugin.__ResetDependency__("handleInlineStyle");
-    createMarkdownShortcutsPlugin.__ResetDependency__("handleNewCodeBlock");
-    createMarkdownShortcutsPlugin.__ResetDependency__("insertEmptyBlock");
-    createMarkdownShortcutsPlugin.__ResetDependency__("handleLink");
-    createMarkdownShortcutsPlugin.__ResetDependency__("handleImage");
-    createMarkdownShortcutsPlugin.__ResetDependency__("leaveList");
-    createMarkdownShortcutsPlugin.__ResetDependency__("changeCurrentBlockType");
-    createMarkdownShortcutsPlugin.__ResetDependency__("replaceText");
-    createMarkdownShortcutsPlugin.__ResetDependency__("checkReturnForState");
+    createMarkdownPlugin.__ResetDependency__("adjustBlockDepth");
+    createMarkdownPlugin.__ResetDependency__("handleBlockType");
+    createMarkdownPlugin.__ResetDependency__("handleInlineStyle");
+    createMarkdownPlugin.__ResetDependency__("handleNewCodeBlock");
+    createMarkdownPlugin.__ResetDependency__("insertEmptyBlock");
+    createMarkdownPlugin.__ResetDependency__("handleLink");
+    createMarkdownPlugin.__ResetDependency__("handleImage");
+    createMarkdownPlugin.__ResetDependency__("leaveList");
+    createMarkdownPlugin.__ResetDependency__("changeCurrentBlockType");
+    createMarkdownPlugin.__ResetDependency__("replaceText");
+    createMarkdownPlugin.__ResetDependency__("checkReturnForState");
     /* eslint-enable no-underscore-dangle */
   });
 
@@ -93,11 +93,11 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
 
     describe(args.length === 0 ? "without config" : "with config", () => {
       beforeEach(() => {
-        plugin = createMarkdownShortcutsPlugin(...args);
+        plugin = createMarkdownPlugin(...args);
       });
 
       it("is loaded", () => {
-        expect(typeof createMarkdownShortcutsPlugin).toBe("function");
+        expect(typeof createMarkdownPlugin).toBe("function");
       });
       it("initialize", () => {
         plugin.initialize(store);
@@ -128,7 +128,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
           expect(store.setEditorState).not.toHaveBeenCalled();
         });
         it("leaves from list", () => {
-          createMarkdownShortcutsPlugin.__Rewire__("leaveList", modifierSpy); // eslint-disable-line no-underscore-dangle
+          createMarkdownPlugin.__Rewire__("leaveList", modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -148,10 +148,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
           expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
         });
         const testInsertNewBlock = type => () => {
-          createMarkdownShortcutsPlugin.__Rewire__(
-            "insertEmptyBlock",
-            modifierSpy
-          ); // eslint-disable-line no-underscore-dangle
+          createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -189,10 +186,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
           });
         });
         it("handles new code block", () => {
-          createMarkdownShortcutsPlugin.__Rewire__(
-            "handleNewCodeBlock",
-            modifierSpy
-          ); // eslint-disable-line no-underscore-dangle
+          createMarkdownPlugin.__Rewire__("handleNewCodeBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -212,7 +206,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
           expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
         });
         it("handle code block closing", () => {
-          createMarkdownShortcutsPlugin.__Rewire__(
+          createMarkdownPlugin.__Rewire__(
             "changeCurrentBlockType",
             modifierSpy
           ); // eslint-disable-line no-underscore-dangle
@@ -234,7 +228,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
           expect(modifierSpy).toHaveBeenCalledTimes(1);
         });
         it("insert new line char from code-block", () => {
-          createMarkdownShortcutsPlugin.__Rewire__("insertText", modifierSpy); // eslint-disable-line no-underscore-dangle
+          createMarkdownPlugin.__Rewire__("insertText", modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -317,10 +311,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
       describe("onTab", () => {
         beforeEach(() => {
           subject = () => {
-            createMarkdownShortcutsPlugin.__Rewire__(
-              "adjustBlockDepth",
-              modifierSpy
-            ); // eslint-disable-line no-underscore-dangle
+            createMarkdownPlugin.__Rewire__("adjustBlockDepth", modifierSpy); // eslint-disable-line no-underscore-dangle
             return plugin.onTab(event, store);
           };
         });
@@ -349,7 +340,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
         ].forEach(modifier => {
           describe(modifier, () => {
             beforeEach(() => {
-              createMarkdownShortcutsPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
+              createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
             });
             it("returns handled", () => {
               expect(subject()).toBe("handled");
@@ -397,7 +388,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
         ].forEach(modifier => {
           describe(modifier, () => {
             beforeEach(() => {
-              createMarkdownShortcutsPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
+              createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
             });
             it("returns handled", () => {
               expect(subject()).toBe("handled");
@@ -416,10 +407,7 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
         describe("pasted just text", () => {
           beforeEach(() => {
             pastedText = "hello";
-            createMarkdownShortcutsPlugin.__Rewire__(
-              "replaceText",
-              modifierSpy
-            ); // eslint-disable-line no-underscore-dangle
+            createMarkdownPlugin.__Rewire__("replaceText", modifierSpy); // eslint-disable-line no-underscore-dangle
           });
           it("returns handled", () => {
             expect(subject()).toBe("handled");
@@ -461,13 +449,11 @@ describe("draft-js-markdown-shortcuts-plugin", () => {
               ],
             };
             /* eslint-disable no-underscore-dangle */
-            createMarkdownShortcutsPlugin.__Rewire__("replaceText", () =>
+            createMarkdownPlugin.__Rewire__("replaceText", () =>
               createEditorState(rawContentState, currentSelectionState)
             );
-            createMarkdownShortcutsPlugin.__Rewire__(
-              "checkReturnForState",
-              () =>
-                createEditorState(otherRawContentState, currentSelectionState)
+            createMarkdownPlugin.__Rewire__("checkReturnForState", () =>
+              createEditorState(otherRawContentState, currentSelectionState)
             );
             /* eslint-enable no-underscore-dangle */
           });

@@ -83,7 +83,7 @@ function checkReturnForState(editorState, ev) {
   return newEditorState;
 }
 
-const createMarkdownShortcutsPlugin = (config = {}) => {
+const createMarkdownPlugin = (config = {}) => {
   const store = {};
   return {
     store,
@@ -201,4 +201,4 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
   };
 };
 
-export default createMarkdownShortcutsPlugin;
+export default createMarkdownPlugin;
