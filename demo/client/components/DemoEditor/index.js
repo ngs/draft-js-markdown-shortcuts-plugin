@@ -9,7 +9,22 @@ import Draft, {
   EditorState,
 } from 'draft-js';
 import styles from './styles.css';
-import prismPlugin from '../../plugins/prism';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-scala';
+import 'prismjs/components/prism-go';
+import 'prismjs/components/prism-sql';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp';
+import 'prismjs/components/prism-kotlin';
+import 'prismjs/components/prism-perl';
+import 'prismjs/components/prism-ruby';
+import 'prismjs/components/prism-swift';
+import createPrismPlugin from 'draft-js-prism-plugin';
+const prismPlugin = createPrismPlugin({
+  prism: Prism,
+});
 
 window.Draft = Draft;
 
