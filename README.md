@@ -1,6 +1,7 @@
 draft-js-markdown-plugin
 ==================================
 
+[![Build Status](https://travis-ci.org/withspectrum/draft-js-markdown-plugin.svg?branch=master)](https://travis-ci.org/withspectrum/draft-js-markdown-plugin)
 [![npm](https://img.shields.io/npm/v/draft-js-markdown-plugin.svg)][npm]
 <!-- [![Coverage Status](https://coveralls.io/repos/github/withspectrum/draft-js-markdown-plugin/badge.svg?branch=master)](https://coveralls.io/github/withspectrum/draft-js-markdown-plugin?branch=master) -->
 
