@@ -25,7 +25,7 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 const prismPlugin = createPrismPlugin({
   prism: Prism,
 });
-console.log(prismPlugin)
+
 window.Draft = Draft;
 
 const plugins = [
