@@ -1,32 +1,35 @@
 {
   "name": "draft-js-markdown-plugin",
   "version": "0.4.0",
-  "description": "A DraftJS plugin for supporting Markdown syntax shortcuts, fork of draft-js-markdown-shortcuts-plugin",
+  "description":
+    "A DraftJS plugin for supporting Markdown syntax shortcuts, fork of draft-js-markdown-shortcuts-plugin",
   "main": "lib/index.js",
   "scripts": {
     "build": "npm run clean && npm run build:js",
-    "build:demo": "NODE_ENV=production webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
-    "build:js": "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",
-    "clean": "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
+    "build:demo":
+      "NODE_ENV=production webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
+    "build:js":
+      "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",
+    "clean":
+      "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
     "dev": "node_modules/.bin/babel-node ./demo/server.js",
-    "test": "jest"
+    "test": "jest",
+    "precommit": "lint-staged"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/withspectrum/draft-js-markdown-plugin.git"
   },
-  "keywords": [
-    "draftjs",
-    "editor",
-    "plugin",
-    "markdown"
-  ],
+  "keywords": ["draftjs", "editor", "plugin", "markdown"],
   "author": "Max Stoiber <contact@mxstbr.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/withspectrum/draft-js-markdown-plugin/issues"
   },
   "homepage": "https://github.com/withspectrum/draft-js-markdown-plugin#readme",
+  "lint-staged": {
+    "*.{js,json,css}": ["prettier --write", "git add"]
+  },
   "devDependencies": {
     "autoprefixer": "^6.5.3",
     "babel-cli": "^6.18.0",
@@ -47,7 +50,8 @@
     "css-modules-require-hook": "^4.0.5",
     "dirty-chai": "^1.2.2",
     "draft-js-plugins-editor": "2.0.0-rc2",
-    "draft-js-prism": "ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb",
+    "draft-js-prism":
+      "ngs/draft-js-prism#6edb31c3805dd1de3fb897cc27fced6bac1bafbb",
     "enzyme": "^2.6.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
@@ -60,13 +64,16 @@
     "file-loader": "^0.9.0",
     "flow-bin": "^0.36.0",
     "history": "^2.0.0",
+    "husky": "^0.14.3",
     "jsdom": "^9.8.3",
+    "lint-staged": "^4.2.1",
     "mocha": "^3.2.0",
     "mocha-junit-reporter": "^1.12.1",
     "mocha-multi-reporters": "^1.1.1",
     "npm-watch": "^0.1.6",
     "nyc": "^10.0.0",
     "postcss-loader": "^1.1.1",
+    "prettier": "^1.7.0",
     "prismjs": "^1.6.0",
     "react": "^15.4.1",
     "react-addons-pure-render-mixin": "^15.4.1",
@@ -84,13 +91,12 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
-    "draft-js-plugins-editor": "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
+    "draft-js-plugins-editor":
+      "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
     "react": "^15.0.0",
     "react-dom": "^15.0.0"
   },
-  "contributors": [
-    "Atsushi Nagase <a@ngs.io>"
-  ],
+  "contributors": ["Atsushi Nagase <a@ngs.io>"],
   "dependencies": {
     "decorate-component-with-props": "^1.0.2",
     "draft-js": "~0.10.1",
