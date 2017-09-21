@@ -1,12 +1,11 @@
-import { expect } from 'chai';
 import Draft, { EditorState, SelectionState } from 'draft-js';
 import insertEmptyBlock from '../modifiers/insertEmptyBlock';
 import { addText, replaceText } from '../utils';
 
 describe('utils test', () => {
   it('is loaded', () => {
-    expect(addText).to.be.a('function');
-    expect(replaceText).to.be.a('function');
+    expect(typeof addText).toBe('function');
+    expect(typeof replaceText).toBe('function');
   });
 
   const newRawContentState = {
@@ -28,9 +27,9 @@ describe('utils test', () => {
     newEditorState = insertEmptyBlock(newEditorState);
     newEditorState = addText(newEditorState, randomText);
     const currentContent = newEditorState.getCurrentContent();
-    expect(currentContent.hasText()).to.equal(true);
+    expect(currentContent.hasText()).toBe(true);
     const lastBlock = currentContent.getLastBlock();
-    expect(lastBlock.getText()).to.equal(randomText);
+    expect(lastBlock.getText()).toBe(randomText);
   });
 
   it('should replaceText', () => {
@@ -48,10 +47,10 @@ describe('utils test', () => {
 
     newEditorState = replaceText(newEditorState, randomText);
     currentContent = newEditorState.getCurrentContent();
-    expect(currentContent.hasText()).to.equal(true);
+    expect(currentContent.hasText()).toBe(true);
     lastBlock = currentContent.getLastBlock();
-    expect(lastBlock.getText()).to.equal(randomText);
+    expect(lastBlock.getText()).toBe(randomText);
     const firstBlock = currentContent.getFirstBlock();
-    expect(firstBlock.getText()).to.equal(randomText);
+    expect(firstBlock.getText()).toBe(randomText);
   });
 });

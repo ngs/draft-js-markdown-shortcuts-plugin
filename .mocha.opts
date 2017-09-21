@@ -1,4 +1,0 @@
---compilers js:babel-core/register
---recursive
---require testHelper.js
---reporter mocha-multi-reporters --reporter-options configFile=.mocha-multi-reporters.json
