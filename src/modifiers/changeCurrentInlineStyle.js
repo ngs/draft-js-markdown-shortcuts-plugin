@@ -1,4 +1,4 @@
-import { EditorState, SelectionState, Modifier } from 'draft-js';
+import { EditorState, SelectionState, Modifier } from "draft-js";
 
 const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const currentContent = editorState.getCurrentContent();
@@ -12,7 +12,7 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const focusOffset = index + matchArr[0].length;
   const wordSelection = SelectionState.createEmpty(key).merge({
     anchorOffset: index,
-    focusOffset
+    focusOffset,
   });
   let newContentState = Modifier.replaceText(
     currentContent,
@@ -23,14 +23,17 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   newContentState = Modifier.insertText(
     newContentState,
     newContentState.getSelectionAfter(),
-    ' '
+    " "
   );
   const newEditorState = EditorState.push(
     editorState,
     newContentState,
-    'change-inline-style'
+    "change-inline-style"
   );
-  return EditorState.forceSelection(newEditorState, newContentState.getSelectionAfter());
+  return EditorState.forceSelection(
+    newEditorState,
+    newContentState.getSelectionAfter()
+  );
 };
 
 export default changeCurrentInlineStyle;

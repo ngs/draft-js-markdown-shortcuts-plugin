@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Image = ({ entityKey, children, contentState }) => {
   const { src, alt, title } = contentState.getEntity(entityKey).getData();

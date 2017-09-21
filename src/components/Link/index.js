@@ -1,7 +1,9 @@
-import React from 'react';
+import React from "react";
 
-const Link = (props) => {
-  const { href, title } = props.contentState.getEntity(props.entityKey).getData();
+const Link = props => {
+  const { href, title } = props.contentState
+    .getEntity(props.entityKey)
+    .getData();
   return (
     <a href={href} title={title}>
       {props.children}

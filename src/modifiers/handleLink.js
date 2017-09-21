@@ -1,9 +1,12 @@
-import insertLink from './insertLink';
+import insertLink from "./insertLink";
 
 const handleLink = (editorState, character) => {
   const re = /\[([^\]]+)]\(([^)"]+)(?: "([^"]+)")?\)/g;
   const key = editorState.getSelection().getStartKey();
-  const text = editorState.getCurrentContent().getBlockForKey(key).getText();
+  const text = editorState
+    .getCurrentContent()
+    .getBlockForKey(key)
+    .getText();
   const line = `${text}${character}`;
   let newEditorState = editorState;
   let matchArr;

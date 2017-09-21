@@ -1,25 +1,28 @@
-import React from 'react';
+import React from "react";
 import {
-  blockRenderMap as checkboxBlockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
-} from 'draft-js-checkable-list-item';
+  blockRenderMap as checkboxBlockRenderMap,
+  CheckableListItem,
+  CheckableListItemUtils,
+  CHECKABLE_LIST_ITEM,
+} from "draft-js-checkable-list-item";
 
-import { Map } from 'immutable';
+import { Map } from "immutable";
 
-import adjustBlockDepth from './modifiers/adjustBlockDepth';
-import handleBlockType from './modifiers/handleBlockType';
-import handleInlineStyle from './modifiers/handleInlineStyle';
-import handleNewCodeBlock from './modifiers/handleNewCodeBlock';
-import insertEmptyBlock from './modifiers/insertEmptyBlock';
-import handleLink from './modifiers/handleLink';
-import handleImage from './modifiers/handleImage';
-import leaveList from './modifiers/leaveList';
-import insertText from './modifiers/insertText';
-import changeCurrentBlockType from './modifiers/changeCurrentBlockType';
-import createLinkDecorator from './decorators/link';
-import createImageDecorator from './decorators/image';
-import { replaceText } from './utils';
+import adjustBlockDepth from "./modifiers/adjustBlockDepth";
+import handleBlockType from "./modifiers/handleBlockType";
+import handleInlineStyle from "./modifiers/handleInlineStyle";
+import handleNewCodeBlock from "./modifiers/handleNewCodeBlock";
+import insertEmptyBlock from "./modifiers/insertEmptyBlock";
+import handleLink from "./modifiers/handleLink";
+import handleImage from "./modifiers/handleImage";
+import leaveList from "./modifiers/leaveList";
+import insertText from "./modifiers/insertText";
+import changeCurrentBlockType from "./modifiers/changeCurrentBlockType";
+import createLinkDecorator from "./decorators/link";
+import createImageDecorator from "./decorators/image";
+import { replaceText } from "./utils";
 
-const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
+const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
 
 function checkCharacterForState(editorState, character) {
   let newEditorState = handleBlockType(editorState, character);
@@ -43,22 +46,37 @@ function checkReturnForState(editorState, ev) {
   const currentBlock = contentState.getBlockForKey(key);
   const type = currentBlock.getType();
   const text = currentBlock.getText();
-  if (/-list-item$/.test(type) && text === '') {
+  if (/-list-item$/.test(type) && text === "") {
     newEditorState = leaveList(editorState);
   }
-  if (newEditorState === editorState &&
-    (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type) || type === 'blockquote')) {
+  if (
+    newEditorState === editorState &&
+    (ev.ctrlKey ||
+      ev.shiftKey ||
+      ev.metaKey ||
+      ev.altKey ||
+      /^header-/.test(type) ||
+      type === "blockquote")
+  ) {
     newEditorState = insertEmptyBlock(editorState);
   }
-  if (newEditorState === editorState && type !== 'code-block' && /^```([\w-]+)?$/.test(text)) {
+  if (
+    newEditorState === editorState &&
+    type !== "code-block" &&
+    /^```([\w-]+)?$/.test(text)
+  ) {
     newEditorState = handleNewCodeBlock(editorState);
   }
-  if (newEditorState === editorState && type === 'code-block') {
+  if (newEditorState === editorState && type === "code-block") {
     if (/```\s*$/.test(text)) {
-      newEditorState = changeCurrentBlockType(newEditorState, type, text.replace(/\n```\s*$/, ''));
+      newEditorState = changeCurrentBlockType(
+        newEditorState,
+        type,
+        text.replace(/\n```\s*$/, "")
+      );
       newEditorState = insertEmptyBlock(newEditorState);
     } else {
-      newEditorState = insertText(editorState, '\n');
+      newEditorState = insertText(editorState, "\n");
     }
   }
 
@@ -70,14 +88,14 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
   return {
     store,
     blockRenderMap: Map({
-      'code-block': {
-        element: 'code',
-        wrapper: <pre spellCheck={'false'} />
-      }
+      "code-block": {
+        element: "code",
+        wrapper: <pre spellCheck={"false"} />,
+      },
     }).merge(checkboxBlockRenderMap),
     decorators: [
       createLinkDecorator(config, store),
-      createImageDecorator(config, store)
+      createImageDecorator(config, store),
     ],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
@@ -99,10 +117,11 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
           return {
             component: CheckableListItem,
             props: {
-              onChangeChecked: () => setEditorState(
-                CheckableListItemUtils.toggleChecked(getEditorState(), block)
-              ),
-              checked: !!block.getData().get('checked'),
+              onChangeChecked: () =>
+                setEditorState(
+                  CheckableListItemUtils.toggleChecked(getEditorState(), block)
+                ),
+              checked: !!block.getData().get("checked"),
             },
           };
         }
@@ -115,42 +134,46 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       const newEditorState = adjustBlockDepth(editorState, ev);
       if (newEditorState !== editorState) {
         setEditorState(newEditorState);
-        return 'handled';
+        return "handled";
       }
-      return 'not-handled';
+      return "not-handled";
     },
     handleReturn(ev, editorState, { setEditorState }) {
       const newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
-        return 'handled';
+        return "handled";
       }
-      return 'not-handled';
+      return "not-handled";
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
-      if (character !== ' ') {
-        return 'not-handled';
+      if (character !== " ") {
+        return "not-handled";
       }
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
-        return 'handled';
+        return "handled";
       }
-      return 'not-handled';
+      return "not-handled";
     },
     handlePastedText(text, html, editorState, { setEditorState }) {
       if (html) {
-        return 'not-handled';
+        return "not-handled";
       }
       let newEditorState = editorState;
       let buffer = [];
-      for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
+      for (let i = 0; i < text.length; i++) {
+        // eslint-disable-line no-plusplus
         if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
-          newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
+          newEditorState = replaceText(
+            newEditorState,
+            buffer.join("") + text[i]
+          );
           newEditorState = checkCharacterForState(newEditorState, text[i]);
           buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
-          newEditorState = replaceText(newEditorState, buffer.join(''));
+          newEditorState = replaceText(newEditorState, buffer.join(""));
           const tmpEditorState = checkReturnForState(newEditorState, {});
           if (newEditorState === tmpEditorState) {
             newEditorState = insertEmptyBlock(tmpEditorState);
@@ -159,7 +182,10 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
           }
           buffer = [];
         } else if (i === text.length - 1) {
-          newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
+          newEditorState = replaceText(
+            newEditorState,
+            buffer.join("") + text[i]
+          );
           buffer = [];
         } else {
           buffer.push(text[i]);
@@ -168,10 +194,10 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
 
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
-        return 'handled';
+        return "handled";
       }
-      return 'not-handled';
-    }
+      return "not-handled";
+    },
   };
 };
 

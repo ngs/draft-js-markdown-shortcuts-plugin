@@ -1,7 +1,7 @@
-import changeCurrentBlockType from './changeCurrentBlockType';
-import insertEmptyBlock from './insertEmptyBlock';
+import changeCurrentBlockType from "./changeCurrentBlockType";
+import insertEmptyBlock from "./insertEmptyBlock";
 
-const handleNewCodeBlock = (editorState) => {
+const handleNewCodeBlock = editorState => {
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
@@ -14,11 +14,11 @@ const handleNewCodeBlock = (editorState) => {
     if (language) {
       data.language = language;
     }
-    return changeCurrentBlockType(editorState, 'code-block', '', data);
+    return changeCurrentBlockType(editorState, "code-block", "", data);
   }
   const type = currentBlock.getType();
-  if (type === 'code-block' && isLast) {
-    return insertEmptyBlock(editorState, 'code-block', currentBlock.getData());
+  if (type === "code-block" && isLast) {
+    return insertEmptyBlock(editorState, "code-block", currentBlock.getData());
   }
   return editorState;
 };

@@ -1,7 +1,7 @@
-import { genKey, ContentBlock, EditorState } from 'draft-js';
-import { List, Map } from 'immutable';
+import { genKey, ContentBlock, EditorState } from "draft-js";
+import { List, Map } from "immutable";
 
-const insertEmptyBlock = (editorState, blockType = 'unstyled', data = {}) => {
+const insertEmptyBlock = (editorState, blockType = "unstyled", data = {}) => {
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
@@ -11,24 +11,25 @@ const insertEmptyBlock = (editorState, blockType = 'unstyled', data = {}) => {
     characterList: List(),
     depth: 0,
     key: emptyBlockKey,
-    text: '',
+    text: "",
     type: blockType,
-    data: Map().merge(data)
+    data: Map().merge(data),
   });
   const blockMap = contentState.getBlockMap();
-  const blocksBefore = blockMap.toSeq().takeUntil((value) => value === currentBlock);
-  const blocksAfter = blockMap.toSeq().skipUntil((value) => value === currentBlock).rest();
+  const blocksBefore = blockMap
+    .toSeq()
+    .takeUntil(value => value === currentBlock);
+  const blocksAfter = blockMap
+    .toSeq()
+    .skipUntil(value => value === currentBlock)
+    .rest();
   const augmentedBlocks = [
-    [
-      currentBlock.getKey(),
-      currentBlock,
-    ],
-    [
-      emptyBlockKey,
-      emptyBlock,
-    ],
+    [currentBlock.getKey(), currentBlock],
+    [emptyBlockKey, emptyBlock],
   ];
-  const newBlocks = blocksBefore.concat(augmentedBlocks, blocksAfter).toOrderedMap();
+  const newBlocks = blocksBefore
+    .concat(augmentedBlocks, blocksAfter)
+    .toOrderedMap();
   const focusKey = emptyBlockKey;
   const newContentState = contentState.merge({
     blockMap: newBlocks,
@@ -41,11 +42,7 @@ const insertEmptyBlock = (editorState, blockType = 'unstyled', data = {}) => {
       isBackward: false,
     }),
   });
-  return EditorState.push(
-    editorState,
-    newContentState,
-    'split-block'
-  );
+  return EditorState.push(editorState, newContentState, "split-block");
 };
 
 export default insertEmptyBlock;

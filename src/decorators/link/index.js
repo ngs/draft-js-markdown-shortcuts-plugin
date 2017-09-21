@@ -1,5 +1,5 @@
-import createLinkStrategy from './linkStrategy';
-import Link from '../../components/Link';
+import createLinkStrategy from "./linkStrategy";
+import Link from "../../components/Link";
 
 const createLinkDecorator = (config, store) => ({
   strategy: createLinkStrategy(config, store),

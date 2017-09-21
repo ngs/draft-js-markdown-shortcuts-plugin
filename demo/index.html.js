@@ -1,5 +1,5 @@
-module.exports = (props) => {
-  const body = props && props.body ? props.body : '';
+module.exports = props => {
+  const body = props && props.body ? props.body : "";
   const template = `
   <!doctype html>
   <html lang="en">

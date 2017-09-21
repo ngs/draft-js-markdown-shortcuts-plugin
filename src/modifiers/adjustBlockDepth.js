@@ -1,5 +1,5 @@
-import { CheckableListItemUtils } from 'draft-js-checkable-list-item';
-import { RichUtils } from 'draft-js';
+import { CheckableListItemUtils } from "draft-js-checkable-list-item";
+import { RichUtils } from "draft-js";
 
 const adjustBlockDepth = (editorState, ev) => {
   const newEditorState = CheckableListItemUtils.onTab(ev, editorState, 4);

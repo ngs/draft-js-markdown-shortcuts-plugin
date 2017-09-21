@@ -1,8 +1,8 @@
 /* eslint-disable no-var */
-var path = require('path');
-var webpack = require('webpack');
-var webpackBaseConfig = require('./webpack.config.base');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var path = require("path");
+var webpack = require("webpack");
+var webpackBaseConfig = require("./webpack.config.base");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 // Set up dev host and HMR host. For the dev host this is pretty self
 // explanatory: We use a different live-reload server to serve our static JS
@@ -15,24 +15,24 @@ var DEV_HOST = `//localhost:${DEV_PORT}/`;
 var HMR_HOST = `${DEV_HOST}__webpack_hmr`;
 
 module.exports = Object.assign(webpackBaseConfig, {
-  devtool: 'inline-source-map',
+  devtool: "inline-source-map",
 
   entry: {
     app: [
       `webpack-hot-middleware/client?path=${HMR_HOST}`,
-      'babel-polyfill',
-      path.join(__dirname, 'client', 'index.js'),
+      "babel-polyfill",
+      path.join(__dirname, "client", "index.js"),
     ],
   },
 
   output: {
-    path: path.join(__dirname, 'public'),
-    filename: '[name].js',
+    path: path.join(__dirname, "public"),
+    filename: "[name].js",
     publicPath: DEV_HOST,
   },
 
   plugins: [
-    new ExtractTextPlugin('css/bundle.css', { disable: true }),
+    new ExtractTextPlugin("css/bundle.css", { disable: true }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
   ],

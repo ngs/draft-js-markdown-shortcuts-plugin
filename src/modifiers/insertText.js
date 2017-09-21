@@ -1,4 +1,4 @@
-import { EditorState, Modifier } from 'draft-js';
+import { EditorState, Modifier } from "draft-js";
 
 const insertText = (editorState, text) => {
   const selection = editorState.getSelection();
@@ -9,11 +9,7 @@ const insertText = (editorState, text) => {
     text,
     editorState.getCurrentInlineStyle()
   );
-  return EditorState.push(
-    editorState,
-    newContentState,
-    'insert-fragment'
-  );
+  return EditorState.push(editorState, newContentState, "insert-fragment");
 };
 
 export default insertText;
