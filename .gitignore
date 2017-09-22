@@ -41,3 +41,4 @@ demo/public
 .deploy
 test-results.xml
 
+*.swp
