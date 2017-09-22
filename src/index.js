@@ -140,7 +140,6 @@ const createMarkdownPlugin = (config = {}) => {
       return "not-handled";
     },
     handleReturn(ev, editorState, { setEditorState }) {
-      console.log("HANDLE RETURN");
       const newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
