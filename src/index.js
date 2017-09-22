@@ -152,6 +152,16 @@ const createMarkdownPlugin = (config = {}) => {
       if (character !== " ") {
         return "not-handled";
       }
+      // If we're in a code block don't add markdown to it
+      const startKey = editorState.getSelection().getStartKey();
+      if (startKey) {
+        const currentBlockType = editorState
+          .getCurrentContent()
+          .getBlockForKey(startKey)
+          .getType();
+        if (currentBlockType === "code-block") return "not-handled";
+      }
+
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
