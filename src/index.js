@@ -157,6 +157,35 @@ const createMarkdownPlugin = (config = {}) => {
       }
       return "not-handled";
     },
+    handleKeyCommand(command, editorState, { setEditorState }) {
+      switch (command) {
+        case "backspace": {
+          // When a styled block is the first thing in the editor,
+          // you cannot delete it. Typing backspace only deletes the content
+          // but never deletes the block styling.
+          // This piece of code fixes the issue by changing the block type
+          // to 'unstyled' if we're on the first block of the editor and it's empty
+          const selection = editorState.getSelection();
+          const currentBlockKey = selection.getStartKey();
+          if (!currentBlockKey) return "not-handled";
+
+          const content = editorState.getCurrentContent();
+          const currentBlock = content.getBlockForKey(currentBlockKey);
+          const firstBlock = content.getFirstBlock();
+          if (firstBlock !== currentBlock) return "not-handled";
+
+          const currentBlockType = currentBlock.getType();
+          const isEmpty = currentBlock.getLength() === 0;
+          if (!isEmpty || currentBlockType === "unstyled") return "not-handled";
+
+          setEditorState(changeCurrentBlockType(editorState, "unstyled", ""));
+          return "handled";
+        }
+        default: {
+          return "not-handled";
+        }
+      }
+    },
     handlePastedText(text, html, editorState, { setEditorState }) {
       if (html) {
         return "not-handled";
