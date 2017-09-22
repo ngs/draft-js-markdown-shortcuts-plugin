@@ -331,6 +331,20 @@ describe("draft-js-markdown-plugin", () => {
           character = " ";
           subject = () =>
             plugin.handleBeforeInput(character, store.getEditorState(), store);
+          currentRawContentState = {
+            entityMap: {},
+            blocks: [
+              {
+                key: "item1",
+                text: "",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+          };
         });
         [
           "handleBlockType",
