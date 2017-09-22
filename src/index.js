@@ -21,6 +21,7 @@ import changeCurrentBlockType from "./modifiers/changeCurrentBlockType";
 import createLinkDecorator from "./decorators/link";
 import createImageDecorator from "./decorators/image";
 import { replaceText } from "./utils";
+import { CODE_BLOCK_REGEX } from "./constants";
 
 const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
 
@@ -63,7 +64,7 @@ function checkReturnForState(editorState, ev) {
   if (
     newEditorState === editorState &&
     type !== "code-block" &&
-    /^```([\w-]+)?$/.test(text)
+    CODE_BLOCK_REGEX.test(text)
   ) {
     newEditorState = handleNewCodeBlock(editorState);
   }
@@ -139,6 +140,7 @@ const createMarkdownPlugin = (config = {}) => {
       return "not-handled";
     },
     handleReturn(ev, editorState, { setEditorState }) {
+      console.log("HANDLE RETURN");
       const newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
