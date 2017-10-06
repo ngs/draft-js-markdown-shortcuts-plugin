@@ -112,7 +112,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
     },
     onTab(ev, { getEditorState, setEditorState }) {
       const editorState = getEditorState();
-      const newEditorState = adjustBlockDepth(editorState, ev);
+      const newEditorState = adjustBlockDepth(editorState, ev, config.maxDepth);
       if (newEditorState !== editorState) {
         setEditorState(newEditorState);
         return 'handled';
