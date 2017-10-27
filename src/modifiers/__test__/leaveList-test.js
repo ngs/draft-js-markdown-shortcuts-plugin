@@ -1,13 +1,12 @@
-import { expect } from "chai";
 import sinon from "sinon";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import leaveList from "../leaveList";
 
 describe("leaveList", () => {
-  before(() => {
+  beforeAll(() => {
     sinon.stub(Draft, "genKey").returns("item2");
   });
-  after(() => {
+  afterAll(() => {
     Draft.genKey.restore();
   });
   [
@@ -58,10 +57,10 @@ describe("leaveList", () => {
     );
     it("converts block type", () => {
       const newEditorState = leaveList(editorState);
-      expect(newEditorState).not.to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(afterRawContentState);
+      expect(newEditorState).not.toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        afterRawContentState
+      );
     });
   });
 });

@@ -1,5 +1,4 @@
 import sinon from "sinon";
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleLink from "../handleLink";
 
@@ -9,7 +8,7 @@ describe("handleLink", () => {
   let selection;
   let fakeInsertLink;
 
-  after(() => {
+  afterAll(() => {
     handleLink.__ResetDependency__("../insertLink"); // eslint-disable-line no-underscore-dangle
   });
 
@@ -65,7 +64,7 @@ describe("handleLink", () => {
       "insert-image"
     );
 
-    fakeInsertLink = sinon.spy(() => newEditorState);
+    fakeInsertLink = jest.fn(() => newEditorState);
 
     handleLink.__Rewire__("insertLink", fakeInsertLink); // eslint-disable-line no-underscore-dangle
 
@@ -80,11 +79,11 @@ describe("handleLink", () => {
       it("returns new editor state", () => {
         const editorState = createEditorState(text);
         const newEditorState = handleLink(editorState, " ");
-        expect(newEditorState).not.to.equal(editorState);
-        expect(
-          Draft.convertToRaw(newEditorState.getCurrentContent())
-        ).to.deep.equal(afterRawContentState);
-        expect(fakeInsertLink).to.have.callCount(1);
+        expect(newEditorState).not.toEqual(editorState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+          afterRawContentState
+        );
+        expect(fakeInsertLink).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -92,8 +91,8 @@ describe("handleLink", () => {
     it("returns old editor state", () => {
       const editorState = createEditorState("yo");
       const newEditorState = handleLink(editorState, " ");
-      expect(newEditorState).to.equal(editorState);
-      expect(fakeInsertLink).not.to.have.been.called();
+      expect(newEditorState).toEqual(editorState);
+      expect(fakeInsertLink).not.toHaveBeenCalled();
     });
   });
 });

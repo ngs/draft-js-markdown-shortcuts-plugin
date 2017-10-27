@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import sinon from "sinon";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleNewCodeBlock from "../handleNewCodeBlock";
@@ -49,10 +48,10 @@ describe("handleNewCodeBlock", () => {
       );
       it("creates new code block", () => {
         const newEditorState = handleNewCodeBlock(editorState);
-        expect(newEditorState).not.to.equal(editorState);
-        expect(
-          Draft.convertToRaw(newEditorState.getCurrentContent())
-        ).to.deep.equal(afterRawContentState);
+        expect(newEditorState).not.toEqual(editorState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+          afterRawContentState
+        );
       });
     };
 
@@ -61,10 +60,10 @@ describe("handleNewCodeBlock", () => {
   });
 
   describe("in code block", () => {
-    before(() => {
+    beforeAll(() => {
       sinon.stub(Draft, "genKey").returns("item2");
     });
-    after(() => {
+    afterAll(() => {
       Draft.genKey.restore();
     });
     const beforeRawContentState = {
@@ -119,10 +118,10 @@ describe("handleNewCodeBlock", () => {
         selection
       );
       const newEditorState = handleNewCodeBlock(editorState);
-      expect(newEditorState).not.to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(afterRawContentState);
+      expect(newEditorState).not.toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        afterRawContentState
+      );
     });
     it("does not add new line even inside code block", () => {
       const selection = new SelectionState({
@@ -138,10 +137,10 @@ describe("handleNewCodeBlock", () => {
         selection
       );
       const newEditorState = handleNewCodeBlock(editorState);
-      expect(newEditorState).to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(beforeRawContentState);
+      expect(newEditorState).toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        beforeRawContentState
+      );
     });
   });
 
@@ -175,10 +174,10 @@ describe("handleNewCodeBlock", () => {
     );
     it("noop", () => {
       const newEditorState = handleNewCodeBlock(editorState);
-      expect(newEditorState).to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(rawContentState);
+      expect(newEditorState).toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        rawContentState
+      );
     });
   });
 });
