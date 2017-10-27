@@ -140,11 +140,28 @@ const createMarkdownPlugin = (config = {}) => {
       return "not-handled";
     },
     handleReturn(ev, editorState, { setEditorState }) {
-      const newEditorState = checkReturnForState(editorState, ev);
+      let newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
         return "handled";
       }
+
+      // If we're in a code block don't add markdown to it
+      const startKey = editorState.getSelection().getStartKey();
+      if (startKey) {
+        const currentBlockType = editorState
+          .getCurrentContent()
+          .getBlockForKey(startKey)
+          .getType();
+        if (currentBlockType === "code-block") return "not-handled";
+      }
+
+      newEditorState = checkCharacterForState(editorState, "\n");
+      if (editorState !== newEditorState) {
+        setEditorState(newEditorState);
+        return "handled";
+      }
+
       return "not-handled";
     },
     handleBeforeInput(character, editorState, { setEditorState }) {

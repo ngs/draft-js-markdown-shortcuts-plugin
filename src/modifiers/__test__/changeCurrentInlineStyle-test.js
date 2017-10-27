@@ -60,4 +60,33 @@ describe("changeCurrentInlineStyle", () => {
       )
     );
   });
+  it("inserts the character at the end", () => {
+    const text = "foo `bar` baz";
+    const editorState = createEditorState(text, []);
+    const matchArr = ["`bar`", "bar"];
+    matchArr.index = 4;
+    matchArr.input = text;
+    const newEditorState = changeCurrentInlineStyle(
+      editorState,
+      matchArr,
+      "CODE",
+      "\n"
+    );
+    expect(newEditorState).not.to.equal(editorState);
+    expect(
+      Draft.convertToRaw(newEditorState.getCurrentContent())
+    ).to.deep.equal(
+      rawContentState(
+        "foo bar  baz",
+        [
+          {
+            length: 3,
+            offset: 4,
+            style: "CODE",
+          },
+        ],
+        "CODE"
+      )
+    );
+  });
 });
