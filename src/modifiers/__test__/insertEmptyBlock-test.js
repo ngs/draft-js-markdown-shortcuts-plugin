@@ -1,13 +1,12 @@
-import { expect } from "chai";
 import sinon from "sinon";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import insertEmptyBlock from "../insertEmptyBlock";
 
 describe("insertEmptyBlock", () => {
-  before(() => {
+  beforeAll(() => {
     sinon.stub(Draft, "genKey").returns("item2");
   });
-  after(() => {
+  afterAll(() => {
     Draft.genKey.restore();
   });
   const testInsertEmptyBlock = (...args) => () => {
@@ -62,10 +61,10 @@ describe("insertEmptyBlock", () => {
 
     it("creates new code block", () => {
       const newEditorState = insertEmptyBlock(editorState, ...args);
-      expect(newEditorState).not.to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(afterRawContentState);
+      expect(newEditorState).not.toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        afterRawContentState
+      );
     });
   };
 

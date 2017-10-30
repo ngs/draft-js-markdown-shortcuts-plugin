@@ -1,5 +1,3 @@
-import sinon from "sinon";
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleImage from "../handleImage";
 
@@ -9,7 +7,7 @@ describe("handleImage", () => {
   let selection;
   let fakeInsertImage;
 
-  after(() => {
+  afterAll(() => {
     handleImage.__ResetDependency__("insertImage"); // eslint-disable-line no-underscore-dangle
   });
 
@@ -65,7 +63,7 @@ describe("handleImage", () => {
       "insert-image"
     );
 
-    fakeInsertImage = sinon.spy(() => newEditorState);
+    fakeInsertImage = jest.fn(() => newEditorState);
 
     handleImage.__Rewire__("insertImage", fakeInsertImage); // eslint-disable-line no-underscore-dangle
 
@@ -90,11 +88,11 @@ describe("handleImage", () => {
       it("returns new editor state", () => {
         const editorState = createEditorState(text);
         const newEditorState = handleImage(editorState, " ");
-        expect(newEditorState).not.to.equal(editorState);
-        expect(
-          Draft.convertToRaw(newEditorState.getCurrentContent())
-        ).to.deep.equal(afterRawContentState);
-        expect(fakeInsertImage).to.have.callCount(1);
+        expect(newEditorState).not.toEqual(editorState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+          afterRawContentState
+        );
+        expect(fakeInsertImage).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -102,8 +100,8 @@ describe("handleImage", () => {
     it("returns old editor state", () => {
       const editorState = createEditorState("yo");
       const newEditorState = handleImage(editorState, " ");
-      expect(newEditorState).to.equal(editorState);
-      expect(fakeInsertImage).not.to.have.been.called();
+      expect(newEditorState).toEqual(editorState);
+      expect(fakeInsertImage).not.toHaveBeenCalled();
     });
   });
 });
