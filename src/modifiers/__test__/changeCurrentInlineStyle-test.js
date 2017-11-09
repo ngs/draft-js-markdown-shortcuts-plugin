@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import changeCurrentInlineStyle from "../changeCurrentInlineStyle";
 
@@ -43,10 +42,8 @@ describe("changeCurrentInlineStyle", () => {
       matchArr,
       "CODE"
     );
-    expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       rawContentState(
         "foo bar  baz",
         [
@@ -72,12 +69,10 @@ describe("changeCurrentInlineStyle", () => {
       "CODE",
       "\n"
     );
-    expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       rawContentState(
-        "foo bar  baz",
+        "foo bar\n baz",
         [
           {
             length: 3,
