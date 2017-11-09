@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import Ribbon from "react-github-fork-ribbon";
+import GitHubCorner from "react-github-corner";
 import DemoEditor from "./components/DemoEditor";
 
 // Import your routes so that you can pass them to the <Router /> component
@@ -9,16 +9,15 @@ import DemoEditor from "./components/DemoEditor";
 // Only render in the browser
 if (typeof document !== "undefined") {
   render(
-    <div>
-      <Ribbon
-        href="https://github.com/ngs/draft-js-markdown-shortcuts-plugin/"
+    <div style={{ height: "100%" }}>
+      <DemoEditor />
+      <GitHubCorner
+        href="https://github.com/withspectrum/draft-js-markdown-plugin"
         target="_blank"
-        position="right"
-        color="black"
+        direction="right"
       >
         Fork me on GitHub
-      </Ribbon>
-      <DemoEditor />
+      </GitHubCorner>
     </div>,
     document.getElementById("root")
   );
