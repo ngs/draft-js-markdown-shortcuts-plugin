@@ -5342,6 +5342,10 @@ react-element-to-jsx-string@^5.0.0:
     stringify-object "2.4.0"
     traverse "^0.6.6"
 
+react-github-corner@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-github-corner/-/react-github-corner-2.0.0.tgz#e248f9110afdc03a5e1168f95714795459b1b380"
+
 react-github-fork-ribbon@^0.4.4:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/react-github-fork-ribbon/-/react-github-fork-ribbon-0.4.5.tgz#2d3586bfde368a19aef7b4a46471e0839c9bc010"
