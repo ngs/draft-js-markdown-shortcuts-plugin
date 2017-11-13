@@ -24,7 +24,8 @@ const handleInlineStyle = (editorState, character) => {
           newEditorState = changeCurrentInlineStyle(
             newEditorState,
             matchArr,
-            k
+            k,
+            character
           );
         }
       } while (matchArr);

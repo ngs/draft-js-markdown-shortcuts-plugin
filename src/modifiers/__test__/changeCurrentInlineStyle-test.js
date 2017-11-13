@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import changeCurrentInlineStyle from "../changeCurrentInlineStyle";
 
@@ -43,12 +42,37 @@ describe("changeCurrentInlineStyle", () => {
       matchArr,
       "CODE"
     );
-    expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       rawContentState(
         "foo bar  baz",
+        [
+          {
+            length: 3,
+            offset: 4,
+            style: "CODE",
+          },
+        ],
+        "CODE"
+      )
+    );
+  });
+  it("inserts the character at the end", () => {
+    const text = "foo `bar` baz";
+    const editorState = createEditorState(text, []);
+    const matchArr = ["`bar`", "bar"];
+    matchArr.index = 4;
+    matchArr.input = text;
+    const newEditorState = changeCurrentInlineStyle(
+      editorState,
+      matchArr,
+      "CODE",
+      "\n"
+    );
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+      rawContentState(
+        "foo bar\n baz",
         [
           {
             length: 3,
