@@ -46,8 +46,9 @@ function checkReturnForState(editorState, ev) {
   if (/-list-item$/.test(type) && text === '') {
     newEditorState = leaveList(editorState);
   }
-  if (newEditorState === editorState &&
-    (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey || /^header-/.test(type))) {
+  if (newEditorState === editorState
+      && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey
+          || (/^header-/.test(type) && selection.isCollapsed() && selection.getEndOffset() === text.length))) {
     newEditorState = insertEmptyBlock(editorState);
   }
   if (newEditorState === editorState && type !== 'code-block' && /^```([\w-]+)?$/.test(text)) {
