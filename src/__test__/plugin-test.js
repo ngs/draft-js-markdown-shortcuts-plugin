@@ -150,13 +150,21 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               data: {}
             }]
           };
+          currentSelectionState = new SelectionState({
+            anchorKey: 'item1',
+            anchorOffset: 5,
+            focusKey: 'item1',
+            focusOffset: 5,
+            isBackward: false,
+            hasFocus: true
+          });
           expect(subject()).to.equal('handled');
           expect(modifierSpy).to.have.been.calledOnce();
           expect(store.setEditorState).to.have.been.calledWith(newEditorState);
         };
         ['one', 'two', 'three', 'four', 'five', 'six'].forEach((level) => {
           describe(`on header-${level}`, () => {
-            it('inserts new empty block', testInsertNewBlock(`header-${level}`));
+            it('inserts new empty block on end of header return', testInsertNewBlock(`header-${level}`));
           });
         });
         ['ctrlKey', 'shiftKey', 'metaKey', 'altKey'].forEach((key) => {
