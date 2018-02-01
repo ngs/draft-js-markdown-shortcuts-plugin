@@ -1,7 +1,7 @@
 machine:
   timezone: UTC
   node:
-    version: 4.2.6
+    version: 8.9.4
   pre:
     - "git config --global user.name 'Circle CI'"
     - "git config --global user.email 'a+circleci@ngs.io'"
