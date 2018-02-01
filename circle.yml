@@ -9,6 +9,11 @@ general:
   branches:
     ignore:
       - gh-pages
+dependencies:
+  override:
+    - yarn
+  cache_directories:
+    - ~/.cache/yarn
 test:
   override:
     - npm test
