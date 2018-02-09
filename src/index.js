@@ -19,8 +19,6 @@ import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
 import { replaceText } from './utils';
 
-const INLINE_STYLE_CHARACTERS = [' ', '*', '_', '~', '`'];
-
 function checkCharacterForState(editorState, character) {
   let newEditorState = handleBlockType(editorState, character);
   if (editorState === newEditorState) {
@@ -147,7 +145,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       let newEditorState = editorState;
       let buffer = [];
       for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
-        if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
+        if (text[i].match(/[^A-z0-9_*~`]/)) {
           newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
           newEditorState = checkCharacterForState(newEditorState, text[i]);
           buffer = [];

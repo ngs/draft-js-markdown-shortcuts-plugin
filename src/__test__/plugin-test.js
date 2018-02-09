@@ -341,7 +341,6 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
         });
         [
           'replaceText',
-          'insertEmptyBlock',
           'handleBlockType',
           'handleImage',
           'handleLink',
