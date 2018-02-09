@@ -19,7 +19,7 @@ import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
 import { replaceText } from './utils';
 
-const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
+const INLINE_STYLE_CHARACTERS = [' ', '*', '_', '~', '`'];
 
 function checkCharacterForState(editorState, character) {
   let newEditorState = handleBlockType(editorState, character);
@@ -61,7 +61,9 @@ function checkReturnForState(editorState, ev) {
       newEditorState = insertText(editorState, '\n');
     }
   }
-
+  if (editorState === newEditorState) {
+    newEditorState = handleInlineStyle(editorState, '\n');
+  }
   return newEditorState;
 }
 
@@ -128,7 +130,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       return 'not-handled';
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
-      if (character !== ' ') {
+      if (character.match(/[A-z0-9_*~`]/)) {
         return 'not-handled';
       }
       const newEditorState = checkCharacterForState(editorState, character);

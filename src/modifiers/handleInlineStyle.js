@@ -1,20 +1,10 @@
 import changeCurrentInlineStyle from './changeCurrentInlineStyle';
 
 const inlineMatchers = {
-  BOLD: [
-    /\*\*([^(?:**)]+)\*\*/g,
-    /__([^(?:__)]+)__/g
-  ],
-  ITALIC: [
-    /\*([^*]+)\*/g,
-    /_([^_]+)_/g
-  ],
-  CODE: [
-    /`([^`]+)`/g
-  ],
-  STRIKETHROUGH: [
-    /~~([^(?:~~)]+)~~/g
-  ]
+  BOLD: /(?:^|\s|\n|[^A-z0-9_*~`])(\*{2}|_{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
+  ITALIC: /(?:^|\s|\n|[^A-z0-9_*~`])(\*{1}|_{1})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
+  CODE: /(?:^|\s|\n|[^A-z0-9_*~`])(`)((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
+  STRIKETHROUGH: /(?:^|\s|\n|[^A-z0-9_*~`])(~{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g
 };
 
 const handleInlineStyle = (editorState, character) => {
@@ -23,16 +13,14 @@ const handleInlineStyle = (editorState, character) => {
   const line = `${text}${character}`;
   let newEditorState = editorState;
   Object.keys(inlineMatchers).some((k) => {
-    inlineMatchers[k].some((re) => {
-      let matchArr;
-      do {
-        matchArr = re.exec(line);
-        if (matchArr) {
-          newEditorState = changeCurrentInlineStyle(newEditorState, matchArr, k);
-        }
-      } while (matchArr);
-      return newEditorState !== editorState;
-    });
+    const re = inlineMatchers[k];
+    let matchArr;
+    do {
+      matchArr = re.exec(line);
+      if (matchArr) {
+        newEditorState = changeCurrentInlineStyle(newEditorState, matchArr, k);
+      }
+    } while (matchArr);
     return newEditorState !== editorState;
   });
   return newEditorState;
