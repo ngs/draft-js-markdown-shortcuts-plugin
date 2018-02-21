@@ -111,7 +111,7 @@
   "dependencies": {
     "decorate-component-with-props": "^1.1.0",
     "draft-js": "~0.10.5",
-    "draft-js-checkable-list-item": "^3.0.0",
+    "draft-js-checkable-list-item": "^3.0.1",
     "immutable": "~3.7.4"
   }
 }

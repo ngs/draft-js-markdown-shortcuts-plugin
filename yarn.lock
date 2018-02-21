@@ -2007,17 +2007,18 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
-draft-js-checkable-list-item@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/draft-js-checkable-list-item/-/draft-js-checkable-list-item-3.0.0.tgz#cb81e7dc76913959bb55aa3af33443f6634a3518"
+draft-js-checkable-list-item@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/draft-js-checkable-list-item/-/draft-js-checkable-list-item-3.0.1.tgz#040beb335f2a83c0d1b9a33236cf6950f48490cd"
   dependencies:
-    draft-js-modifiers "~0.2.0"
+    draft-js-modifiers "~0.2.1"
+    immutable "~3.7.4"
 
-draft-js-modifiers@~0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/draft-js-modifiers/-/draft-js-modifiers-0.2.0.tgz#c34f23b81df7770df878b0962dcff42d0a5d315c"
+draft-js-modifiers@~0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-modifiers/-/draft-js-modifiers-0.2.1.tgz#18f48e8ad59c0ae66b14847db42e5d595e5c038e"
   dependencies:
-    draft-js "~0.10.4"
+    draft-js "~0.10.5"
     immutable "~3.7.4"
 
 draft-js-plugins-editor@2.0.4:
@@ -2037,7 +2038,7 @@ draft-js-prism@^1.0.5:
     extend "^3.0.0"
     immutable "*"
 
-draft-js@~0.10.4, draft-js@~0.10.5:
+draft-js@~0.10.5:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.5.tgz#bfa9beb018fe0533dbb08d6675c371a6b08fa742"
   dependencies:
