@@ -1,7 +1,7 @@
 import changeCurrentInlineStyle from "./changeCurrentInlineStyle";
 
 const inlineMatchers = {
-  BOLD: [/\*\*([^(?:**)]+)\*\*/g, /__([^(?:__)]+)__/g],
+  BOLD: [/\*\*([^(?**)]+)\*\*/g, /__([^(?:__)]+)__/g],
   ITALIC: [/\*([^*]+)\*/g, /_([^_]+)_/g],
   CODE: [/`([^`]+)`/g],
   STRIKETHROUGH: [/~~([^(?:~~)]+)~~/g],
