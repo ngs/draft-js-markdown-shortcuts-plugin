@@ -25,6 +25,19 @@ import { CODE_BLOCK_REGEX } from "./constants";
 
 const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
 
+function inCodeBlock(editorState) {
+  const startKey = editorState.getSelection().getStartKey();
+  if (startKey) {
+    const currentBlockType = editorState
+      .getCurrentContent()
+      .getBlockForKey(startKey)
+      .getType();
+    if (currentBlockType === "code-block") return true;
+  }
+
+  return false;
+}
+
 function checkCharacterForState(editorState, character) {
   let newEditorState = handleBlockType(editorState, character);
   if (editorState === newEditorState) {
@@ -147,14 +160,7 @@ const createMarkdownPlugin = (config = {}) => {
       }
 
       // If we're in a code block don't add markdown to it
-      const startKey = editorState.getSelection().getStartKey();
-      if (startKey) {
-        const currentBlockType = editorState
-          .getCurrentContent()
-          .getBlockForKey(startKey)
-          .getType();
-        if (currentBlockType === "code-block") return "not-handled";
-      }
+      if (inCodeBlock(editorState)) return "not-handled";
 
       newEditorState = checkCharacterForState(editorState, "\n");
       if (editorState !== newEditorState) {
@@ -168,15 +174,9 @@ const createMarkdownPlugin = (config = {}) => {
       if (character !== " ") {
         return "not-handled";
       }
+
       // If we're in a code block don't add markdown to it
-      const startKey = editorState.getSelection().getStartKey();
-      if (startKey) {
-        const currentBlockType = editorState
-          .getCurrentContent()
-          .getBlockForKey(startKey)
-          .getType();
-        if (currentBlockType === "code-block") return "not-handled";
-      }
+      if (inCodeBlock(editorState)) return "not-handled";
 
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
@@ -218,6 +218,8 @@ const createMarkdownPlugin = (config = {}) => {
       if (html) {
         return "not-handled";
       }
+      // If we're in a code block don't add markdown to it
+      if (inCodeBlock(editorState)) return "not-handled";
       let newEditorState = editorState;
       let buffer = [];
       for (let i = 0; i < text.length; i++) {
