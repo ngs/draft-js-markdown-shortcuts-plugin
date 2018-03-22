@@ -87,6 +87,50 @@ describe.only("handleInlineStyle", () => {
         hasFocus: true,
       }),
     },
+    "converts semicolons to bold with astarisks": {
+      before: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello **TL;DR:** style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      after: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello TL;DR:  style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [
+              {
+                length: 6,
+                offset: 6,
+                style: "BOLD",
+              },
+            ],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      selection: new SelectionState({
+        anchorKey: "item1",
+        anchorOffset: 14,
+        focusKey: "item1",
+        focusOffset: 14,
+        isBackward: false,
+        hasFocus: true,
+      }),
+    },
     "converts to bold with underscores": {
       before: {
         entityMap: {},
