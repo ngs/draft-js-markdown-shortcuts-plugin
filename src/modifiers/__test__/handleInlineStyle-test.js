@@ -532,8 +532,6 @@ describe("handleInlineStyle", () => {
       it("converts block type", () => {
         const newEditorState = handleInlineStyle(editorState, character);
         expect(newEditorState).not.toEqual(editorState);
-        // console.log('actual', JSON.stringify(Draft.convertToRaw(newEditorState.getCurrentContent()), null, 2))
-        // console.log('expected', JSON.stringify(after, null, 2))
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           after
         );

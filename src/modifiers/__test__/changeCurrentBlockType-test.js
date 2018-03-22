@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import changeCurrentBlockType from "../changeCurrentBlockType";
 
@@ -40,10 +39,8 @@ describe("changeCurrentBlockType", () => {
       "Hello world",
       { foo: "bar" }
     );
-    expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       rawContentState("Hello world", "header-one", { foo: "bar" })
     );
   });
@@ -55,9 +52,9 @@ describe("changeCurrentBlockType", () => {
       "Hello world",
       null
     );
-    expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(rawContentState("Hello world", "header-one", {}));
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+      rawContentState("Hello world", "header-one", {})
+    );
   });
 });

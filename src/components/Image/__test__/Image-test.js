@@ -1,12 +1,8 @@
 import React from "react";
 import { ContentState } from "draft-js";
 import { shallow } from "enzyme";
-import chai, { expect } from "chai";
-import chaiEnzyme from "chai-enzyme";
 
 import Image from "../";
-
-chai.use(chaiEnzyme());
 
 describe("<Image />", () => {
   it("renders anchor tag", () => {
@@ -24,7 +20,7 @@ describe("<Image />", () => {
           &nbsp;
         </Image>
       ).html()
-    ).to.equal(
+    ).toEqual(
       '<span> <img src="http://cultofthepartyparrot.com/parrots/aussieparrot.gif" alt="alt" title="parrot"/></span>'
     );
   });

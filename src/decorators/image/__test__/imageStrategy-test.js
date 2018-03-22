@@ -1,10 +1,5 @@
-import chai, { expect } from "chai";
-import sinon from "sinon";
-import sinonChai from "sinon-chai";
 import Draft from "draft-js";
 import createImageStrategy from "../imageStrategy";
-
-chai.use(sinonChai);
 
 describe("imageStrategy", () => {
   const contentState = Draft.convertFromRaw({
@@ -40,9 +35,9 @@ describe("imageStrategy", () => {
   it("callbacks range", () => {
     const block = contentState.getBlockForKey("dtehj");
     const strategy = createImageStrategy();
-    const cb = sinon.spy();
-    expect(block).to.be.an("object");
+    const cb = jest.fn();
+    expect(typeof block).toBe("object");
     strategy(block, cb, contentState);
-    expect(cb).to.have.been.calledWith(0, 1);
+    expect(cb).toHaveBeenCalledWith(0, 1);
   });
 });
