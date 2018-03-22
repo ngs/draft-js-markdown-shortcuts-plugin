@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/withspectrum/draft-js-markdown-plugin#readme",
   "lint-staged": {
-    "*.{js,json,css}": ["prettier --write", "git add"]
+    "*.{js,css}": ["prettier --write", "git add"]
   },
   "devDependencies": {
     "autoprefixer": "^6.5.3",
