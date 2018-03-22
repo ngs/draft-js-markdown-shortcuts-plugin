@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import insertText from "../insertText";
 
@@ -46,9 +45,9 @@ describe("insertText", () => {
   );
   it("insert text", () => {
     const newEditorState = insertText(editorState, "1");
-    expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(afterRawContentState);
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+      afterRawContentState
+    );
   });
 });

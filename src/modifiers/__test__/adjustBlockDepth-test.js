@@ -1,10 +1,6 @@
-import chai, { expect } from "chai";
 import sinon from "sinon";
-import sinonChai from "sinon-chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import adjustBlockDepth from "../adjustBlockDepth";
-
-chai.use(sinonChai);
 
 describe("adjustBlockDepth", () => {
   const createEvent = () => {
@@ -44,10 +40,10 @@ describe("adjustBlockDepth", () => {
       const event = createEvent();
       const editorState = createEditorState("unstyled", 0, 0);
       const newEditorState = adjustBlockDepth(editorState, event);
-      expect(newEditorState).to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(rawContentState("unstyled", 0, 0));
+      expect(newEditorState).toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        rawContentState("unstyled", 0, 0)
+      );
     });
   });
   [
@@ -60,10 +56,10 @@ describe("adjustBlockDepth", () => {
         const event = createEvent();
         const editorState = createEditorState(type, 0, 0);
         const newEditorState = adjustBlockDepth(editorState, event);
-        expect(newEditorState).not.to.equal(editorState);
-        expect(
-          Draft.convertToRaw(newEditorState.getCurrentContent())
-        ).to.deep.equal(rawContentState(type, 0, 1));
+        expect(newEditorState).not.toEqual(editorState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+          rawContentState(type, 0, 1)
+        );
       });
     });
   });

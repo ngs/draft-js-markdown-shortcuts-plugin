@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleInlineStyle from "../handleInlineStyle";
 
@@ -35,10 +34,10 @@ describe("handleInlineStyle", () => {
     );
     it("does not convert block type", () => {
       const newEditorState = handleInlineStyle(editorState, " ");
-      expect(newEditorState).to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(rawContentState);
+      expect(newEditorState).toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        rawContentState
+      );
     });
   });
 
@@ -531,10 +530,10 @@ describe("handleInlineStyle", () => {
       );
       it("converts block type", () => {
         const newEditorState = handleInlineStyle(editorState, character);
-        expect(newEditorState).not.to.equal(editorState);
-        expect(
-          Draft.convertToRaw(newEditorState.getCurrentContent())
-        ).to.deep.equal(after);
+        expect(newEditorState).not.toEqual(editorState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+          after
+        );
       });
     });
   });
