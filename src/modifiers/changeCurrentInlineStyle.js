@@ -1,7 +1,5 @@
 import { EditorState, SelectionState, Modifier } from "draft-js";
 
-const STYLES = ["BOLD", "ITALIC", "CODE", "STRIKETHROUGH"];
-
 const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
   const currentContent = editorState.getCurrentContent();
   const selection = editorState.getSelection();
@@ -19,48 +17,43 @@ const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
   });
 
   const inlineStyles = [];
+  const markdownCharacterLength = (matchArr[0].length - matchArr[1].length) / 2;
 
-  STYLES.forEach(_style =>
-    block.findStyleRanges(
-      styles => styles.getStyle().includes(_style),
-      (start, end) => {
-        if (focusOffset > start && index <= end) {
-          inlineStyles.push({
-            style: _style,
-            start: start >= index ? start : index,
-            end: end > focusOffset ? end : focusOffset,
-          });
-        }
-      }
-    )
-  );
+  let newContentState = currentContent;
 
-  console.log("yo inline styles", inlineStyles);
-
-  let newContentState = Modifier.replaceText(
-    currentContent,
-    wordSelection,
-    matchArr[1],
-    newStyle
-  );
-
-  const afterSelection = newContentState.getSelectionAfter();
-
-  // re-apply previous styles
-  newContentState = inlineStyles.reduce(
-    (content, { style: _style, start, end }) =>
-      Modifier.applyInlineStyle(
-        content,
-        wordSelection.merge({ anchorOffset: start, focusOffset: end }),
-        _style
-      ),
-    newContentState
-  );
-
-  newContentState = Modifier.insertText(
+  // remove markdown delimiter at end
+  newContentState = Modifier.replaceText(
     newContentState,
-    afterSelection,
+    wordSelection.merge({
+      anchorOffset: wordSelection.getFocusOffset() - markdownCharacterLength,
+    }),
     character || " "
+  );
+
+  let afterSelection = newContentState.getSelectionAfter();
+
+  afterSelection = afterSelection.merge({
+    anchorOffset: afterSelection.getFocusOffset() - markdownCharacterLength,
+    focusOffset: afterSelection.getFocusOffset() - markdownCharacterLength,
+  });
+
+  // remove markdown delimiter at start
+  newContentState = Modifier.replaceText(
+    newContentState,
+    wordSelection.merge({
+      focusOffset: wordSelection.getAnchorOffset() + markdownCharacterLength,
+    }),
+    ""
+  );
+
+  // apply style
+  newContentState = Modifier.applyInlineStyle(
+    newContentState,
+    wordSelection.merge({
+      anchorOffset: index,
+      focusOffset: focusOffset - markdownCharacterLength * 2,
+    }),
+    style
   );
 
   const newEditorState = EditorState.push(
@@ -69,10 +62,7 @@ const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
     "change-inline-style"
   );
 
-  return EditorState.forceSelection(
-    newEditorState,
-    newContentState.getSelectionAfter()
-  );
+  return EditorState.forceSelection(newEditorState, afterSelection);
 };
 
 export default changeCurrentInlineStyle;

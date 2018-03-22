@@ -1,11 +1,5 @@
 import changeCurrentInlineStyle from "./changeCurrentInlineStyle";
-
-const inlineMatchers = {
-  BOLD: [/\*\*([^(?:**)]+)\*\*/g, /__([^(?:__)]+)__/g],
-  ITALIC: [/\*([^*]+)\*/g, /_([^_]+)_/g],
-  CODE: [/`([^`]+)`/g],
-  STRIKETHROUGH: [/~~([^(?:~~)]+)~~/g],
-};
+import { inlineMatchers } from "../constants";
 
 const handleInlineStyle = (editorState, character) => {
   const key = editorState.getSelection().getStartKey();
