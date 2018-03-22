@@ -4,7 +4,7 @@
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleInlineStyle from "../handleInlineStyle";
 
-describe.only("handleInlineStyle", () => {
+describe("handleInlineStyle", () => {
   describe("no markup", () => {
     const rawContentState = {
       entityMap: {},
