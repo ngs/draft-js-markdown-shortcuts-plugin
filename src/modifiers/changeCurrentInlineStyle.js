@@ -10,30 +10,59 @@ const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
   const currentInlineStyle = block.getInlineStyleAt(index).merge();
   const newStyle = currentInlineStyle.merge([style]);
   const focusOffset = index + matchArr[0].length;
+
   const wordSelection = SelectionState.createEmpty(key).merge({
     anchorOffset: index,
     focusOffset,
   });
-  let newContentState = Modifier.replaceText(
-    currentContent,
-    wordSelection,
-    matchArr[1],
-    newStyle
-  );
-  newContentState = Modifier.insertText(
+
+  const inlineStyles = [];
+  const markdownCharacterLength = (matchArr[0].length - matchArr[1].length) / 2;
+
+  let newContentState = currentContent;
+
+  // remove markdown delimiter at end
+  newContentState = Modifier.replaceText(
     newContentState,
-    newContentState.getSelectionAfter(),
+    wordSelection.merge({
+      anchorOffset: wordSelection.getFocusOffset() - markdownCharacterLength,
+    }),
     character || " "
   );
+
+  let afterSelection = newContentState.getSelectionAfter();
+
+  afterSelection = afterSelection.merge({
+    anchorOffset: afterSelection.getFocusOffset() - markdownCharacterLength,
+    focusOffset: afterSelection.getFocusOffset() - markdownCharacterLength,
+  });
+
+  // remove markdown delimiter at start
+  newContentState = Modifier.replaceText(
+    newContentState,
+    wordSelection.merge({
+      focusOffset: wordSelection.getAnchorOffset() + markdownCharacterLength,
+    }),
+    ""
+  );
+
+  // apply style
+  newContentState = Modifier.applyInlineStyle(
+    newContentState,
+    wordSelection.merge({
+      anchorOffset: index,
+      focusOffset: focusOffset - markdownCharacterLength * 2,
+    }),
+    style
+  );
+
   const newEditorState = EditorState.push(
     editorState,
     newContentState,
     "change-inline-style"
   );
-  return EditorState.forceSelection(
-    newEditorState,
-    newContentState.getSelectionAfter()
-  );
+
+  return EditorState.forceSelection(newEditorState, afterSelection);
 };
 
 export default changeCurrentInlineStyle;

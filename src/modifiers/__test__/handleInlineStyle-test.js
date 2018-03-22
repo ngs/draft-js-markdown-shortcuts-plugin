@@ -274,7 +274,7 @@ describe("handleInlineStyle", () => {
             inlineStyleRanges: [
               {
                 length: 3,
-                offset: 5,
+                offset: 2,
                 style: "ITALIC",
               },
             ],
@@ -293,8 +293,8 @@ describe("handleInlineStyle", () => {
             depth: 0,
             inlineStyleRanges: [
               {
-                length: 7, // FIXME
-                offset: 5,
+                length: 3,
+                offset: 2,
                 style: "ITALIC",
               },
               {
@@ -419,7 +419,7 @@ describe("handleInlineStyle", () => {
             depth: 0,
             inlineStyleRanges: [
               {
-                length: 3,
+                length: 4,
                 offset: 5,
                 style: "ITALIC",
               },
@@ -439,7 +439,7 @@ describe("handleInlineStyle", () => {
             depth: 0,
             inlineStyleRanges: [
               {
-                length: 7, // FIXME
+                length: 2,
                 offset: 5,
                 style: "ITALIC",
               },
@@ -470,12 +470,12 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello __inline__ style",
+            text: "hello _inline_ style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
               {
-                length: 3,
+                length: 5,
                 offset: 5,
                 style: "BOLD",
               },
@@ -495,14 +495,15 @@ describe("handleInlineStyle", () => {
             depth: 0,
             inlineStyleRanges: [
               {
-                length: 7, // FIXME
+                length: 4,
                 offset: 5,
                 style: "BOLD",
-              } /* { FIXME
-            length: 6,
-            offset: 6,
-            style: 'ITALIC'
-          } */,
+              },
+              {
+                length: 6,
+                offset: 6,
+                style: "ITALIC",
+              },
             ],
             entityRanges: [],
             data: {},
