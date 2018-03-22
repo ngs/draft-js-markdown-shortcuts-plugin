@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import insertImage from "../insertImage";
 
@@ -73,9 +72,9 @@ describe("insertImage", () => {
     matchArr.index = 4;
     matchArr.input = text;
     const newEditorState = insertImage(editorState, matchArr);
-    expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(afterRawContentState);
+    expect(newEditorState).not.toEqual(editorState);
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+      afterRawContentState
+    );
   });
 });

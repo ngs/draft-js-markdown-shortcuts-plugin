@@ -1,12 +1,10 @@
 import React from "react";
 import { ContentState } from "draft-js";
-import { shallow } from "enzyme";
-import chai, { expect } from "chai";
-import chaiEnzyme from "chai-enzyme";
+import ShallowRenderer from "react-test-renderer/shallow";
+
+const renderer = new ShallowRenderer();
 
 import Link from "../";
-
-chai.use(chaiEnzyme());
 
 describe("<Link />", () => {
   it("renders anchor tag", () => {
@@ -17,14 +15,15 @@ describe("<Link />", () => {
       title: "parrot",
     });
     const entityKey = contentState.getLastCreatedEntityKey();
-    expect(
-      shallow(
-        <Link entityKey={entityKey} contentState={contentState}>
-          <b>Hello</b>
-        </Link>
-      ).html()
-    ).to.equal(
-      '<a href="http://cultofthepartyparrot.com/" title="parrot"><b>Hello</b></a>'
+    renderer.render(
+      <Link entityKey={entityKey} contentState={contentState}>
+        <b>Hello</b>
+      </Link>
+    );
+    expect(renderer.getRenderOutput()).toEqual(
+      <a href="http://cultofthepartyparrot.com/" title="parrot">
+        <b>Hello</b>
+      </a>
     );
   });
 });
