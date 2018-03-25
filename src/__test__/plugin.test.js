@@ -104,13 +104,10 @@ describe("draft-js-markdown-plugin", () => {
       });
       describe("handleReturn", () => {
         beforeEach(() => {
-          subject = () => {
-            event = new window.KeyboardEvent("keydown", { which: 13 });
-            jest.spyOn(event, "preventDefault");
-            return plugin.keyBindingFn(event, store);
-          };
+          subject = () =>
+            plugin.handleReturn(event, store.getEditorState(), store);
         });
-        it("does not handle", () => {
+        it("does always handle", () => {
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -125,7 +122,7 @@ describe("draft-js-markdown-plugin", () => {
               },
             ],
           };
-          expect(subject()).toBe(null);
+          expect(subject()).toBe("handled");
           expect(modifierSpy).not.toHaveBeenCalledTimes(1);
           expect(store.setEditorState).not.toHaveBeenCalled();
         });

@@ -6,12 +6,19 @@ import {
   CHECKABLE_LIST_ITEM,
 } from "draft-js-checkable-list-item";
 
-import { Map } from "immutable";
-import { getDefaultKeyBinding, Modifier, EditorState } from "draft-js";
+import { Map, OrderedSet } from "immutable";
+import {
+  getDefaultKeyBinding,
+  Modifier,
+  EditorState,
+  RichUtils,
+  DefaultDraftInlineStyle,
+} from "draft-js";
 import adjustBlockDepth from "./modifiers/adjustBlockDepth";
 import handleBlockType from "./modifiers/handleBlockType";
 import handleInlineStyle from "./modifiers/handleInlineStyle";
 import handleNewCodeBlock from "./modifiers/handleNewCodeBlock";
+import resetInlineStyle from "./modifiers/resetInlineStyle";
 import insertEmptyBlock from "./modifiers/insertEmptyBlock";
 import handleLink from "./modifiers/handleLink";
 import handleImage from "./modifiers/handleImage";
@@ -152,31 +159,24 @@ const createMarkdownPlugin = (config = {}) => {
       }
       return "not-handled";
     },
-    keyBindingFn(ev, { getEditorState, setEditorState }) {
-      if (ev.which === 13) {
-        const editorState = getEditorState();
-        let newEditorState = checkReturnForState(editorState, ev);
-        if (editorState !== newEditorState) {
-          setEditorState(newEditorState);
-          return "handled";
-        }
+    handleReturn(ev, editorState, { setEditorState }) {
+      let newEditorState = checkReturnForState(editorState, ev);
+      let selection = newEditorState.getSelection();
 
-        newEditorState = checkCharacterForState(editorState, "");
-        if (!inCodeBlock(editorState) && editorState !== newEditorState) {
-          const contentState = Modifier.splitBlock(
-            newEditorState.getCurrentContent(),
-            newEditorState.getSelection()
-          );
+      newEditorState = checkCharacterForState(newEditorState, "");
+      let content = newEditorState.getCurrentContent();
 
-          setEditorState(
-            EditorState.push(newEditorState, contentState, "split-block")
-          );
+      content = Modifier.splitBlock(content, selection);
 
-          return "handled";
-        }
-      }
+      setEditorState(
+        EditorState.push(
+          resetInlineStyle(newEditorState),
+          content,
+          "split-block"
+        )
+      );
 
-      return getDefaultKeyBinding(ev);
+      return "handled";
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
       if (character !== " ") {
