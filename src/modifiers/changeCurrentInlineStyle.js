@@ -27,7 +27,7 @@ const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
     wordSelection.merge({
       anchorOffset: wordSelection.getFocusOffset() - markdownCharacterLength,
     }),
-    character || " "
+    character == null ? " " : character
   );
 
   let afterSelection = newContentState.getSelectionAfter();

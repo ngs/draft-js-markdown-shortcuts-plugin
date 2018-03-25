@@ -1,4 +1,3 @@
-import sinon from "sinon";
 import Draft, { EditorState, SelectionState, ContentBlock } from "draft-js";
 import {
   CheckableListItem,
@@ -105,8 +104,11 @@ describe("draft-js-markdown-plugin", () => {
       });
       describe("handleReturn", () => {
         beforeEach(() => {
-          subject = () =>
-            plugin.handleReturn(event, store.getEditorState(), store);
+          subject = () => {
+            event = new window.KeyboardEvent("keydown", { which: 13 });
+            jest.spyOn(event, "preventDefault");
+            return plugin.keyBindingFn(event, store);
+          };
         });
         it("does not handle", () => {
           currentRawContentState = {
@@ -123,7 +125,7 @@ describe("draft-js-markdown-plugin", () => {
               },
             ],
           };
-          expect(subject()).toBe("not-handled");
+          expect(subject()).toBe(null);
           expect(modifierSpy).not.toHaveBeenCalledTimes(1);
           expect(store.setEditorState).not.toHaveBeenCalled();
         });

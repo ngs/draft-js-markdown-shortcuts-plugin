@@ -7,7 +7,7 @@ import {
 } from "draft-js-checkable-list-item";
 
 import { Map } from "immutable";
-
+import { getDefaultKeyBinding, Modifier, EditorState } from "draft-js";
 import adjustBlockDepth from "./modifiers/adjustBlockDepth";
 import handleBlockType from "./modifiers/handleBlockType";
 import handleInlineStyle from "./modifiers/handleInlineStyle";
@@ -152,23 +152,31 @@ const createMarkdownPlugin = (config = {}) => {
       }
       return "not-handled";
     },
-    handleReturn(ev, editorState, { setEditorState }) {
-      let newEditorState = checkReturnForState(editorState, ev);
-      if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
-        return "handled";
+    keyBindingFn(ev, { getEditorState, setEditorState }) {
+      if (ev.which === 13) {
+        const editorState = getEditorState();
+        let newEditorState = checkReturnForState(editorState, ev);
+        if (editorState !== newEditorState) {
+          setEditorState(newEditorState);
+          return "handled";
+        }
+
+        newEditorState = checkCharacterForState(editorState, "");
+        if (!inCodeBlock(editorState) && editorState !== newEditorState) {
+          const contentState = Modifier.splitBlock(
+            newEditorState.getCurrentContent(),
+            newEditorState.getSelection()
+          );
+
+          setEditorState(
+            EditorState.push(newEditorState, contentState, "split-block")
+          );
+
+          return "handled";
+        }
       }
 
-      // If we're in a code block don't add markdown to it
-      if (inCodeBlock(editorState)) return "not-handled";
-
-      newEditorState = checkCharacterForState(editorState, "\n");
-      if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
-        return "handled";
-      }
-
-      return "not-handled";
+      return getDefaultKeyBinding(ev);
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
       if (character !== " ") {
