@@ -127,6 +127,51 @@ describe("draft-js-markdown-plugin", () => {
           expect(modifierSpy).not.toHaveBeenCalledTimes(1);
           expect(store.setEditorState).not.toHaveBeenCalled();
         });
+
+        it("does not handle if current entity is link", () => {
+          currentRawContentState = {
+            entityMap: {
+              "0": {
+                data: {
+                  href: "www.google.com",
+                  url: "http://www.google.com",
+                },
+                mutability: "MUTABLE",
+                type: "LINK",
+              },
+            },
+            blocks: [
+              {
+                key: "item1",
+                text: "what **is** going on",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [
+                  {
+                    offset: 0,
+                    key: 0,
+                    length: 20,
+                  },
+                ],
+                data: {},
+              },
+            ],
+          };
+
+          currentSelectionState = currentEditorState.getSelection().merge({
+            focusOffset: 19,
+            anchorOffset: 19,
+          });
+
+          currentEditorState = createEditorState(
+            currentRawContentState,
+            currentSelectionState
+          );
+
+          expect(subject()).toBe("not-handled");
+        });
+
         it("leaves from list", () => {
           createMarkdownPlugin.__Rewire__("leaveList", modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
@@ -372,6 +417,51 @@ describe("draft-js-markdown-plugin", () => {
         });
         describe("no matching modifiers", () => {
           it("returns not-handled", () => {
+            expect(subject()).toBe("not-handled");
+          });
+        });
+        describe("current entity is a link", () => {
+          it("returns not-handled", () => {
+            currentRawContentState = {
+              entityMap: {
+                "0": {
+                  data: {
+                    href: "www.google.com",
+                    url: "http://www.google.com",
+                  },
+                  mutability: "MUTABLE",
+                  type: "LINK",
+                },
+              },
+              blocks: [
+                {
+                  key: "item1",
+                  text: "what **is** going on",
+                  type: "unstyled",
+                  depth: 0,
+                  inlineStyleRanges: [],
+                  entityRanges: [
+                    {
+                      offset: 0,
+                      key: 0,
+                      length: 20,
+                    },
+                  ],
+                  data: {},
+                },
+              ],
+            };
+
+            currentSelectionState = currentEditorState.getSelection().merge({
+              focusOffset: 19,
+              anchorOffset: 19,
+            });
+
+            currentEditorState = createEditorState(
+              currentRawContentState,
+              currentSelectionState
+            );
+
             expect(subject()).toBe("not-handled");
           });
         });

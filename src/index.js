@@ -25,6 +25,16 @@ import { CODE_BLOCK_REGEX } from "./constants";
 
 const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
 
+function inLink(editorState) {
+  const selection = editorState.getSelection();
+  const contentState = editorState.getCurrentContent();
+  const block = contentState.getBlockForKey(selection.getAnchorKey());
+  const entityKey = block.getEntityAt(selection.getFocusOffset());
+  return (
+    entityKey != null && contentState.getEntity(entityKey).getType() === "LINK"
+  );
+}
+
 function inCodeBlock(editorState) {
   const startKey = editorState.getSelection().getStartKey();
   if (startKey) {
@@ -153,6 +163,9 @@ const createMarkdownPlugin = (config = {}) => {
       return "not-handled";
     },
     handleReturn(ev, editorState, { setEditorState }) {
+      if (inLink(editorState)) return "not-handled";
+
+      const selection = editorState.getSelection();
       let newEditorState = checkReturnForState(editorState, ev);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
@@ -175,8 +188,11 @@ const createMarkdownPlugin = (config = {}) => {
         return "not-handled";
       }
 
-      // If we're in a code block don't add markdown to it
+      // If we're in a code block - don't transform markdown
       if (inCodeBlock(editorState)) return "not-handled";
+
+      // If we're in a link - don't transform markdown
+      if (inLink(editorState)) return "not-handled";
 
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
