@@ -1,4 +1,3 @@
-import sinon from "sinon";
 import Draft, { EditorState, SelectionState, ContentBlock } from "draft-js";
 import {
   CheckableListItem,
@@ -99,10 +98,12 @@ describe("draft-js-markdown-plugin", () => {
       it("is loaded", () => {
         expect(typeof createMarkdownPlugin).toBe("function");
       });
+
       it("initialize", () => {
         plugin.initialize(store);
         expect(plugin.store).toEqual(store);
       });
+
       describe("handleReturn", () => {
         beforeEach(() => {
           subject = () =>
@@ -172,6 +173,33 @@ describe("draft-js-markdown-plugin", () => {
           expect(subject()).toBe("not-handled");
         });
 
+        it("resets curent inline style", () => {
+          currentRawContentState = {
+            entityMap: {},
+            blocks: [
+              {
+                key: "item1",
+                text: "item1",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [{ offset: 0, length: 5, style: "BOLD" }],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+          };
+
+          currentSelectionState = currentSelectionState.merge({
+            focusOffset: 5,
+            anchorOffset: 5,
+          });
+
+          expect(subject()).toBe("handled");
+          expect(store.setEditorState).toHaveBeenCalled();
+          newEditorState = store.setEditorState.mock.calls[0][0];
+          expect(newEditorState.getCurrentInlineStyle().size).toBe(0);
+        });
+
         it("leaves from list", () => {
           createMarkdownPlugin.__Rewire__("leaveList", modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
@@ -192,6 +220,38 @@ describe("draft-js-markdown-plugin", () => {
           expect(modifierSpy).toHaveBeenCalledTimes(1);
           expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
         });
+
+        it("adds list item and transforms markdown", () => {
+          // createMarkdownPlugin.__Rewire__("leaveList", modifierSpy); // eslint-disable-line no-underscore-dangle
+          currentRawContentState = {
+            entityMap: {},
+            blocks: [
+              {
+                key: "item1",
+                text: "**some bold text**",
+                type: "unordered-list-item",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+          };
+          currentSelectionState = currentSelectionState.merge({
+            focusOffset: 18,
+            anchorOffset: 18,
+          });
+          expect(subject()).toBe("handled");
+          // expect(modifierSpy).toHaveBeenCalledTimes(1);
+          expect(store.setEditorState).toHaveBeenCalledTimes(1);
+          newEditorState = store.setEditorState.mock.calls[0][0];
+          const newRawContentState = Draft.convertToRaw(
+            newEditorState.getCurrentContent()
+          );
+          expect(newRawContentState.blocks.length).toBe(2);
+          expect(newEditorState.getCurrentInlineStyle().size).toBe(0);
+        });
+
         const testInsertNewBlock = type => () => {
           createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
