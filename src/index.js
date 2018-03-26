@@ -8,6 +8,7 @@ import {
 
 import { Map } from "immutable";
 
+import CodeBlock from "./components/Code";
 import adjustBlockDepth from "./modifiers/adjustBlockDepth";
 import handleBlockType from "./modifiers/handleBlockType";
 import handleInlineStyle from "./modifiers/handleInlineStyle";
@@ -21,7 +22,7 @@ import changeCurrentBlockType from "./modifiers/changeCurrentBlockType";
 import createLinkDecorator from "./decorators/link";
 import createImageDecorator from "./decorators/image";
 import { replaceText } from "./utils";
-import { CODE_BLOCK_REGEX } from "./constants";
+import { CODE_BLOCK_REGEX, CODE_BLOCK_TYPE } from "./constants";
 
 const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
 
@@ -104,7 +105,7 @@ const createMarkdownPlugin = (config = {}) => {
     blockRenderMap: Map({
       "code-block": {
         element: "code",
-        wrapper: <pre spellCheck={"false"} />,
+        wrapper: <pre spellCheck="false" />,
       },
     }).merge(checkboxBlockRenderMap),
     decorators: [
@@ -139,6 +140,17 @@ const createMarkdownPlugin = (config = {}) => {
             },
           };
         }
+        case CODE_BLOCK_TYPE: {
+          return {
+            component: CodeBlock,
+            props: {
+              setEditorState,
+              language: block.getData().get("language"),
+              getEditorState,
+            },
+          };
+        }
+
         default:
           return null;
       }

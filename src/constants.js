@@ -6,3 +6,5 @@ export const inlineMatchers = {
   CODE: [/`([^`]+)`/g],
   STRIKETHROUGH: [/~~([^(?:~~)]+)~~/g],
 };
+
+export const CODE_BLOCK_TYPE = "code-block";

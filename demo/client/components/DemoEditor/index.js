@@ -52,7 +52,7 @@ export default class DemoEditor extends Component {
     const { editorState } = this.state;
     return (
       <div className={styles.root}>
-        <div className={styles.editor} onClick={this.focus}>
+        <div className={styles.editor}>
           <Editor
             editorState={editorState}
             onChange={this.onChange}
