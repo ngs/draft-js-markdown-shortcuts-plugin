@@ -2,14 +2,18 @@ import changeCurrentInlineStyle from "./changeCurrentInlineStyle";
 import { inlineMatchers } from "../constants";
 
 const handleInlineStyle = (editorState, character) => {
+  const selection = editorState.getSelection();
   const key = editorState.getSelection().getStartKey();
   const text = editorState
     .getCurrentContent()
     .getBlockForKey(key)
-    .getText();
+    .getText()
+    .slice(0, selection.getFocusOffset());
 
-  const line = `${text}${character}`;
+  const line = `${text}`;
   let newEditorState = editorState;
+
+  var i = 0;
 
   Object.keys(inlineMatchers).some(k => {
     inlineMatchers[k].some(re => {
@@ -24,6 +28,7 @@ const handleInlineStyle = (editorState, character) => {
             character
           );
         }
+        i++;
       } while (matchArr);
       return newEditorState !== editorState;
     });
