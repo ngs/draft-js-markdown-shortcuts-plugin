@@ -70,18 +70,12 @@ describe("changeCurrentInlineStyle", () => {
       "\n"
     );
     expect(newEditorState).not.toEqual(editorState);
-    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
-      rawContentState(
-        "foo bar\n baz",
-        [
-          {
-            length: 3,
-            offset: 4,
-            style: "CODE",
-          },
-        ],
-        "CODE"
-      )
-    );
+    const contentState = Draft.convertToRaw(newEditorState.getCurrentContent());
+    expect(contentState.blocks.length).toBe(2);
+    expect(contentState.blocks[0].text).toEqual("foo bar");
+    expect(contentState.blocks[0].inlineStyleRanges).toEqual([
+      { offset: 4, length: 3, style: "CODE" },
+    ]);
+    expect(contentState.blocks[1].text).toEqual(" baz");
   });
 });
