@@ -81,7 +81,15 @@ function checkReturnForState(editorState, ev) {
       /^header-/.test(type) ||
       type === "blockquote")
   ) {
-    newEditorState = insertEmptyBlock(editorState);
+    // transform markdown (if we aren't in a codeblock that is)
+    if (!inCodeBlock(editorState)) {
+      newEditorState = checkCharacterForState(newEditorState, "\n");
+    }
+    if (newEditorState === editorState) {
+      newEditorState = insertEmptyBlock(newEditorState);
+    } else {
+      newEditorState = RichUtils.toggleBlockType(newEditorState, type);
+    }
   }
   if (
     newEditorState === editorState &&
@@ -165,6 +173,7 @@ const createMarkdownPlugin = (config = {}) => {
       let newEditorState = checkReturnForState(editorState, ev);
       let selection = newEditorState.getSelection();
 
+      // exit code blocks
       if (
         inCodeBlock(editorState) &&
         !is(editorState.getImmutable(), newEditorState.getImmutable())
