@@ -2,4 +2,6 @@ import { OrderedSet } from "immutable";
 import { EditorState } from "draft-js";
 
 export default editorState =>
-  EditorState.setInlineStyleOverride(editorState, OrderedSet());
+  editorState.getCurrentInlineStyle().size === 0
+    ? editorState
+    : EditorState.setInlineStyleOverride(editorState, OrderedSet());

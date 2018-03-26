@@ -6,7 +6,7 @@ import {
   CHECKABLE_LIST_ITEM,
 } from "draft-js-checkable-list-item";
 
-import { Map, OrderedSet } from "immutable";
+import { Map, OrderedSet, is } from "immutable";
 import {
   getDefaultKeyBinding,
   Modifier,
@@ -67,9 +67,11 @@ function checkReturnForState(editorState, ev) {
   const currentBlock = contentState.getBlockForKey(key);
   const type = currentBlock.getType();
   const text = currentBlock.getText();
+
   if (/-list-item$/.test(type) && text === "") {
     newEditorState = leaveList(editorState);
   }
+
   if (
     newEditorState === editorState &&
     (ev.ctrlKey ||
@@ -163,20 +165,36 @@ const createMarkdownPlugin = (config = {}) => {
       let newEditorState = checkReturnForState(editorState, ev);
       let selection = newEditorState.getSelection();
 
-      newEditorState = checkCharacterForState(newEditorState, "");
+      if (
+        inCodeBlock(editorState) &&
+        !is(editorState.getImmutable(), newEditorState.getImmutable())
+      ) {
+        setEditorState(newEditorState);
+        return "handled";
+      }
+
+      newEditorState = checkCharacterForState(newEditorState, "\n");
       let content = newEditorState.getCurrentContent();
 
-      content = Modifier.splitBlock(content, selection);
+      // if there are actually no changes but the editorState has a
+      // current inline style we want to split the block
+      if (
+        is(editorState.getImmutable(), newEditorState.getImmutable()) &&
+        editorState.getCurrentInlineStyle().size > 0
+      ) {
+        content = Modifier.splitBlock(content, selection);
+      }
 
-      setEditorState(
-        EditorState.push(
-          resetInlineStyle(newEditorState),
-          content,
-          "split-block"
-        )
-      );
+      newEditorState = resetInlineStyle(newEditorState);
 
-      return "handled";
+      if (!is(editorState.getImmutable(), newEditorState.getImmutable())) {
+        setEditorState(
+          EditorState.push(newEditorState, content, "split-block")
+        );
+        return "handled";
+      }
+
+      return "not-handled";
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
       if (character !== " ") {

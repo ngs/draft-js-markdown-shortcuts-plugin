@@ -21,13 +21,16 @@ const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
 
   let newContentState = currentContent;
 
+  let appendChar = character == null ? " " : character;
+  if (character == "\n") appendChar = "";
+
   // remove markdown delimiter at end
   newContentState = Modifier.replaceText(
     newContentState,
     wordSelection.merge({
       anchorOffset: wordSelection.getFocusOffset() - markdownCharacterLength,
     }),
-    character == null ? " " : character
+    appendChar
   );
 
   let afterSelection = newContentState.getSelectionAfter();
@@ -55,6 +58,11 @@ const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
     }),
     style
   );
+
+  if (character == "\n") {
+    newContentState = Modifier.splitBlock(newContentState, afterSelection);
+    afterSelection = newContentState.getSelectionAfter();
+  }
 
   const newEditorState = EditorState.push(
     editorState,
