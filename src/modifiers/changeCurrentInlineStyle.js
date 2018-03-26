@@ -21,6 +21,8 @@ const changeCurrentInlineStyle = (editorState, matchArr, style, character) => {
 
   let newContentState = currentContent;
 
+  // if appendChar isn't defined add a space
+  // if character is a newline - add empty string and later on - split block
   let appendChar = character == null ? " " : character;
   if (character == "\n") appendChar = "";
 
