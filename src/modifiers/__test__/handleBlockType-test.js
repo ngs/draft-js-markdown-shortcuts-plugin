@@ -39,6 +39,44 @@ describe("handleBlockType", () => {
     });
   });
 
+  describe("when current block type is not 'unstyled' or 'paragraph'", () => {
+    const rawContentState = {
+      entityMap: {},
+      blocks: [
+        {
+          key: "item1",
+          text: "# Header",
+          type: "unordered-list-item",
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: {},
+        },
+      ],
+    };
+    const contentState = Draft.convertFromRaw(rawContentState);
+    const selection = new SelectionState({
+      anchorKey: "item1",
+      anchorOffset: 3,
+      focusKey: "item1",
+      focusOffset: 3,
+      isBackward: false,
+      hasFocus: true,
+    });
+    const editorState = EditorState.forceSelection(
+      EditorState.createWithContent(contentState),
+      selection
+    );
+
+    it("does not convert block type", () => {
+      const newEditorState = handleBlockType(editorState, " ");
+      expect(newEditorState).toEqual(editorState);
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+        rawContentState
+      );
+    });
+  });
+
   const testCases = {
     "converts from unstyled to header-one": {
       before: {
