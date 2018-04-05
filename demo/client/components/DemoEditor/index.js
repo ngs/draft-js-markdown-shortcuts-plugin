@@ -27,7 +27,42 @@ const prismPlugin = createPrismPlugin({
   prism: Prism,
 });
 
-const plugins = [prismPlugin, createMarkdownShortcutsPlugin()];
+const renderLanguageSelect = ({
+  options,
+  onChange,
+  selectedValue,
+  selectedLabel,
+}) => (
+  <div className={styles.switcherContainer}>
+    <div className={styles.switcher}>
+      <select
+        className={styles.switcherSelect}
+        value={selectedValue}
+        onChange={onChange}
+      >
+        {options.map(({ label, value }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </select>
+      <div className={styles.switcherLabel}>
+        {selectedLabel} {String.fromCharCode(9662)}
+      </div>
+    </div>
+  </div>
+);
+
+const languages = {
+  js: "JavaScript",
+  kotlin: "Kotlin",
+  mathml: "MathML",
+};
+
+const plugins = [
+  prismPlugin,
+  createMarkdownShortcutsPlugin({ renderLanguageSelect }),
+];
 
 const initialEditorState = EditorState.createWithContent(
   convertFromRaw(initialState)

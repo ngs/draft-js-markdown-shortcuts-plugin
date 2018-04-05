@@ -10,7 +10,7 @@
     "clean": "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
     "dev": "node_modules/.bin/babel-node ./demo/server.js",
     "test": "jest",
-    "precommit": "lint-staged"
+    "precommit": "jest && lint-staged"
   },
   "repository": {
     "type": "git",
@@ -65,6 +65,7 @@
     "flow-bin": "^0.36.0",
     "history": "^2.0.0",
     "husky": "^0.14.3",
+    "jest": "^21.1.0",
     "jsdom": "^9.8.3",
     "lint-staged": "^4.2.1",
     "mocha": "^3.2.0",
@@ -81,6 +82,7 @@
     "react-dom": "^15.4.1",
     "react-github-corner": "^2.0.0",
     "react-github-fork-ribbon": "^0.4.4",
+    "react-test-renderer": "^16.2.0",
     "rimraf": "^2.5.4",
     "sinon": "^1.17.6",
     "static-site-generator-webpack-plugin": "^3.1.0",
@@ -88,23 +90,23 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.3",
     "webpack-dev-middleware": "^1.8.4",
-    "webpack-hot-middleware": "^2.13.2",
-    "jest": "^21.1.0",
-    "react-test-renderer": "^16.2.0"
+    "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
     "draft-js-plugins-editor": "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
     "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "react-dom": "^15.0.0",
+    "react-portal": "^4.1.4"
   },
   "contributors": [
     "Atsushi Nagase <a@ngs.io>"
   ],
   "dependencies": {
     "decorate-component-with-props": "^1.0.2",
-    "draft-js": "~0.10.1",
+    "draft-js": "^0.10.4",
     "draft-js-checkable-list-item": "^2.0.5",
     "draft-js-prism-plugin": "^0.1.1",
-    "immutable": "~3.7.4"
+    "immutable": "~3.7.4",
+    "react-click-outside": "^3.0.1"
   }
 }

@@ -7,6 +7,7 @@ import {
 } from "draft-js-checkable-list-item";
 
 import { Map, OrderedSet, is } from "immutable";
+import CodeBlock from "./components/Code";
 import {
   getDefaultKeyBinding,
   Modifier,
@@ -28,9 +29,38 @@ import changeCurrentBlockType from "./modifiers/changeCurrentBlockType";
 import createLinkDecorator from "./decorators/link";
 import createImageDecorator from "./decorators/image";
 import { replaceText } from "./utils";
-import { CODE_BLOCK_REGEX } from "./constants";
+import { CODE_BLOCK_REGEX, CODE_BLOCK_TYPE } from "./constants";
+
+const defaultLanguages = {
+  bash: "Bash",
+  c: "C",
+  cpp: "C++",
+  css: "CSS",
+  go: "Go",
+  html: "HTML",
+  java: "Java",
+  js: "JavaScript",
+  kotlin: "Kotlin",
+  mathml: "MathML",
+  perl: "Perl",
+  ruby: "Ruby",
+  scala: "Scala",
+  sql: "SQL",
+  svg: "SVG",
+  swift: "Swift",
+};
 
 const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
+
+const defaultRenderSelect = ({ options, onChange, selectedValue }) => (
+  <select value={selectedValue} onChange={onChange}>
+    {options.map(({ label, value }) => (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    ))}
+  </select>
+);
 
 function inLink(editorState) {
   const selection = editorState.getSelection();
@@ -124,20 +154,28 @@ function checkReturnForState(editorState, ev) {
   return newEditorState;
 }
 
-const createMarkdownPlugin = (config = {}) => {
+const defaultConfig = {
+  renderLanguageSelect: defaultRenderSelect,
+  languages: defaultLanguages,
+};
+
+const createMarkdownPlugin = (_config = {}) => {
   const store = {};
+
+  const config = {
+    ...defaultConfig,
+    ..._config,
+  };
+
   return {
     store,
     blockRenderMap: Map({
       "code-block": {
         element: "code",
-        wrapper: <pre spellCheck={"false"} />,
+        wrapper: <pre spellCheck="false" />,
       },
     }).merge(checkboxBlockRenderMap),
-    decorators: [
-      createLinkDecorator(config, store),
-      createImageDecorator(config, store),
-    ],
+    decorators: [createLinkDecorator(), createImageDecorator()],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;
@@ -152,7 +190,10 @@ const createMarkdownPlugin = (config = {}) => {
       return null;
     },
 
-    blockRendererFn(block, { setEditorState, getEditorState }) {
+    blockRendererFn(
+      block,
+      { setReadOnly, setEditorState, getEditorState, getEditorRef }
+    ) {
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
           return {
@@ -166,6 +207,20 @@ const createMarkdownPlugin = (config = {}) => {
             },
           };
         }
+        case CODE_BLOCK_TYPE: {
+          return {
+            component: CodeBlock,
+            props: {
+              setEditorState,
+              renderLanguageSelect: config.renderLanguageSelect,
+              languages: config.languages,
+              setReadOnly,
+              language: block.getData().get("language"),
+              getEditorState,
+            },
+          };
+        }
+
         default:
           return null;
       }
