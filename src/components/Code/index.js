@@ -8,25 +8,6 @@ const alias = {
   jsx: "js",
 };
 
-const languages = {
-  bash: "Bash",
-  c: "C",
-  cpp: "C++",
-  css: "CSS",
-  go: "Go",
-  html: "HTML",
-  java: "Java",
-  js: "JavaScript",
-  kotlin: "Kotlin",
-  mathml: "MathML",
-  perl: "Perl",
-  ruby: "Ruby",
-  scala: "Scala",
-  sql: "SQL",
-  svg: "SVG",
-  swift: "Swift",
-};
-
 const CodeSwitchContainer = enhanceWithClickOutside(
   class SwitchContainer extends PureComponent {
     handleClickOutside() {
@@ -103,12 +84,15 @@ class CodeBlock extends PureComponent {
     const editorState = getEditorState();
     const selection = editorState.getSelection();
 
-    setEditorState(EditorState.forceSelection(newEditorState, selection));
+    setEditorState(EditorState.forceSelection(editorState, selection));
   };
 
   render() {
-    const { languages, blockProps } = this.props;
-    const { renderLanguageSelect, language: _language } = blockProps;
+    const {
+      languages,
+      renderLanguageSelect,
+      language: _language,
+    } = this.props.blockProps;
 
     const language = alias[_language] || _language;
     const selectedLabel = languages[language];
@@ -143,9 +127,5 @@ class CodeBlock extends PureComponent {
     );
   }
 }
-
-CodeBlock.defaultProps = {
-  languages,
-};
 
 export default CodeBlock;

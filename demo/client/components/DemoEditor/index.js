@@ -53,6 +53,12 @@ const renderLanguageSelect = ({
   </div>
 );
 
+const languages = {
+  js: "JavaScript",
+  kotlin: "Kotlin",
+  mathml: "MathML",
+};
+
 const plugins = [
   prismPlugin,
   createMarkdownShortcutsPlugin({ renderLanguageSelect }),

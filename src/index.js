@@ -24,6 +24,25 @@ import createImageDecorator from "./decorators/image";
 import { replaceText } from "./utils";
 import { CODE_BLOCK_REGEX, CODE_BLOCK_TYPE } from "./constants";
 
+const defaultLanguages = {
+  bash: "Bash",
+  c: "C",
+  cpp: "C++",
+  css: "CSS",
+  go: "Go",
+  html: "HTML",
+  java: "Java",
+  js: "JavaScript",
+  kotlin: "Kotlin",
+  mathml: "MathML",
+  perl: "Perl",
+  ruby: "Ruby",
+  scala: "Scala",
+  sql: "SQL",
+  svg: "SVG",
+  swift: "Swift",
+};
+
 const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
 
 const defaultRenderSelect = ({ options, onChange, selectedValue }) => (
@@ -110,6 +129,7 @@ function checkReturnForState(editorState, ev) {
 
 const defaultConfig = {
   renderLanguageSelect: defaultRenderSelect,
+  languages: defaultLanguages,
 };
 
 const createMarkdownPlugin = (_config = {}) => {
@@ -128,10 +148,7 @@ const createMarkdownPlugin = (_config = {}) => {
         wrapper: <pre spellCheck="false" />,
       },
     }).merge(checkboxBlockRenderMap),
-    decorators: [
-      createLinkDecorator(config, store),
-      createImageDecorator(config, store),
-    ],
+    decorators: [createLinkDecorator(), createImageDecorator()],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;
@@ -169,6 +186,7 @@ const createMarkdownPlugin = (_config = {}) => {
             props: {
               setEditorState,
               renderLanguageSelect: config.renderLanguageSelect,
+              languages: config.languages,
               setReadOnly,
               language: block.getData().get("language"),
               getEditorState,

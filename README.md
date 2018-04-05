@@ -17,6 +17,48 @@ A [DraftJS] plugin for supporting Markdown syntax shortcuts in DraftJS. This plu
 npm i --save draft-js-markdown-plugin
 ```
 
+## Options
+The `draft-js-markdown-plugin` is configurable. Just pass a config object. Here are the available options:
+
+
+### `renderLanguageSelect`
+
+```js
+renderLanguageSelect = ({
+  // Array of language options
+  options: Array<{ label, value }>,
+  // Callback to select an option
+  onChange: (selectedValue: string) => void,
+  // Value of selected option
+  selectedValue: string,
+  // Label of selected option
+  selectedLabel: string
+}) => React.Node
+```
+
+Code blocks render a select to switch syntax highlighting - `renderLanguageSelect` is a render function that lets you override how this is rendered. 
+
+Here's an example:
+
+```
+import createMarkdownPlugin from 'draft-js-markdown-plugin';
+
+const renderLanguageSelect = ({ options, onChange, selectedValue }) => (
+  <select value={selectedValue} onChange={onChange}>
+    {options.map(({ label, value }) => (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    ))}
+  </select>
+);
+
+const markdownPlugin = createMarkdownPlugin({ renderLanguageSelect })
+```
+
+### `languages`
+Dictionary for languages available to code block switcher
+
 ## Usage
 
 ```js
