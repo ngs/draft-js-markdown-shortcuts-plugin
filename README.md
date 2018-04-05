@@ -38,7 +38,7 @@ renderLanguageSelect = ({
 
 Code blocks render a select to switch syntax highlighting - `renderLanguageSelect` is a render function that lets you override how this is rendered. 
 
-Here's an example:
+#### Example:
 
 ```
 import createMarkdownPlugin from 'draft-js-markdown-plugin';
@@ -58,6 +58,16 @@ const markdownPlugin = createMarkdownPlugin({ renderLanguageSelect })
 
 ### `languages`
 Dictionary for languages available to code block switcher
+
+#### Example:
+
+```js
+const languages = {
+  js: 'JavaScript'
+}
+
+const markdownPlugin = createMarkdownPlugin({ languages })
+```
 
 ## Usage
 
