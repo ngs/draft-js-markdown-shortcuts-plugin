@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { Map } from "immutable";
 import { EditorState, EditorBlock, Modifier } from "draft-js";
+import Modal from "react-modal";
 
 const languages = {
   bash: "Bash",
@@ -22,11 +23,22 @@ const languages = {
   swift: "Swift",
 };
 
+const hidden = {};
+
 class CodeBlock extends PureComponent {
+  state = {
+    isOpen: false,
+  };
+
   onChange = ev => {
     ev.preventDefault();
+    ev.stopPropagation();
     const blockKey = this.props.block.getKey();
-    const { getEditorState, setEditorState } = this.props.blockProps;
+    const {
+      getEditorState,
+      setEditorState,
+      getEditorRef,
+    } = this.props.blockProps;
     const editorState = getEditorState();
     const selection = editorState.getSelection();
     const language = ev.currentTarget.value;
@@ -40,12 +52,19 @@ class CodeBlock extends PureComponent {
       "change-block-data"
     );
 
-    // setTimeout(() => {
-    //   setEditorState(EditorState.forceSelection(
-    //     newEditorState,
-    //     content.getSelectionAfter()
-    //   ))
-    // }, 3000)
+    setTimeout(() => {
+      setEditorState(
+        EditorState.forceSelection(newEditorState, content.getSelectionAfter())
+      );
+    }, 2);
+  };
+
+  cancelClicks = event => event.preventDefault();
+
+  preventBubbling = event => event.stopPropagation();
+
+  wat = () => {
+    console.log("yo wtf");
   };
 
   render() {
@@ -54,8 +73,13 @@ class CodeBlock extends PureComponent {
     return (
       <div>
         <EditorBlock {...this.props} />
-        <div contentEditable={false}>
-          <select value={language} onChange={this.onChange}>
+        <div>
+          <select
+            contentEditable={false}
+            onClick={this.preventBubbling}
+            value={language}
+            onChange={this.onChange}
+          >
             {Object.keys(this.props.languages).map(lang => (
               <option key={lang} value={lang}>
                 {this.props.languages[lang]}

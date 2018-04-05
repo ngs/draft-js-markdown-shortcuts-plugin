@@ -126,7 +126,7 @@ const createMarkdownPlugin = (config = {}) => {
       return null;
     },
 
-    blockRendererFn(block, { setEditorState, getEditorState }) {
+    blockRendererFn(block, { setEditorState, getEditorState, getEditorRef }) {
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
           return {
@@ -144,6 +144,7 @@ const createMarkdownPlugin = (config = {}) => {
           return {
             component: CodeBlock,
             props: {
+              getEditorRef,
               setEditorState,
               language: block.getData().get("language"),
               getEditorState,
