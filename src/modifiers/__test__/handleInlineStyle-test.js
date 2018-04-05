@@ -79,9 +79,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 16,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 16,
         isBackward: false,
         hasFocus: true,
       }),
@@ -123,9 +123,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 16,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 16,
         isBackward: false,
         hasFocus: true,
       }),
@@ -167,9 +167,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 16,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 16,
         isBackward: false,
         hasFocus: true,
       }),
@@ -310,9 +310,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 16,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 16,
         isBackward: false,
         hasFocus: true,
       }),
@@ -398,9 +398,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 16,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 16,
         isBackward: false,
         hasFocus: true,
       }),
@@ -456,9 +456,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 16,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 16,
         isBackward: false,
         hasFocus: true,
       }),
@@ -529,7 +529,25 @@ describe("handleInlineStyle", () => {
         EditorState.createWithContent(contentState),
         selection
       );
-      it("converts block type", () => {
+
+      const wrongSelectionState = selection.merge({
+        anchorOffset: 0,
+        focusOffset: 0,
+      });
+      const sameEditorState = EditorState.forceSelection(
+        editorState,
+        wrongSelectionState
+      );
+
+      it("does not convert markdown to style or block type if selection is at the wrong place", () => {
+        const newEditorState = handleInlineStyle(sameEditorState, character);
+        expect(newEditorState).toEqual(sameEditorState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
+          before
+        );
+      });
+
+      it("converts markdown to style or block type", () => {
         const newEditorState = handleInlineStyle(editorState, character);
         expect(newEditorState).not.toEqual(editorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(

@@ -6,13 +6,20 @@ import {
   CHECKABLE_LIST_ITEM,
 } from "draft-js-checkable-list-item";
 
-import { Map } from "immutable";
-
+import { Map, OrderedSet, is } from "immutable";
 import CodeBlock from "./components/Code";
+import {
+  getDefaultKeyBinding,
+  Modifier,
+  EditorState,
+  RichUtils,
+  DefaultDraftInlineStyle,
+} from "draft-js";
 import adjustBlockDepth from "./modifiers/adjustBlockDepth";
 import handleBlockType from "./modifiers/handleBlockType";
 import handleInlineStyle from "./modifiers/handleInlineStyle";
 import handleNewCodeBlock from "./modifiers/handleNewCodeBlock";
+import resetInlineStyle from "./modifiers/resetInlineStyle";
 import insertEmptyBlock from "./modifiers/insertEmptyBlock";
 import handleLink from "./modifiers/handleLink";
 import handleImage from "./modifiers/handleImage";
@@ -55,6 +62,16 @@ const defaultRenderSelect = ({ options, onChange, selectedValue }) => (
   </select>
 );
 
+function inLink(editorState) {
+  const selection = editorState.getSelection();
+  const contentState = editorState.getCurrentContent();
+  const block = contentState.getBlockForKey(selection.getAnchorKey());
+  const entityKey = block.getEntityAt(selection.getFocusOffset());
+  return (
+    entityKey != null && contentState.getEntity(entityKey).getType() === "LINK"
+  );
+}
+
 function inCodeBlock(editorState) {
   const startKey = editorState.getSelection().getStartKey();
   if (startKey) {
@@ -90,9 +107,11 @@ function checkReturnForState(editorState, ev) {
   const currentBlock = contentState.getBlockForKey(key);
   const type = currentBlock.getType();
   const text = currentBlock.getText();
+
   if (/-list-item$/.test(type) && text === "") {
     newEditorState = leaveList(editorState);
   }
+
   if (
     newEditorState === editorState &&
     (ev.ctrlKey ||
@@ -102,7 +121,15 @@ function checkReturnForState(editorState, ev) {
       /^header-/.test(type) ||
       type === "blockquote")
   ) {
-    newEditorState = insertEmptyBlock(editorState);
+    // transform markdown (if we aren't in a codeblock that is)
+    if (!inCodeBlock(editorState)) {
+      newEditorState = checkCharacterForState(newEditorState, "\n");
+    }
+    if (newEditorState === editorState) {
+      newEditorState = insertEmptyBlock(newEditorState);
+    } else {
+      newEditorState = RichUtils.toggleBlockType(newEditorState, type);
+    }
   }
   if (
     newEditorState === editorState &&
@@ -208,18 +235,38 @@ const createMarkdownPlugin = (_config = {}) => {
       return "not-handled";
     },
     handleReturn(ev, editorState, { setEditorState }) {
+      if (inLink(editorState)) return "not-handled";
+
       let newEditorState = checkReturnForState(editorState, ev);
-      if (editorState !== newEditorState) {
+      const selection = newEditorState.getSelection();
+
+      // exit code blocks
+      if (
+        inCodeBlock(editorState) &&
+        !is(editorState.getImmutable(), newEditorState.getImmutable())
+      ) {
         setEditorState(newEditorState);
         return "handled";
       }
 
-      // If we're in a code block don't add markdown to it
-      if (inCodeBlock(editorState)) return "not-handled";
+      newEditorState = checkCharacterForState(newEditorState, "\n");
+      let content = newEditorState.getCurrentContent();
 
-      newEditorState = checkCharacterForState(editorState, "\n");
-      if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
+      // if there are actually no changes but the editorState has a
+      // current inline style we want to split the block
+      if (
+        is(editorState.getImmutable(), newEditorState.getImmutable()) &&
+        editorState.getCurrentInlineStyle().size > 0
+      ) {
+        content = Modifier.splitBlock(content, selection);
+      }
+
+      newEditorState = resetInlineStyle(newEditorState);
+
+      if (!is(editorState.getImmutable(), newEditorState.getImmutable())) {
+        setEditorState(
+          EditorState.push(newEditorState, content, "split-block")
+        );
         return "handled";
       }
 
@@ -230,8 +277,11 @@ const createMarkdownPlugin = (_config = {}) => {
         return "not-handled";
       }
 
-      // If we're in a code block don't add markdown to it
+      // If we're in a code block - don't transform markdown
       if (inCodeBlock(editorState)) return "not-handled";
+
+      // If we're in a link - don't transform markdown
+      if (inLink(editorState)) return "not-handled";
 
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
