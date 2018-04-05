@@ -10,17 +10,18 @@ const sharps = len => {
   return ret;
 };
 
-const blockTypes = [
-  null,
-  "header-one",
-  "header-two",
-  "header-three",
-  "header-four",
-  "header-five",
-  "header-six",
-];
+const blockTypes = {
+  "#": "header-one",
+  "##": "header-two",
+  "###": "header-three",
+  "####": "header-four",
+  "#####": "header-five",
+  "######": "header-six",
+};
 
-const handleBlockType = (editorState, character) => {
+const headerReg = /^(#+)\s+/;
+
+const handleBlockType = (whiteList, editorState, character) => {
   const currentSelection = editorState.getSelection();
   const key = currentSelection.getStartKey();
   const text = editorState
@@ -33,26 +34,32 @@ const handleBlockType = (editorState, character) => {
   );
   const blockType = RichUtils.getCurrentBlockType(editorState);
 
+  const headerMatch = line.match(headerReg);
+
   if (blockType === "unstyled" || blockType === "paragraph") {
-    for (let i = 1; i <= 6; i += 1) {
-      if (line.indexOf(`${sharps(i)} `) === 0) {
-        return changeCurrentBlockType(
-          editorState,
-          blockTypes[i],
-          line.replace(/^#+\s/, "")
-        );
-      }
+    if (
+      headerMatch !== null &&
+      blockTypes[headerMatch[1]] !== null &&
+      whiteList.includes(blockTypes[headerMatch[1]])
+    ) {
+      return changeCurrentBlockType(
+        editorState,
+        blockTypes[headerMatch[1]],
+        line.replace(/^#+\s/, "")
+      );
     }
+
     let matchArr = line.match(/^[*-] (.*)$/);
-    if (matchArr) {
+    if (matchArr && whiteList.includes("unordered-list-item")) {
       return changeCurrentBlockType(
         editorState,
         "unordered-list-item",
         matchArr[1]
       );
     }
+
     matchArr = line.match(/^[\d]\. (.*)$/);
-    if (matchArr) {
+    if (matchArr && whiteList.includes("ordered-list-item")) {
       return changeCurrentBlockType(
         editorState,
         "ordered-list-item",
@@ -63,7 +70,10 @@ const handleBlockType = (editorState, character) => {
     if (matchArr) {
       return changeCurrentBlockType(editorState, "blockquote", matchArr[1]);
     }
-  } else if (blockType === "unordered-list-item") {
+  } else if (
+    blockType === "unordered-list-item" &&
+    whiteList.includes(CHECKABLE_LIST_ITEM)
+  ) {
     let matchArr = line.match(/^\[([x ])] (.*)$/i);
     if (matchArr) {
       return changeCurrentBlockType(

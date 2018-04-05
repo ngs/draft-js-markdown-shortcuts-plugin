@@ -95,8 +95,7 @@
   "peerDependencies": {
     "draft-js-plugins-editor": "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
     "react": "^15.0.0",
-    "react-dom": "^15.0.0",
-    "react-portal": "^4.1.4"
+    "react-dom": "^15.0.0"
   },
   "contributors": [
     "Atsushi Nagase <a@ngs.io>"

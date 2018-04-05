@@ -4,6 +4,8 @@ import {
   CheckableListItemUtils,
 } from "draft-js-checkable-list-item";
 
+import { defaultInlineWhitelist, defaultBlockWhitelist } from "../constants";
+
 import { Map, List } from "immutable";
 import createMarkdownPlugin from "../";
 
@@ -451,12 +453,7 @@ describe("draft-js-markdown-plugin", () => {
             ],
           };
         });
-        [
-          "handleBlockType",
-          "handleImage",
-          "handleLink",
-          "handleInlineStyle",
-        ].forEach(modifier => {
+        ["handleImage", "handleLink"].forEach(modifier => {
           describe(modifier, () => {
             beforeEach(() => {
               createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
@@ -464,6 +461,36 @@ describe("draft-js-markdown-plugin", () => {
             it("returns handled", () => {
               expect(subject()).toBe("handled");
               expect(modifierSpy).toHaveBeenCalledWith(currentEditorState, " ");
+            });
+          });
+        });
+        ["handleBlockType"].forEach(modifier => {
+          describe(modifier, () => {
+            beforeEach(() => {
+              createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
+            });
+            it("returns handled", () => {
+              expect(subject()).toBe("handled");
+              expect(modifierSpy).toHaveBeenCalledWith(
+                defaultBlockWhitelist,
+                currentEditorState,
+                " "
+              );
+            });
+          });
+        });
+        ["handleInlineStyle"].forEach(modifier => {
+          describe(modifier, () => {
+            beforeEach(() => {
+              createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
+            });
+            it("returns handled", () => {
+              expect(subject()).toBe("handled");
+              expect(modifierSpy).toHaveBeenCalledWith(
+                defaultInlineWhitelist,
+                currentEditorState,
+                " "
+              );
             });
           });
         });

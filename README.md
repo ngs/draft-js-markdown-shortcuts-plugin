@@ -69,6 +69,61 @@ const languages = {
 const markdownPlugin = createMarkdownPlugin({ languages })
 ```
 
+### `features`
+A list of enabled features, by default all features are turned on.
+
+```js
+features = {
+  block: Array<string>,
+  inline: Array<string>,
+}
+```
+
+````
+#### Example
+
+```
+// this will only enable BOLD for inline and CODE
+// as well as header-one for blocks
+const features = {
+  inline: ['BOLD'],
+  block: ['CODE', 'header-one'],
+}
+const plugin = createMarkdownPlugin({ features })
+```
+
+*Available Inline features*:
+
+```js
+[
+  'BOLD',
+  'ITALIC',
+  'CODE',
+  'STRIKETHROUGH',
+  'LINK',
+  'IMAGE'
+]
+```
+
+*Available Block features*:
+
+```js
+[
+  'CODE',
+  'header-one',
+  'header-two',
+  'header-three',
+  'header-four',
+  'header-five',
+  'header-six',
+  'ordered-list-item',
+  'unordered-list-item',
+  CHECKABLE_LIST_ITEM,
+  'blockquote',
+]
+```
+
+
 ## Usage
 
 ```js
