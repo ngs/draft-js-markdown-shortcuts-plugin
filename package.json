@@ -96,7 +96,6 @@
     "draft-js-plugins-editor": "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
-    "react-modal": "3.x",
     "react-portal": "^4.1.4"
   },
   "contributors": [
@@ -108,7 +107,6 @@
     "draft-js-checkable-list-item": "^2.0.5",
     "draft-js-prism-plugin": "^0.1.1",
     "immutable": "~3.7.4",
-    "react-modal": "^3.3.2",
-    "react-popover": "^0.4.0"
+    "react-click-outside": "^3.0.1"
   }
 }

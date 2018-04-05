@@ -1,7 +1,12 @@
 import React, { PureComponent } from "react";
 import { Map } from "immutable";
 import { EditorState, EditorBlock, Modifier } from "draft-js";
-import Modal from "react-modal";
+import enhanceWithClickOutside from "react-click-outside";
+
+const alias = {
+  javascript: "js",
+  jsx: "js",
+};
 
 const languages = {
   bash: "Bash",
@@ -11,7 +16,6 @@ const languages = {
   go: "Go",
   html: "HTML",
   java: "Java",
-  javascript: "JavaScript",
   js: "JavaScript",
   kotlin: "Kotlin",
   mathml: "MathML",
@@ -23,7 +27,21 @@ const languages = {
   swift: "Swift",
 };
 
-const hidden = {};
+const CodeSwitchContainer = enhanceWithClickOutside(
+  class SwitchContainer extends PureComponent {
+    handleClickOutside() {
+      this.props.onClickOutside();
+    }
+
+    render() {
+      return (
+        <div contentEditable={false} onClick={this.props.onClick}>
+          {this.props.children}
+        </div>
+      );
+    }
+  }
+);
 
 class CodeBlock extends PureComponent {
   state = {
@@ -36,15 +54,25 @@ class CodeBlock extends PureComponent {
     const blockKey = this.props.block.getKey();
     const {
       getEditorState,
+      setReadOnly,
       setEditorState,
-      getEditorRef,
     } = this.props.blockProps;
+
     const editorState = getEditorState();
     const selection = editorState.getSelection();
     const language = ev.currentTarget.value;
+    const blockSelection = selection.merge({
+      anchorKey: blockKey,
+      focusKey: blockKey,
+    });
 
     let content = editorState.getCurrentContent();
-    content = Modifier.mergeBlockData(content, selection, Map({ language }));
+    content = Modifier.mergeBlockData(
+      content,
+      blockSelection,
+      Map({ language })
+    );
+    setReadOnly(false);
 
     const newEditorState = EditorState.push(
       editorState,
@@ -52,41 +80,65 @@ class CodeBlock extends PureComponent {
       "change-block-data"
     );
 
-    setTimeout(() => {
-      setEditorState(
-        EditorState.forceSelection(newEditorState, content.getSelectionAfter())
-      );
-    }, 2);
+    setEditorState(EditorState.forceSelection(newEditorState, selection));
   };
 
   cancelClicks = event => event.preventDefault();
 
-  preventBubbling = event => event.stopPropagation();
+  onSelectClick = event => {
+    const { setReadOnly } = this.props.blockProps;
+    event.stopPropagation();
+    setReadOnly(true);
+  };
 
-  wat = () => {
-    console.log("yo wtf");
+  onClickOutside = () => {
+    const {
+      getEditorState,
+      setReadOnly,
+      setEditorState,
+    } = this.props.blockProps;
+
+    setReadOnly(false);
+
+    const editorState = getEditorState();
+    const selection = editorState.getSelection();
+
+    setEditorState(EditorState.forceSelection(newEditorState, selection));
   };
 
   render() {
-    const { language } = this.props.blockProps;
+    const { languages, blockProps } = this.props;
+    const { renderLanguageSelect, language: _language } = blockProps;
+
+    const language = alias[_language] || _language;
+    const selectedLabel = languages[language];
+    const selectedValue = language;
+
+    const options = Object.keys(languages).reduce(
+      (acc, val) => [
+        ...acc,
+        {
+          label: languages[val],
+          value: val,
+        },
+      ],
+      []
+    );
 
     return (
       <div>
         <EditorBlock {...this.props} />
-        <div>
-          <select
-            contentEditable={false}
-            onClick={this.preventBubbling}
-            value={language}
-            onChange={this.onChange}
-          >
-            {Object.keys(this.props.languages).map(lang => (
-              <option key={lang} value={lang}>
-                {this.props.languages[lang]}
-              </option>
-            ))}
-          </select>
-        </div>
+        <CodeSwitchContainer
+          onClickOutside={this.onClickOutside}
+          onClick={this.onSelectClick}
+        >
+          {renderLanguageSelect({
+            selectedLabel,
+            selectedValue,
+            onChange: this.onChange,
+            options,
+          })}
+        </CodeSwitchContainer>
       </div>
     );
   }

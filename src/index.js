@@ -26,6 +26,16 @@ import { CODE_BLOCK_REGEX, CODE_BLOCK_TYPE } from "./constants";
 
 const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
 
+const defaultRenderSelect = ({ options, onChange, selectedValue }) => (
+  <select value={selectedValue} onChange={onChange}>
+    {options.map(({ label, value }) => (
+      <option key={value} value={value}>
+        {label}
+      </option>
+    ))}
+  </select>
+);
+
 function inCodeBlock(editorState) {
   const startKey = editorState.getSelection().getStartKey();
   if (startKey) {
@@ -98,8 +108,18 @@ function checkReturnForState(editorState, ev) {
   return newEditorState;
 }
 
-const createMarkdownPlugin = (config = {}) => {
+const defaultConfig = {
+  renderLanguageSelect: defaultRenderSelect,
+};
+
+const createMarkdownPlugin = (_config = {}) => {
   const store = {};
+
+  const config = {
+    ...defaultConfig,
+    ..._config,
+  };
+
   return {
     store,
     blockRenderMap: Map({
@@ -126,7 +146,10 @@ const createMarkdownPlugin = (config = {}) => {
       return null;
     },
 
-    blockRendererFn(block, { setEditorState, getEditorState, getEditorRef }) {
+    blockRendererFn(
+      block,
+      { setReadOnly, setEditorState, getEditorState, getEditorRef }
+    ) {
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
           return {
@@ -144,8 +167,9 @@ const createMarkdownPlugin = (config = {}) => {
           return {
             component: CodeBlock,
             props: {
-              getEditorRef,
               setEditorState,
+              renderLanguageSelect: config.renderLanguageSelect,
+              setReadOnly,
               language: block.getData().get("language"),
               getEditorState,
             },
