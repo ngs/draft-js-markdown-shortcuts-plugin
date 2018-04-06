@@ -47,6 +47,66 @@ describe("handleInlineStyle", () => {
   });
 
   const testCases = {
+    "converts a mix of code, bold and italic and strikethrough in one go": {
+      before: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "`h~~el**lo *inline~~***` style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      after: {
+        entityMap: {},
+        blocks: [
+          {
+            key: "item1",
+            text: "hello inline  style",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [
+              {
+                length: 12,
+                offset: 0,
+                style: "CODE",
+              },
+              {
+                length: 11,
+                offset: 1,
+                style: "STRIKETHROUGH",
+              },
+              {
+                length: 9,
+                offset: 3,
+                style: "BOLD",
+              },
+              {
+                length: 6,
+                offset: 6,
+                style: "ITALIC",
+              },
+            ],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+      },
+      selection: new SelectionState({
+        anchorKey: "item1",
+        anchorOffset: 24,
+        focusKey: "item1",
+        focusOffset: 24,
+        isBackward: false,
+        hasFocus: true,
+      }),
+    },
+
     "converts to bold with astarisks": {
       before: {
         entityMap: {},
