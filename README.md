@@ -108,6 +108,7 @@ const plugin = createMarkdownPlugin({ features })
 *Available Block features*:
 
 ```js
+import { CHECKABLE_LIST_ITEM } from "draft-js-checkable-list-item"
 [
   'CODE',
   'header-one',
@@ -118,6 +119,8 @@ const plugin = createMarkdownPlugin({ features })
   'header-six',
   'ordered-list-item',
   'unordered-list-item',
+  // CHECKABLE_LIST_ITEM is a constant from 'draft-js-checkable-list-item'
+  // see import statementabove
   CHECKABLE_LIST_ITEM,
   'blockquote',
 ]
