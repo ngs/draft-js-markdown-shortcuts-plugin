@@ -2,6 +2,7 @@
 
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleInlineStyle from "../handleInlineStyle";
+import { defaultInlineWhitelist } from "../../constants";
 
 describe("handleInlineStyle", () => {
   describe("no markup", () => {
@@ -33,7 +34,11 @@ describe("handleInlineStyle", () => {
       selection
     );
     it("does not convert block type", () => {
-      const newEditorState = handleInlineStyle(editorState, " ");
+      const newEditorState = handleInlineStyle(
+        defaultInlineWhitelist,
+        editorState,
+        " "
+      );
       expect(newEditorState).toEqual(editorState);
       expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
         rawContentState
@@ -600,7 +605,11 @@ describe("handleInlineStyle", () => {
       );
 
       it("does not convert markdown to style or block type if selection is at the wrong place", () => {
-        const newEditorState = handleInlineStyle(sameEditorState, character);
+        const newEditorState = handleInlineStyle(
+          defaultInlineWhitelist,
+          sameEditorState,
+          character
+        );
         expect(newEditorState).toEqual(sameEditorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           before
@@ -608,7 +617,11 @@ describe("handleInlineStyle", () => {
       });
 
       it("converts markdown to style or block type", () => {
-        const newEditorState = handleInlineStyle(editorState, character);
+        const newEditorState = handleInlineStyle(
+          defaultInlineWhitelist,
+          editorState,
+          character
+        );
         expect(newEditorState).not.toEqual(editorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           after

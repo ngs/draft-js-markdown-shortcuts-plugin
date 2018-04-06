@@ -29,7 +29,12 @@ import changeCurrentBlockType from "./modifiers/changeCurrentBlockType";
 import createLinkDecorator from "./decorators/link";
 import createImageDecorator from "./decorators/image";
 import { replaceText } from "./utils";
-import { CODE_BLOCK_REGEX, CODE_BLOCK_TYPE } from "./constants";
+import {
+  CODE_BLOCK_REGEX,
+  CODE_BLOCK_TYPE,
+  defaultInlineWhitelist,
+  defaultBlockWhitelist,
+} from "./constants";
 
 const defaultLanguages = {
   bash: "Bash",
@@ -85,21 +90,35 @@ function inCodeBlock(editorState) {
   return false;
 }
 
-function checkCharacterForState(editorState, character) {
-  let newEditorState = handleBlockType(editorState, character);
-  if (editorState === newEditorState) {
+function checkCharacterForState(config, editorState, character) {
+  let newEditorState = handleBlockType(
+    config.features.block,
+    editorState,
+    character
+  );
+  if (
+    editorState === newEditorState &&
+    config.features.inline.includes("IMAGE")
+  ) {
     newEditorState = handleImage(editorState, character);
   }
-  if (editorState === newEditorState) {
+  if (
+    editorState === newEditorState &&
+    config.features.inline.includes("LINK")
+  ) {
     newEditorState = handleLink(editorState, character);
   }
   if (editorState === newEditorState) {
-    newEditorState = handleInlineStyle(editorState, character);
+    newEditorState = handleInlineStyle(
+      config.features.inline,
+      editorState,
+      character
+    );
   }
   return newEditorState;
 }
 
-function checkReturnForState(editorState, ev) {
+function checkReturnForState(config, editorState, ev) {
   let newEditorState = editorState;
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
@@ -123,7 +142,7 @@ function checkReturnForState(editorState, ev) {
   ) {
     // transform markdown (if we aren't in a codeblock that is)
     if (!inCodeBlock(editorState)) {
-      newEditorState = checkCharacterForState(newEditorState, "\n");
+      newEditorState = checkCharacterForState(config, newEditorState, "\n");
     }
     if (newEditorState === editorState) {
       newEditorState = insertEmptyBlock(newEditorState);
@@ -134,6 +153,7 @@ function checkReturnForState(editorState, ev) {
   if (
     newEditorState === editorState &&
     type !== "code-block" &&
+    config.features.block.includes("CODE") &&
     CODE_BLOCK_REGEX.test(text)
   ) {
     newEditorState = handleNewCodeBlock(editorState);
@@ -157,6 +177,10 @@ function checkReturnForState(editorState, ev) {
 const defaultConfig = {
   renderLanguageSelect: defaultRenderSelect,
   languages: defaultLanguages,
+  features: {
+    inline: defaultInlineWhitelist,
+    block: defaultBlockWhitelist,
+  },
 };
 
 const createMarkdownPlugin = (_config = {}) => {
@@ -165,6 +189,10 @@ const createMarkdownPlugin = (_config = {}) => {
   const config = {
     ...defaultConfig,
     ..._config,
+    features: {
+      ...defaultConfig.features,
+      ..._config.features,
+    },
   };
 
   return {
@@ -237,7 +265,7 @@ const createMarkdownPlugin = (_config = {}) => {
     handleReturn(ev, editorState, { setEditorState }) {
       if (inLink(editorState)) return "not-handled";
 
-      let newEditorState = checkReturnForState(editorState, ev);
+      let newEditorState = checkReturnForState(config, editorState, ev);
       const selection = newEditorState.getSelection();
 
       // exit code blocks
@@ -249,7 +277,7 @@ const createMarkdownPlugin = (_config = {}) => {
         return "handled";
       }
 
-      newEditorState = checkCharacterForState(newEditorState, "\n");
+      newEditorState = checkCharacterForState(config, newEditorState, "\n");
       let content = newEditorState.getCurrentContent();
 
       // if there are actually no changes but the editorState has a
@@ -283,7 +311,11 @@ const createMarkdownPlugin = (_config = {}) => {
       // If we're in a link - don't transform markdown
       if (inLink(editorState)) return "not-handled";
 
-      const newEditorState = checkCharacterForState(editorState, character);
+      const newEditorState = checkCharacterForState(
+        config,
+        editorState,
+        character
+      );
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
         return "handled";
@@ -334,11 +366,19 @@ const createMarkdownPlugin = (_config = {}) => {
             newEditorState,
             buffer.join("") + text[i]
           );
-          newEditorState = checkCharacterForState(newEditorState, text[i]);
+          newEditorState = checkCharacterForState(
+            config,
+            newEditorState,
+            text[i]
+          );
           buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
           newEditorState = replaceText(newEditorState, buffer.join(""));
-          const tmpEditorState = checkReturnForState(newEditorState, {});
+          const tmpEditorState = checkReturnForState(
+            config,
+            newEditorState,
+            {}
+          );
           if (newEditorState === tmpEditorState) {
             newEditorState = insertEmptyBlock(tmpEditorState);
           } else {

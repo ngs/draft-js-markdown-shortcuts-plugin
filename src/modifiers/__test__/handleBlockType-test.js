@@ -1,5 +1,6 @@
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleBlockType from "../handleBlockType";
+import { defaultBlockWhitelist } from "../../constants";
 
 describe("handleBlockType", () => {
   describe("no markup", () => {
@@ -31,7 +32,11 @@ describe("handleBlockType", () => {
       selection
     );
     it("does not convert block type", () => {
-      const newEditorState = handleBlockType(editorState, " ");
+      const newEditorState = handleBlockType(
+        defaultBlockWhitelist,
+        editorState,
+        " "
+      );
       expect(newEditorState).toEqual(editorState);
       expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
         rawContentState
@@ -69,7 +74,11 @@ describe("handleBlockType", () => {
     );
 
     it("does not convert block type", () => {
-      const newEditorState = handleBlockType(editorState, " ");
+      const newEditorState = handleBlockType(
+        defaultBlockWhitelist,
+        editorState,
+        " "
+      );
       expect(newEditorState).toEqual(editorState);
       expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
         rawContentState
@@ -549,7 +558,11 @@ describe("handleBlockType", () => {
         selection
       );
       it("converts block type", () => {
-        const newEditorState = handleBlockType(editorState, character);
+        const newEditorState = handleBlockType(
+          defaultBlockWhitelist,
+          editorState,
+          character
+        );
         expect(newEditorState).not.toEqual(editorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           after
