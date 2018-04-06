@@ -45,7 +45,7 @@ describe("changeCurrentInlineStyle", () => {
     expect(newEditorState).not.toEqual(editorState);
     expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       rawContentState(
-        "foo bar  baz",
+        "foo bar baz",
         [
           {
             length: 3,
@@ -56,26 +56,5 @@ describe("changeCurrentInlineStyle", () => {
         "CODE"
       )
     );
-  });
-  it("inserts the character at the end", () => {
-    const text = "foo `bar` baz";
-    const editorState = createEditorState(text, []);
-    const matchArr = ["`bar`", "bar"];
-    matchArr.index = 4;
-    matchArr.input = text;
-    const newEditorState = changeCurrentInlineStyle(
-      editorState,
-      matchArr,
-      "CODE",
-      "\n"
-    );
-    expect(newEditorState).not.toEqual(editorState);
-    const contentState = Draft.convertToRaw(newEditorState.getCurrentContent());
-    expect(contentState.blocks.length).toBe(2);
-    expect(contentState.blocks[0].text).toEqual("foo bar");
-    expect(contentState.blocks[0].inlineStyleRanges).toEqual([
-      { offset: 4, length: 3, style: "CODE" },
-    ]);
-    expect(contentState.blocks[1].text).toEqual(" baz");
   });
 });
