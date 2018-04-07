@@ -122,8 +122,11 @@ function checkReturnForState(config, editorState, ev) {
   let newEditorState = editorState;
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
+  const isCollapsed = selection.isCollapsed();
   const key = selection.getStartKey();
+  const endOffset = selection.getEndOffset();
   const currentBlock = contentState.getBlockForKey(key);
+  const blockLength = currentBlock.getLength();
   const type = currentBlock.getType();
   const text = currentBlock.getText();
 
@@ -131,14 +134,16 @@ function checkReturnForState(config, editorState, ev) {
     newEditorState = leaveList(editorState);
   }
 
+  const modifierKeyPressed =
+    ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey;
+  const isAtEndOfLine = endOffset === blockLength;
+  const atEndOfHeader = /^header-/.test(type) && isAtEndOfLine;
+  const atEndOfBlockQuote = type === "blockquote" && isAtEndOfLine;
+
   if (
     newEditorState === editorState &&
-    (ev.ctrlKey ||
-      ev.shiftKey ||
-      ev.metaKey ||
-      ev.altKey ||
-      /^header-/.test(type) ||
-      type === "blockquote")
+    isCollapsed &&
+    (modifierKeyPressed || atEndOfHeader || atEndOfBlockQuote)
   ) {
     // transform markdown (if we aren't in a codeblock that is)
     if (!inCodeBlock(editorState)) {
