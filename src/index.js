@@ -174,7 +174,7 @@ function checkReturnForState(config, editorState, ev) {
       newEditorState = changeCurrentBlockType(
         newEditorState,
         type,
-        text.replace(/\n```\s*$/, "")
+        text.replace(/```\s*$/, "")
       );
       newEditorState = insertEmptyBlock(newEditorState);
     } else {
