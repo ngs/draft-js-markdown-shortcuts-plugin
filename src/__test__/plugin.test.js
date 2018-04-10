@@ -254,32 +254,66 @@ describe("draft-js-markdown-plugin", () => {
           expect(newEditorState.getCurrentInlineStyle().size).toBe(0);
         });
 
-        const testInsertNewBlock = type => () => {
-          createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
-          currentRawContentState = {
-            entityMap: {},
-            blocks: [
-              {
-                key: "item1",
-                text: "Hello",
-                type,
-                depth: 0,
-                inlineStyleRanges: [],
-                entityRanges: [],
-                data: {},
-              },
-            ],
-          };
-          expect(subject()).toBe("handled");
-          expect(modifierSpy).toHaveBeenCalledTimes(1);
-          expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
-        };
-        ["one", "two", "three", "four", "five", "six"].forEach(level => {
-          describe(`on header-${level}`, () => {
-            it(
-              "inserts new empty block",
-              testInsertNewBlock(`header-${level}`)
-            );
+        const emptyBlockTypes = [
+          "blockquote",
+          "header-one",
+          "header-two",
+          "header-three",
+          "header-four",
+          "header-five",
+          "header-six",
+        ];
+
+        emptyBlockTypes.forEach(type => {
+          describe(`on ${type}`, () => {
+            const text = "Hello";
+            beforeEach(() => {
+              createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
+              currentRawContentState = {
+                entityMap: {},
+                blocks: [
+                  {
+                    key: "item1",
+                    text,
+                    type,
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [],
+                    data: {},
+                  },
+                ],
+              };
+            });
+
+            describe("at the end of line", () => {
+              beforeEach(() => {
+                currentSelectionState = currentEditorState
+                  .getSelection()
+                  .merge({
+                    focusOffset: text.length,
+                    anchorOffset: text.length,
+                  });
+
+                currentEditorState = createEditorState(
+                  currentRawContentState,
+                  currentSelectionState
+                );
+              });
+              it("inserts new empty block", () => {
+                expect(subject()).toBe("handled");
+                expect(modifierSpy).toHaveBeenCalledTimes(1);
+                expect(store.setEditorState).toHaveBeenCalledWith(
+                  newEditorState
+                );
+              });
+            });
+            describe("when not at the end of the line", () => {
+              it("does not handle", () => {
+                expect(subject()).toBe("not-handled");
+                expect(modifierSpy).not.toHaveBeenCalled();
+                expect(store.setEditorState).not.toHaveBeenCalled();
+              });
+            });
           });
         });
         ["ctrlKey", "shiftKey", "metaKey", "altKey"].forEach(key => {
@@ -289,7 +323,27 @@ describe("draft-js-markdown-plugin", () => {
               props[key] = true;
               event = new window.KeyboardEvent("keydown", props);
             });
-            it("inserts new empty block", testInsertNewBlock("blockquote"));
+            it("inserts new empty block", () => {
+              createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
+              const text = "Hello";
+              currentRawContentState = {
+                entityMap: {},
+                blocks: [
+                  {
+                    key: "item1",
+                    text,
+                    type: "any type",
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    entityRanges: [],
+                    data: {},
+                  },
+                ],
+              };
+              expect(subject()).toBe("handled");
+              expect(modifierSpy).toHaveBeenCalledTimes(1);
+              expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
+            });
           });
         });
         it("handles new code block", () => {
