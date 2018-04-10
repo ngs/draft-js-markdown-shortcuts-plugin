@@ -137,9 +137,6 @@ function checkReturnForState(config, editorState, ev) {
 
   const isHeader = /^header-/.test(type);
   const isBlockQuote = type === "blockquote";
-
-  const modifierKeyPressed =
-    ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey;
   const isAtEndOfLine = endOffset === blockLength;
   const atEndOfHeader = isHeader && isAtEndOfLine;
   const atEndOfBlockQuote = isBlockQuote && isAtEndOfLine;
@@ -147,7 +144,7 @@ function checkReturnForState(config, editorState, ev) {
   if (
     newEditorState === editorState &&
     isCollapsed &&
-    (modifierKeyPressed || atEndOfHeader || atEndOfBlockQuote)
+    (atEndOfHeader || atEndOfBlockQuote)
   ) {
     // transform markdown (if we aren't in a codeblock that is)
     if (!inCodeBlock(editorState)) {

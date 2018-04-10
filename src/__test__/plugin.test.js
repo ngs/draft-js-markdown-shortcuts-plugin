@@ -333,7 +333,6 @@ describe("draft-js-markdown-plugin", () => {
               event = new window.KeyboardEvent("keydown", props);
             });
             it("inserts new empty block", () => {
-              createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
               const text = "Hello";
               currentRawContentState = {
                 entityMap: {},
@@ -349,9 +348,8 @@ describe("draft-js-markdown-plugin", () => {
                   },
                 ],
               };
-              expect(subject()).toBe("handled");
-              expect(modifierSpy).toHaveBeenCalledTimes(1);
-              expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
+              expect(subject()).toBe("not-handled");
+              expect(store.setEditorState).not.toHaveBeenCalled();
             });
           });
         });
