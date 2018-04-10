@@ -17,6 +17,7 @@ describe("draft-js-markdown-plugin", () => {
     createMarkdownPlugin.__ResetDependency__("handleInlineStyle");
     createMarkdownPlugin.__ResetDependency__("handleNewCodeBlock");
     createMarkdownPlugin.__ResetDependency__("insertEmptyBlock");
+    createMarkdownPlugin.__ResetDependency__("splitBlockAndChange");
     createMarkdownPlugin.__ResetDependency__("handleLink");
     createMarkdownPlugin.__ResetDependency__("handleImage");
     createMarkdownPlugin.__ResetDependency__("leaveList");
@@ -268,7 +269,10 @@ describe("draft-js-markdown-plugin", () => {
           describe(`on ${type}`, () => {
             const text = "Hello";
             beforeEach(() => {
-              createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
+              createMarkdownPlugin.__Rewire__(
+                "splitBlockAndChange",
+                modifierSpy
+              ); // eslint-disable-line no-underscore-dangle
               currentRawContentState = {
                 entityMap: {},
                 blocks: [
@@ -287,6 +291,10 @@ describe("draft-js-markdown-plugin", () => {
 
             describe("at the end of line", () => {
               beforeEach(() => {
+                createMarkdownPlugin.__Rewire__(
+                  "insertEmptyBlock",
+                  modifierSpy
+                ); // eslint-disable-line no-underscore-dangle
                 currentSelectionState = currentEditorState
                   .getSelection()
                   .merge({
@@ -308,14 +316,15 @@ describe("draft-js-markdown-plugin", () => {
               });
             });
             describe("when not at the end of the line", () => {
-              it("does not handle", () => {
-                expect(subject()).toBe("not-handled");
-                expect(modifierSpy).not.toHaveBeenCalled();
-                expect(store.setEditorState).not.toHaveBeenCalled();
+              it("splits and resets block", () => {
+                expect(subject()).toBe("handled");
+                expect(modifierSpy).toHaveBeenCalled();
+                expect(store.setEditorState).toHaveBeenCalled();
               });
             });
           });
         });
+
         ["ctrlKey", "shiftKey", "metaKey", "altKey"].forEach(key => {
           describe(`${key} is pressed`, () => {
             beforeEach(() => {
