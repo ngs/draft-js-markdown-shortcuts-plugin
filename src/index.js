@@ -18,6 +18,7 @@ import {
 import adjustBlockDepth from "./modifiers/adjustBlockDepth";
 import handleBlockType from "./modifiers/handleBlockType";
 import handleInlineStyle from "./modifiers/handleInlineStyle";
+import splitBlockAndChange from "./modifiers/splitBlockAndChange";
 import handleNewCodeBlock from "./modifiers/handleNewCodeBlock";
 import resetInlineStyle from "./modifiers/resetInlineStyle";
 import insertEmptyBlock from "./modifiers/insertEmptyBlock";
@@ -134,11 +135,14 @@ function checkReturnForState(config, editorState, ev) {
     newEditorState = leaveList(editorState);
   }
 
+  const isHeader = /^header-/.test(type);
+  const isBlockQuote = type === "blockquote";
+
   const modifierKeyPressed =
     ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey;
   const isAtEndOfLine = endOffset === blockLength;
-  const atEndOfHeader = /^header-/.test(type) && isAtEndOfLine;
-  const atEndOfBlockQuote = type === "blockquote" && isAtEndOfLine;
+  const atEndOfHeader = isHeader && isAtEndOfLine;
+  const atEndOfBlockQuote = isBlockQuote && isAtEndOfLine;
 
   if (
     newEditorState === editorState &&
@@ -154,6 +158,8 @@ function checkReturnForState(config, editorState, ev) {
     } else {
       newEditorState = RichUtils.toggleBlockType(newEditorState, type);
     }
+  } else if (isCollapsed && (isHeader || isBlockQuote) && !isAtEndOfLine) {
+    newEditorState = splitBlockAndChange(newEditorState);
   }
   if (
     newEditorState === editorState &&
@@ -296,7 +302,7 @@ const createMarkdownPlugin = (_config = {}) => {
 
       newEditorState = resetInlineStyle(newEditorState);
 
-      if (!is(editorState.getImmutable(), newEditorState.getImmutable())) {
+      if (editorState !== newEditorState) {
         setEditorState(
           EditorState.push(newEditorState, content, "split-block")
         );
