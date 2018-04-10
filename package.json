@@ -76,6 +76,7 @@
     "postcss-loader": "^1.1.1",
     "prettier": "^1.7.0",
     "prismjs": "^1.6.0",
+    "raf": "^3.4.0",
     "react": "16.2.x",
     "react-addons-pure-render-mixin": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
@@ -94,8 +95,8 @@
   },
   "peerDependencies": {
     "draft-js-plugins-editor": "~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "react": "^15.0.0 || ^16.0.0",
+    "react-dom": "^15.0.0 || ^16.0.0"
   },
   "contributors": [
     "Atsushi Nagase <a@ngs.io>"
