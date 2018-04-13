@@ -109,6 +109,19 @@ function checkCharacterForState(config, editorState, character) {
   ) {
     newEditorState = handleLink(editorState, character);
   }
+  if (
+    newEditorState === editorState &&
+    config.features.block.includes("CODE")
+  ) {
+    const contentState = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const key = selection.getStartKey();
+    const currentBlock = contentState.getBlockForKey(key);
+    const text = currentBlock.getText();
+    const type = currentBlock.getType();
+    if (type !== "code-block" && CODE_BLOCK_REGEX.test(text))
+      newEditorState = handleNewCodeBlock(editorState);
+  }
   if (editorState === newEditorState) {
     newEditorState = handleInlineStyle(
       config.features.inline,
