@@ -613,6 +613,27 @@ describe("draft-js-markdown-plugin", () => {
             expect(subject()).toBe("not-handled");
           });
         });
+        it("handles new code block on space", () => {
+          createMarkdownPlugin.__Rewire__("handleNewCodeBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
+          currentRawContentState = {
+            entityMap: {},
+            blocks: [
+              {
+                key: "item1",
+                text: "```",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+          };
+          character = " ";
+          expect(subject()).toBe("handled");
+          expect(modifierSpy).toHaveBeenCalledTimes(1);
+          expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
+        });
       });
       describe("handlePastedText", () => {
         let pastedText;
