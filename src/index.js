@@ -187,6 +187,8 @@ function checkReturnForState(config, editorState, ev) {
         text.replace(/```\s*$/, "")
       );
       newEditorState = insertEmptyBlock(newEditorState);
+    } else if (ev.shiftKey) {
+      newEditorState = insertEmptyBlock(newEditorState);
     } else {
       newEditorState = insertText(editorState, "\n");
     }
