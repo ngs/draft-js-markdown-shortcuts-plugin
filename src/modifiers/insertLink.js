@@ -14,6 +14,7 @@ const insertLink = (editorState, matchArr) => {
   const nextContent = currentContent.createEntity("LINK", "MUTABLE", {
     href,
     title,
+    url: href,
   });
   const entityKey = nextContent.getLastCreatedEntityKey();
   let newContentState = Modifier.replaceText(

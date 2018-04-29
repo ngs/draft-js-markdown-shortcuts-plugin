@@ -23,6 +23,7 @@ describe("insertLink", () => {
       0: {
         data: {
           href: "http://cultofthepartyparrot.com/parrots/aussieparrot.gif",
+          url: "http://cultofthepartyparrot.com/parrots/aussieparrot.gif",
           title: "party",
         },
         mutability: "MUTABLE",
