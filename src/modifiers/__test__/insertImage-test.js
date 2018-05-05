@@ -1,6 +1,13 @@
 import Draft, { EditorState, SelectionState } from "draft-js";
 import insertImage from "../insertImage";
 
+jest.mock("draft-js/lib/generateRandomKey", () => {
+  let count = 0;
+  return () => {
+    return `key${count++}`;
+  };
+});
+
 describe("insertImage", () => {
   const markup =
     '![bar](http://cultofthepartyparrot.com/parrots/aussieparrot.gif "party")';
@@ -20,6 +27,35 @@ describe("insertImage", () => {
     ],
   };
   const afterRawContentState = {
+    blocks: [
+      {
+        data: {},
+        depth: 0,
+        entityRanges: [],
+        inlineStyleRanges: [],
+        key: "item1",
+        text: "foo ",
+        type: "unstyled",
+      },
+      {
+        data: {},
+        depth: 0,
+        entityRanges: [{ key: 0, length: 1, offset: 0 }],
+        inlineStyleRanges: [],
+        key: "key0",
+        text: " ",
+        type: "atomic",
+      },
+      {
+        data: {},
+        depth: 0,
+        entityRanges: [],
+        inlineStyleRanges: [],
+        key: "key4",
+        text: "  baz",
+        type: "unstyled",
+      },
+    ],
     entityMap: {
       0: {
         data: {
@@ -31,24 +67,8 @@ describe("insertImage", () => {
         type: "IMG",
       },
     },
-    blocks: [
-      {
-        key: "item1",
-        text: "foo \u200B  baz",
-        type: "unstyled",
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [
-          {
-            key: 0,
-            length: 1,
-            offset: 4,
-          },
-        ],
-        data: {},
-      },
-    ],
   };
+
   const selection = new SelectionState({
     anchorKey: "item1",
     anchorOffset: 6,

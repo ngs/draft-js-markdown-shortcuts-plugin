@@ -1,4 +1,10 @@
-import { EditorState, RichUtils, SelectionState, Modifier } from "draft-js";
+import {
+  EditorState,
+  RichUtils,
+  SelectionState,
+  Modifier,
+  AtomicBlockUtils,
+} from "draft-js";
 
 const insertImage = (editorState, matchArr) => {
   const currentContent = editorState.getCurrentContent();
@@ -42,9 +48,14 @@ const insertImage = (editorState, matchArr) => {
     newWordSelection,
     entityKey
   );
+  newEditorState = AtomicBlockUtils.insertAtomicBlock(
+    newEditorState,
+    newEditorState.getCurrentContent().getLastCreatedEntityKey(),
+    " "
+  );
   return EditorState.forceSelection(
     newEditorState,
-    newContentState.getSelectionAfter()
+    newEditorState.getCurrentContent().getSelectionAfter()
   );
 };
 
