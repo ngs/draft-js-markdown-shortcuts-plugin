@@ -11,6 +11,11 @@ export const inlineMatchers = {
 
 export const CODE_BLOCK_TYPE = "code-block";
 
+export const ENTITY_TYPE = {
+  IMAGE: "IMG",
+  LINK: "LINK",
+};
+
 export const defaultInlineWhitelist = [
   "BOLD",
   "ITALIC",

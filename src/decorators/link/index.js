@@ -1,8 +1,8 @@
 import createLinkStrategy from "./linkStrategy";
 import Link from "../../components/Link";
 
-const createLinkDecorator = () => ({
-  strategy: createLinkStrategy(),
+const createLinkDecorator = ({ entityType }) => ({
+  strategy: createLinkStrategy({ entityType }),
   component: Link,
 });
 

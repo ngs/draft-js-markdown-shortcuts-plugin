@@ -1,6 +1,6 @@
 import { EditorState, RichUtils, SelectionState, Modifier } from "draft-js";
 
-const insertImage = (editorState, matchArr) => {
+const insertImage = (editorState, matchArr, entityType) => {
   const currentContent = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
@@ -11,7 +11,7 @@ const insertImage = (editorState, matchArr) => {
     anchorOffset: index,
     focusOffset,
   });
-  const nextContent = currentContent.createEntity("IMG", "IMMUTABLE", {
+  const nextContent = currentContent.createEntity(entityType, "IMMUTABLE", {
     alt,
     src,
     title,

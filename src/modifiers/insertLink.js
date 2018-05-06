@@ -1,6 +1,6 @@
 import { EditorState, RichUtils, SelectionState, Modifier } from "draft-js";
 
-const insertLink = (editorState, matchArr) => {
+const insertLink = (editorState, matchArr, entityType) => {
   const currentContent = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();
@@ -11,7 +11,7 @@ const insertLink = (editorState, matchArr) => {
     anchorOffset: index,
     focusOffset,
   });
-  const nextContent = currentContent.createEntity("LINK", "MUTABLE", {
+  const nextContent = currentContent.createEntity(entityType, "MUTABLE", {
     href,
     title,
     url: href,

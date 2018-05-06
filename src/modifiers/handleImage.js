@@ -1,6 +1,6 @@
 import insertImage from "./insertImage";
 
-const handleImage = (editorState, character) => {
+const handleImage = (editorState, character, entityType) => {
   const re = /!\[([^\]]*)]\(([^)"]+)(?: "([^"]+)")?\)/g;
   const key = editorState.getSelection().getStartKey();
   const text = editorState
@@ -13,7 +13,7 @@ const handleImage = (editorState, character) => {
   do {
     matchArr = re.exec(line);
     if (matchArr) {
-      newEditorState = insertImage(newEditorState, matchArr);
+      newEditorState = insertImage(newEditorState, matchArr, entityType);
     }
   } while (matchArr);
   return newEditorState;

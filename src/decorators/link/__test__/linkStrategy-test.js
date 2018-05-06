@@ -1,4 +1,5 @@
 import Draft from "draft-js";
+import { ENTITY_TYPE } from "../../../constants";
 import createLinkStrategy from "../linkStrategy";
 
 describe("linkStrategy", () => {
@@ -33,7 +34,9 @@ describe("linkStrategy", () => {
   });
   it("callbacks range", () => {
     const block = contentState.getBlockForKey("dtehj");
-    const strategy = createLinkStrategy();
+    const strategy = createLinkStrategy({
+      entityType: ENTITY_TYPE.LINK,
+    });
     const cb = jest.fn();
     expect(typeof block).toBe("object");
     strategy(block, cb, contentState);
