@@ -1,8 +1,8 @@
 import createImageStrategy from "./imageStrategy";
 import Image from "../../components/Image";
 
-const createImageDecorator = () => ({
-  strategy: createImageStrategy(),
+const createImageDecorator = ({ entityType }) => ({
+  strategy: createImageStrategy({ entityType }),
   component: Image,
 });
 

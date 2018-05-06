@@ -1,4 +1,5 @@
 import Draft from "draft-js";
+import { ENTITY_TYPE } from "../../../constants";
 import createImageStrategy from "../imageStrategy";
 
 describe("imageStrategy", () => {
@@ -34,7 +35,9 @@ describe("imageStrategy", () => {
   });
   it("callbacks range", () => {
     const block = contentState.getBlockForKey("dtehj");
-    const strategy = createImageStrategy();
+    const strategy = createImageStrategy({
+      entityType: ENTITY_TYPE.IMAGE,
+    });
     const cb = jest.fn();
     expect(typeof block).toBe("object");
     strategy(block, cb, contentState);

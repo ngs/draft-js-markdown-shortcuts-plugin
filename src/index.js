@@ -33,6 +33,7 @@ import { replaceText } from "./utils";
 import {
   CODE_BLOCK_REGEX,
   CODE_BLOCK_TYPE,
+  ENTITY_TYPE,
   defaultInlineWhitelist,
   defaultBlockWhitelist,
 } from "./constants";
@@ -101,13 +102,17 @@ function checkCharacterForState(config, editorState, character) {
     editorState === newEditorState &&
     config.features.inline.includes("IMAGE")
   ) {
-    newEditorState = handleImage(editorState, character);
+    newEditorState = handleImage(
+      editorState,
+      character,
+      config.entityType.IMAGE
+    );
   }
   if (
     editorState === newEditorState &&
     config.features.inline.includes("LINK")
   ) {
-    newEditorState = handleLink(editorState, character);
+    newEditorState = handleLink(editorState, character, config.entityType.LINK);
   }
   if (
     newEditorState === editorState &&
@@ -204,6 +209,7 @@ const defaultConfig = {
     inline: defaultInlineWhitelist,
     block: defaultBlockWhitelist,
   },
+  entityType: ENTITY_TYPE,
 };
 
 const createMarkdownPlugin = (_config = {}) => {
@@ -216,6 +222,10 @@ const createMarkdownPlugin = (_config = {}) => {
       ...defaultConfig.features,
       ..._config.features,
     },
+    entityType: {
+      ...defaultConfig.entityType,
+      ..._config.entityType,
+    },
   };
 
   return {
@@ -226,7 +236,14 @@ const createMarkdownPlugin = (_config = {}) => {
         wrapper: <pre spellCheck="false" />,
       },
     }).merge(checkboxBlockRenderMap),
-    decorators: [createLinkDecorator(), createImageDecorator()],
+    decorators: [
+      createLinkDecorator({
+        entityType: config.entityType.LINK,
+      }),
+      createImageDecorator({
+        entityType: config.entityType.IMAGE,
+      }),
+    ],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;

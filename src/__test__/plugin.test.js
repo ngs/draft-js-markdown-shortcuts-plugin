@@ -4,7 +4,11 @@ import {
   CheckableListItemUtils,
 } from "draft-js-checkable-list-item";
 
-import { defaultInlineWhitelist, defaultBlockWhitelist } from "../constants";
+import {
+  defaultInlineWhitelist,
+  defaultBlockWhitelist,
+  ENTITY_TYPE,
+} from "../constants";
 
 import { Map, List } from "immutable";
 import createMarkdownPlugin from "../";
@@ -514,14 +518,33 @@ describe("draft-js-markdown-plugin", () => {
             ],
           };
         });
-        ["handleImage", "handleLink"].forEach(modifier => {
+        ["handleImage"].forEach(modifier => {
           describe(modifier, () => {
             beforeEach(() => {
               createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
             });
             it("returns handled", () => {
               expect(subject()).toBe("handled");
-              expect(modifierSpy).toHaveBeenCalledWith(currentEditorState, " ");
+              expect(modifierSpy).toHaveBeenCalledWith(
+                currentEditorState,
+                " ",
+                ENTITY_TYPE.IMAGE
+              );
+            });
+          });
+        });
+        ["handleLink"].forEach(modifier => {
+          describe(modifier, () => {
+            beforeEach(() => {
+              createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
+            });
+            it("returns handled", () => {
+              expect(subject()).toBe("handled");
+              expect(modifierSpy).toHaveBeenCalledWith(
+                currentEditorState,
+                " ",
+                ENTITY_TYPE.LINK
+              );
             });
           });
         });

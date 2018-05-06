@@ -1,4 +1,5 @@
 import Draft, { EditorState, SelectionState } from "draft-js";
+import { ENTITY_TYPE } from "../../constants";
 import handleImage from "../handleImage";
 
 describe("handleImage", () => {
@@ -87,7 +88,7 @@ describe("handleImage", () => {
     describe(condition, () => {
       it("returns new editor state", () => {
         const editorState = createEditorState(text);
-        const newEditorState = handleImage(editorState, " ");
+        const newEditorState = handleImage(editorState, " ", ENTITY_TYPE.IMAGE);
         expect(newEditorState).not.toEqual(editorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           afterRawContentState
@@ -99,7 +100,7 @@ describe("handleImage", () => {
   describe("if does not match", () => {
     it("returns old editor state", () => {
       const editorState = createEditorState("yo");
-      const newEditorState = handleImage(editorState, " ");
+      const newEditorState = handleImage(editorState, " ", ENTITY_TYPE.LINK);
       expect(newEditorState).toEqual(editorState);
       expect(fakeInsertImage).not.toHaveBeenCalled();
     });

@@ -1,4 +1,5 @@
 import Draft, { EditorState, SelectionState } from "draft-js";
+import { ENTITY_TYPE } from "../../constants";
 import insertImage from "../insertImage";
 
 jest.mock("draft-js/lib/generateRandomKey", () => {
@@ -91,7 +92,11 @@ describe("insertImage", () => {
     ];
     matchArr.index = 4;
     matchArr.input = text;
-    const newEditorState = insertImage(editorState, matchArr);
+    const newEditorState = insertImage(
+      editorState,
+      matchArr,
+      ENTITY_TYPE.IMAGE
+    );
     expect(newEditorState).not.toEqual(editorState);
     expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       afterRawContentState
