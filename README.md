@@ -57,6 +57,7 @@ const markdownPlugin = createMarkdownPlugin({ renderLanguageSelect })
 ```
 
 ### `languages`
+
 Dictionary for languages available to code block switcher
 
 #### Example:
@@ -70,6 +71,7 @@ const markdownPlugin = createMarkdownPlugin({ languages })
 ```
 
 ### `features`
+
 A list of enabled features, by default all features are turned on.
 
 ```js
@@ -126,17 +128,28 @@ import { CHECKABLE_LIST_ITEM } from "draft-js-checkable-list-item"
 ```
 
 ### `entityType`
-Dictionary for `IMAGE` and `LINK` entity.
+
+To interoperate this plugin with other DraftJS plugins, i.e. [`draft-js-plugins`](https://github.com/draft-js-plugins/draft-js-plugins), you might need to customize the `LINK` and `IMAGE` entity type created by `draft-js-markdown-plugin`.
 
 #### Example:
 
 ```js
+import createMarkdownPlugin from "draft-js-markdown-plugin";
+import createFocusPlugin from "draft-js-focus-plugin";
+import createImagePlugin from "draft-js-image-plugin";
+
 const entityType = {
   IMAGE: "IMAGE",
-  LINK: "LINK",
-}
+};
 
-const markdownPlugin = createMarkdownPlugin({ entityType })
+const focusPlugin = createFocusPlugin();
+const imagePlugin = createImagePlugin({
+  decorator: focusPlugin.decorator,
+});
+// For `draft-js-image-plugin` to work, the entity type of an image must be `IMAGE`.
+const markdownPlugin = createMarkdownPlugin({ entityType });
+
+const editorPlugins = [focusPlugin, imagePlugin, markdownPlugin];
 ```
 
 ## Usage
