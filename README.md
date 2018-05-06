@@ -79,7 +79,7 @@ features = {
 }
 ```
 
-#### Example
+#### Example:
 
 ```
 // this will only enable BOLD for inline and CODE
@@ -125,6 +125,19 @@ import { CHECKABLE_LIST_ITEM } from "draft-js-checkable-list-item"
 ]
 ```
 
+### `entityType`
+Dictionary for `IMAGE` and `LINK` entity.
+
+#### Example:
+
+```js
+const entityType = {
+  IMAGE: "IMAGE",
+  LINK: "LINK",
+}
+
+const markdownPlugin = createMarkdownPlugin({ entityType })
+```
 
 ## Usage
 
