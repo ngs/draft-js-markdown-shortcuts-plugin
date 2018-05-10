@@ -1,6 +1,7 @@
 import changeCurrentInlineStyle from "./changeCurrentInlineStyle";
 import { EditorState, Modifier } from "draft-js";
 import { inlineMatchers } from "../constants";
+import insertText from "./insertText";
 
 const handleChange = (editorState, line, whitelist) => {
   let newEditorState = editorState;
@@ -37,12 +38,18 @@ const getLine = (editorState, anchorOffset) => {
     .slice(0, selection.getFocusOffset());
 };
 
-const handleInlineStyle = (whitelist, editorState, character) => {
+const handleInlineStyle = (
+  whitelist,
+  editorStateWithoutCharacter,
+  character
+) => {
+  const editorState = insertText(editorStateWithoutCharacter, character);
   let selection = editorState.getSelection();
   let line = getLine(editorState, selection.getAnchorOffset());
   let newEditorState = handleChange(editorState, line, whitelist);
   let lastEditorState = editorState;
 
+  // Recursively resolve markdown, e.g. _*text*_ should turn into both italic and bold
   while (newEditorState !== lastEditorState) {
     lastEditorState = newEditorState;
     line = getLine(newEditorState, selection.getAnchorOffset());
@@ -56,11 +63,7 @@ const handleInlineStyle = (whitelist, editorState, character) => {
     if (character === "\n") {
       newContentState = Modifier.splitBlock(newContentState, selection);
     } else {
-      newContentState = Modifier.insertText(
-        newContentState,
-        selection,
-        character
-      );
+      newContentState = Modifier.insertText(newContentState, selection, " ");
     }
 
     newEditorState = EditorState.push(
@@ -68,9 +71,11 @@ const handleInlineStyle = (whitelist, editorState, character) => {
       newContentState,
       "change-inline-style"
     );
+
+    return newEditorState;
   }
 
-  return newEditorState;
+  return editorStateWithoutCharacter;
 };
 
 export default handleInlineStyle;
