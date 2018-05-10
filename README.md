@@ -17,9 +17,64 @@ A [DraftJS] plugin for supporting Markdown syntax shortcuts in DraftJS. This plu
 npm i --save draft-js-markdown-plugin
 ```
 
-## Options
-The `draft-js-markdown-plugin` is configurable. Just pass a config object. Here are the available options:
+## Usage
 
+```js
+import React, { Component } from 'react';
+import Editor from 'draft-js-plugins-editor';
+import createMarkdownPlugin from 'draft-js-markdown-plugin';
+import { EditorState } from 'draft-js';
+
+export default class DemoEditor extends Component {
+
+  state = {
+    editorState: EditorState.createEmpty(),
+    plugins: [createMarkdownPlugin()]
+  };
+
+  onChange = (editorState) => {
+    this.setState({
+      editorState,
+    });
+  };
+
+  render() {
+    return (
+      <Editor
+        editorState={this.state.editorState}
+        onChange={this.onChange}
+        plugins={this.state.plugins}
+      />
+    );
+  }
+}
+```
+
+### Add code block syntax highlighting
+
+Using the [`draft-js-prism-plugin`](https://github.com/withspectrum/draft-js-prism-plugin) you can easily add syntax highlighting support to your code blocks!
+
+```JS
+// Install prismjs and draft-js-prism-plugin
+import Prism from 'prismjs';
+import createPrismPlugin from 'draft-js-prism-plugin';
+
+class Editor extends Component {
+  state = {
+    plugins: [
+      // Add the Prism plugin to the plugins array 
+      createPrismPlugin({
+        prism: Prism
+      }),
+      createMarkdownPlugin()
+    ]
+  }
+}
+```
+
+## Options
+
+The `draft-js-markdown-plugin` is configurable. Just pass a config object. Here are the available options:
 
 ### `renderLanguageSelect`
 
@@ -150,61 +205,6 @@ const imagePlugin = createImagePlugin({
 const markdownPlugin = createMarkdownPlugin({ entityType });
 
 const editorPlugins = [focusPlugin, imagePlugin, markdownPlugin];
-```
-
-## Usage
-
-```js
-import React, { Component } from 'react';
-import Editor from 'draft-js-plugins-editor';
-import createMarkdownPlugin from 'draft-js-markdown-plugin';
-import { EditorState } from 'draft-js';
-
-export default class DemoEditor extends Component {
-
-  state = {
-    editorState: EditorState.createEmpty(),
-    plugins: [createMarkdownPlugin()]
-  };
-
-  onChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
-  };
-
-  render() {
-    return (
-      <Editor
-        editorState={this.state.editorState}
-        onChange={this.onChange}
-        plugins={this.state.plugins}
-      />
-    );
-  }
-}
-```
-
-### Add code block syntax highlighting
-
-Using the [`draft-js-prism-plugin`](https://github.com/withspectrum/draft-js-prism-plugin) you can easily add syntax highlighting support to your code blocks!
-
-```JS
-// Install prismjs and draft-js-prism-plugin
-import Prism from 'prismjs';
-import createPrismPlugin from 'draft-js-prism-plugin';
-
-class Editor extends Component {
-  state = {
-    plugins: [
-      // Add the Prism plugin to the plugins array 
-      createPrismPlugin({
-        prism: Prism
-      }),
-      createMarkdownPlugin()
-    ]
-  }
-}
 ```
 
 ## Why fork the `markdown-shortcuts-plugin`?
