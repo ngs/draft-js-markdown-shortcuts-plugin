@@ -54,7 +54,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "`h~~el*lo _inline~~_* style",
+            text: "`h~el*lo _inline~_* style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -100,9 +100,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 21,
+        anchorOffset: 19,
         focusKey: "item1",
-        focusOffset: 21,
+        focusOffset: 19,
         isBackward: false,
         hasFocus: true,
       }),
@@ -351,7 +351,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello ~~inline~ style",
+            text: "hello ~inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -382,9 +382,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 15,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 15,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
