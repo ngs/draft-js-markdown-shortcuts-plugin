@@ -29,7 +29,7 @@ import insertText from "./modifiers/insertText";
 import changeCurrentBlockType from "./modifiers/changeCurrentBlockType";
 import createLinkDecorator from "./decorators/link";
 import createImageDecorator from "./decorators/image";
-import { replaceText } from "./utils";
+import { replaceText, getCurrentLine } from "./utils";
 import {
   CODE_BLOCK_REGEX,
   CODE_BLOCK_TYPE,
@@ -57,7 +57,7 @@ const defaultLanguages = {
   swift: "Swift",
 };
 
-const INLINE_STYLE_CHARACTERS = [" ", "*", "_"];
+const INLINE_STYLE_CHARACTERS = ["*", "_", "`", "~"];
 
 const defaultRenderSelect = ({ options, onChange, selectedValue }) => (
   <select value={selectedValue} onChange={onChange}>
@@ -341,15 +341,15 @@ const createMarkdownPlugin = (_config = {}) => {
       return "not-handled";
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
-      if (character !== " ") {
-        return "not-handled";
-      }
-
       // If we're in a code block - don't transform markdown
       if (inCodeBlock(editorState)) return "not-handled";
 
       // If we're in a link - don't transform markdown
       if (inLink(editorState)) return "not-handled";
+
+      // Don't let users type two spaces after another
+      if (character === " " && getCurrentLine(editorState).slice(-1) === " ")
+        return "handled";
 
       const newEditorState = checkCharacterForState(
         config,

@@ -228,37 +228,6 @@ describe("draft-js-markdown-plugin", () => {
           expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
         });
 
-        it("adds list item and transforms markdown", () => {
-          // createMarkdownPlugin.__Rewire__("leaveList", modifierSpy); // eslint-disable-line no-underscore-dangle
-          currentRawContentState = {
-            entityMap: {},
-            blocks: [
-              {
-                key: "item1",
-                text: "**some bold text**",
-                type: "unordered-list-item",
-                depth: 0,
-                inlineStyleRanges: [],
-                entityRanges: [],
-                data: {},
-              },
-            ],
-          };
-          currentSelectionState = currentSelectionState.merge({
-            focusOffset: 18,
-            anchorOffset: 18,
-          });
-          expect(subject()).toBe("handled");
-          // expect(modifierSpy).toHaveBeenCalledTimes(1);
-          expect(store.setEditorState).toHaveBeenCalledTimes(1);
-          newEditorState = store.setEditorState.mock.calls[0][0];
-          const newRawContentState = Draft.convertToRaw(
-            newEditorState.getCurrentContent()
-          );
-          expect(newRawContentState.blocks.length).toBe(2);
-          expect(newEditorState.getCurrentInlineStyle().size).toBe(0);
-        });
-
         const emptyBlockTypes = [
           "blockquote",
           "header-one",

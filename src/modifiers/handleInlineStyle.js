@@ -1,6 +1,8 @@
 import changeCurrentInlineStyle from "./changeCurrentInlineStyle";
 import { EditorState, Modifier } from "draft-js";
 import { inlineMatchers } from "../constants";
+import insertText from "./insertText";
+import { getCurrentLine as getLine } from "../utils";
 
 const handleChange = (editorState, line, whitelist) => {
   let newEditorState = editorState;
@@ -26,26 +28,21 @@ const handleChange = (editorState, line, whitelist) => {
   return newEditorState;
 };
 
-const getLine = (editorState, anchorOffset) => {
-  const selection = editorState.getSelection().merge({ anchorOffset });
-  const key = editorState.getSelection().getStartKey();
-
-  return editorState
-    .getCurrentContent()
-    .getBlockForKey(key)
-    .getText()
-    .slice(0, selection.getFocusOffset());
-};
-
-const handleInlineStyle = (whitelist, editorState, character) => {
+const handleInlineStyle = (
+  whitelist,
+  editorStateWithoutCharacter,
+  character
+) => {
+  const editorState = insertText(editorStateWithoutCharacter, character);
   let selection = editorState.getSelection();
-  let line = getLine(editorState, selection.getAnchorOffset());
+  let line = getLine(editorState);
   let newEditorState = handleChange(editorState, line, whitelist);
   let lastEditorState = editorState;
 
+  // Recursively resolve markdown, e.g. _*text*_ should turn into both italic and bold
   while (newEditorState !== lastEditorState) {
     lastEditorState = newEditorState;
-    line = getLine(newEditorState, selection.getAnchorOffset());
+    line = getLine(newEditorState);
     newEditorState = handleChange(newEditorState, line, whitelist);
   }
 
@@ -56,11 +53,7 @@ const handleInlineStyle = (whitelist, editorState, character) => {
     if (character === "\n") {
       newContentState = Modifier.splitBlock(newContentState, selection);
     } else {
-      newContentState = Modifier.insertText(
-        newContentState,
-        selection,
-        character
-      );
+      newContentState = Modifier.insertText(newContentState, selection, " ");
     }
 
     newEditorState = EditorState.push(
@@ -68,9 +61,11 @@ const handleInlineStyle = (whitelist, editorState, character) => {
       newContentState,
       "change-inline-style"
     );
+
+    return newEditorState;
   }
 
-  return newEditorState;
+  return editorStateWithoutCharacter;
 };
 
 export default handleInlineStyle;

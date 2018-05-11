@@ -48,12 +48,13 @@ describe("handleInlineStyle", () => {
 
   const testCases = {
     "converts a mix of code, bold and italic and strikethrough in one go": {
+      character: "`",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "`h~~el**lo *inline~~***` style",
+            text: "`h~el*lo _inline~_* style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -99,21 +100,22 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 24,
+        anchorOffset: 19,
         focusKey: "item1",
-        focusOffset: 24,
+        focusOffset: 19,
         isBackward: false,
         hasFocus: true,
       }),
     },
 
     "converts to bold with astarisks": {
+      character: "*",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "hello **inline** style",
+            text: "hello *inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -144,20 +146,21 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 16,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 16,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
     },
     "converts semicolons to bold with astarisks": {
+      character: "*",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "hello **TL;DR:** style",
+            text: "hello *TL;DR: style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -188,108 +191,21 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 16,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 16,
-        isBackward: false,
-        hasFocus: true,
-      }),
-    },
-    "converts to bold with underscores": {
-      before: {
-        entityMap: {},
-        blocks: [
-          {
-            key: "item1",
-            text: "hello __inline__ style",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [],
-            entityRanges: [],
-            data: {},
-          },
-        ],
-      },
-      after: {
-        entityMap: {},
-        blocks: [
-          {
-            key: "item1",
-            text: "hello inline  style",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [
-              {
-                length: 6,
-                offset: 6,
-                style: "BOLD",
-              },
-            ],
-            entityRanges: [],
-            data: {},
-          },
-        ],
-      },
-      selection: new SelectionState({
-        anchorKey: "item1",
-        anchorOffset: 16,
-        focusKey: "item1",
-        focusOffset: 16,
-        isBackward: false,
-        hasFocus: true,
-      }),
-    },
-    "converts to italic with astarisk": {
-      before: {
-        entityMap: {},
-        blocks: [
-          {
-            key: "item1",
-            text: "hello *inline* style",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [],
-            entityRanges: [],
-            data: {},
-          },
-        ],
-      },
-      after: {
-        entityMap: {},
-        blocks: [
-          {
-            key: "item1",
-            text: "hello inline  style",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [
-              {
-                length: 6,
-                offset: 6,
-                style: "ITALIC",
-              },
-            ],
-            entityRanges: [],
-            data: {},
-          },
-        ],
-      },
-      selection: new SelectionState({
-        anchorKey: "item1",
-        anchorOffset: 14,
-        focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
     },
     "converts to italic with underscore": {
+      character: "_",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "hello _inline_ style",
+            text: "hello _inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -320,20 +236,21 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
     },
     "combines to italic and bold with astarisks": {
+      character: "*",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "hello **inline** style",
+            text: "hello *inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -375,20 +292,21 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 16,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 16,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
     },
     "converts to code with backquote": {
+      character: "`",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "hello `inline` style",
+            text: "hello `inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -419,20 +337,21 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
     },
     "converts to strikethrough with tildes": {
+      character: "~",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "hello ~~inline~~ style",
+            text: "hello ~inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [],
@@ -463,9 +382,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 16,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 16,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
@@ -473,69 +392,14 @@ describe("handleInlineStyle", () => {
 
     // combine tests
 
-    "combines to italic and bold with underscores": {
-      before: {
-        entityMap: {},
-        blocks: [
-          {
-            key: "item1",
-            text: "hello __inline__ style",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [
-              {
-                length: 4,
-                offset: 5,
-                style: "ITALIC",
-              },
-            ],
-            entityRanges: [],
-            data: {},
-          },
-        ],
-      },
-      after: {
-        entityMap: {},
-        blocks: [
-          {
-            key: "item1",
-            text: "hello inline  style",
-            type: "unstyled",
-            depth: 0,
-            inlineStyleRanges: [
-              {
-                length: 2,
-                offset: 5,
-                style: "ITALIC",
-              },
-              {
-                length: 6,
-                offset: 6,
-                style: "BOLD",
-              },
-            ],
-            entityRanges: [],
-            data: {},
-          },
-        ],
-      },
-      selection: new SelectionState({
-        anchorKey: "item1",
-        anchorOffset: 16,
-        focusKey: "item1",
-        focusOffset: 16,
-        isBackward: false,
-        hasFocus: true,
-      }),
-    },
-
     "combines to bold and italic with underscores": {
+      character: "_",
       before: {
         entityMap: {},
         blocks: [
           {
             key: "item1",
-            text: "hello _inline_ style",
+            text: "hello _inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -577,9 +441,9 @@ describe("handleInlineStyle", () => {
       },
       selection: new SelectionState({
         anchorKey: "item1",
-        anchorOffset: 14,
+        anchorOffset: 13,
         focusKey: "item1",
-        focusOffset: 14,
+        focusOffset: 13,
         isBackward: false,
         hasFocus: true,
       }),
@@ -588,7 +452,11 @@ describe("handleInlineStyle", () => {
   Object.keys(testCases).forEach(k => {
     describe(k, () => {
       const testCase = testCases[k];
-      const { before, after, selection, character = " " } = testCase;
+      const { before, after, selection, character } = testCase;
+      if (!character)
+        throw new Error(
+          "Invalid test case, needs to provide character option."
+        );
       const contentState = Draft.convertFromRaw(before);
       const editorState = EditorState.forceSelection(
         EditorState.createWithContent(contentState),
@@ -610,10 +478,10 @@ describe("handleInlineStyle", () => {
           sameEditorState,
           character
         );
-        expect(newEditorState).toEqual(sameEditorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           before
         );
+        expect(newEditorState).toEqual(sameEditorState);
       });
 
       it("converts markdown to style or block type", () => {
@@ -622,10 +490,10 @@ describe("handleInlineStyle", () => {
           editorState,
           character
         );
-        expect(newEditorState).not.toEqual(editorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           after
         );
+        expect(newEditorState).not.toEqual(editorState);
       });
     });
   });
