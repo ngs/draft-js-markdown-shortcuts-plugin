@@ -1,3 +1,4 @@
+import { OrderedSet } from "immutable";
 import { EditorState, SelectionState, Modifier } from "draft-js";
 
 const changeCurrentInlineStyle = (editorState, matchArr, style) => {
@@ -60,7 +61,10 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
     "change-inline-style"
   );
 
-  return EditorState.forceSelection(newEditorState, afterSelection);
+  return EditorState.setInlineStyleOverride(
+    EditorState.forceSelection(newEditorState, afterSelection),
+    OrderedSet.of("")
+  );
 };
 
 export default changeCurrentInlineStyle;

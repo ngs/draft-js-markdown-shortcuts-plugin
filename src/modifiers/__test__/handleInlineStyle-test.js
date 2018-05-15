@@ -68,7 +68,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline  style",
+            text: "hello inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -129,7 +129,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline  style",
+            text: "hello inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -174,7 +174,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello TL;DR:  style",
+            text: "hello TL;DR: style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -219,7 +219,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline  style",
+            text: "hello inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -270,7 +270,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline  style",
+            text: "hello inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -320,7 +320,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline  style",
+            text: "hello inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -365,7 +365,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline  style",
+            text: "hello inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [
@@ -419,7 +419,7 @@ describe("handleInlineStyle", () => {
         blocks: [
           {
             key: "item1",
-            text: "hello inline  style",
+            text: "hello inline style",
             type: "unstyled",
             depth: 0,
             inlineStyleRanges: [

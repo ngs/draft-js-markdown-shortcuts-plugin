@@ -52,8 +52,6 @@ const handleInlineStyle = (
 
     if (character === "\n") {
       newContentState = Modifier.splitBlock(newContentState, selection);
-    } else {
-      newContentState = Modifier.insertText(newContentState, selection, " ");
     }
 
     newEditorState = EditorState.push(
