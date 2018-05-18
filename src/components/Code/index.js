@@ -70,9 +70,18 @@ class CodeBlock extends PureComponent {
     const { setReadOnly } = this.props.blockProps;
     event.stopPropagation();
     setReadOnly(true);
+    this.setState({
+      isOpen: true,
+    });
   };
 
   onClickOutside = () => {
+    if (!this.state.isOpen) {
+      return;
+    }
+    this.setState({
+      isOpen: false,
+    });
     const {
       getEditorState,
       setReadOnly,
