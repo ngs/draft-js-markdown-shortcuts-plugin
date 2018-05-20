@@ -347,10 +347,6 @@ const createMarkdownPlugin = (_config = {}) => {
       // If we're in a link - don't transform markdown
       if (inLink(editorState)) return "not-handled";
 
-      // Don't let users type two spaces after another
-      if (character === " " && getCurrentLine(editorState).slice(-1) === " ")
-        return "handled";
-
       const newEditorState = checkCharacterForState(
         config,
         editorState,
