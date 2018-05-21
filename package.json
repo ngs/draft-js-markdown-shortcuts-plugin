@@ -1,6 +1,6 @@
 {
   "name": "draft-js-markdown-shortcuts-plugin",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A DraftJS plugin for supporting Markdown syntax shortcuts",
   "main": "lib/index.js",
   "scripts": {
