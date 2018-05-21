@@ -11,19 +11,19 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const newStyle = currentInlineStyle.merge([style]);
   const focusOffset = index + matchArr[0].length;
   const wordSelection = SelectionState.createEmpty(key).merge({
-    anchorOffset: index,
+    anchorOffset: index + matchArr[0].indexOf(matchArr[1]),
     focusOffset
   });
   let newContentState = Modifier.replaceText(
     currentContent,
     wordSelection,
-    matchArr[1],
+    matchArr[2],
     newStyle
   );
   newContentState = Modifier.insertText(
     newContentState,
     newContentState.getSelectionAfter(),
-    ' '
+    matchArr[4]
   );
   const newEditorState = EditorState.push(
     editorState,
