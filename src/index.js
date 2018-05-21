@@ -19,17 +19,20 @@ import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
 import { replaceText } from './utils';
 
-const INLINE_STYLE_CHARACTERS = [' ', '*', '_'];
-
 function checkCharacterForState(editorState, character) {
   let newEditorState = handleBlockType(editorState, character);
+  const contentState = editorState.getCurrentContent();
+  const selection = editorState.getSelection();
+  const key = selection.getStartKey();
+  const currentBlock = contentState.getBlockForKey(key);
+  const type = currentBlock.getType();
   if (editorState === newEditorState) {
     newEditorState = handleImage(editorState, character);
   }
   if (editorState === newEditorState) {
     newEditorState = handleLink(editorState, character);
   }
-  if (editorState === newEditorState) {
+  if (editorState === newEditorState && type !== 'code-block') {
     newEditorState = handleInlineStyle(editorState, character);
   }
   return newEditorState;
@@ -62,7 +65,9 @@ function checkReturnForState(editorState, ev) {
       newEditorState = insertText(editorState, '\n');
     }
   }
-
+  if (editorState === newEditorState) {
+    newEditorState = handleInlineStyle(editorState, '\n');
+  }
   return newEditorState;
 }
 
@@ -129,7 +134,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       return 'not-handled';
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
-      if (character !== ' ') {
+      if (character.match(/[A-z0-9_*~`]/)) {
         return 'not-handled';
       }
       const newEditorState = checkCharacterForState(editorState, character);
@@ -146,7 +151,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       let newEditorState = editorState;
       let buffer = [];
       for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
-        if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
+        if (text[i].match(/[^A-z0-9_*~`]/)) {
           newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
           newEditorState = checkCharacterForState(newEditorState, text[i]);
           buffer = [];

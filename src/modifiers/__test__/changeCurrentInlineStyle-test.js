@@ -32,7 +32,7 @@ describe('changeCurrentInlineStyle', () => {
   it('changes block type', () => {
     const text = 'foo `bar` baz';
     const editorState = createEditorState(text, []);
-    const matchArr = ['`bar`', 'bar'];
+    const matchArr = ['`bar` ', '`', 'bar', '`', ' '];
     matchArr.index = 4;
     matchArr.input = text;
     const newEditorState = changeCurrentInlineStyle(
@@ -41,7 +41,7 @@ describe('changeCurrentInlineStyle', () => {
     expect(
       Draft.convertToRaw(newEditorState.getCurrentContent())
     ).to.deep.equal(
-      rawContentState('foo bar  baz', [{
+      rawContentState('foo bar baz', [{
         length: 3,
         offset: 4,
         style: 'CODE'
