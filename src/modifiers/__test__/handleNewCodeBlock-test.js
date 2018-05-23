@@ -2,6 +2,16 @@ import sinon from "sinon";
 import Draft, { EditorState, SelectionState } from "draft-js";
 import handleNewCodeBlock from "../handleNewCodeBlock";
 
+const removeBlockKeys = rawContentState => {
+  return {
+    ...rawContentState,
+    blocks: rawContentState.blocks.map(block => {
+      delete block.key;
+      return block;
+    }),
+  };
+};
+
 describe("handleNewCodeBlock", () => {
   describe("in unstyled block with three backquotes", () => {
     const testNewCodeBlock = (text, data) => () => {
@@ -23,13 +33,20 @@ describe("handleNewCodeBlock", () => {
         entityMap: {},
         blocks: [
           {
-            key: "item1",
             text: "",
             type: "code-block",
             depth: 0,
             inlineStyleRanges: [],
             entityRanges: [],
             data,
+          },
+          {
+            text: "",
+            type: "unstyled",
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+            depth: 0,
           },
         ],
       };
@@ -49,9 +66,11 @@ describe("handleNewCodeBlock", () => {
       it("creates new code block", () => {
         const newEditorState = handleNewCodeBlock(editorState);
         expect(newEditorState).not.toEqual(editorState);
-        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
-          afterRawContentState
-        );
+        expect(
+          removeBlockKeys(
+            Draft.convertToRaw(newEditorState.getCurrentContent())
+          )
+        ).toEqual(removeBlockKeys(afterRawContentState));
       });
     };
 

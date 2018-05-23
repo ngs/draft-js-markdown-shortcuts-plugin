@@ -3,12 +3,13 @@ import { EditorState, Modifier } from "draft-js";
 const splitBlockAndChange = (
   editorState,
   type = "unstyled",
-  blockMetadata = {}
+  blockMetadata = {},
+  selectNewBlock = true
 ) => {
   let currentContent = editorState.getCurrentContent();
-  let selection = editorState.getSelection();
-  currentContent = Modifier.splitBlock(currentContent, selection);
-  selection = currentContent.getSelectionAfter();
+  const currentSelection = editorState.getSelection();
+  currentContent = Modifier.splitBlock(currentContent, currentSelection);
+  const selection = currentContent.getSelectionAfter();
   const key = selection.getStartKey();
   const blockMap = currentContent.getBlockMap();
   const block = blockMap.get(key);
@@ -16,7 +17,7 @@ const splitBlockAndChange = (
   const newBlock = block.merge({ type, data });
   const newContentState = currentContent.merge({
     blockMap: blockMap.set(key, newBlock),
-    selectionAfter: selection,
+    selectionAfter: selectNewBlock ? selection : currentSelection,
   });
 
   return EditorState.push(editorState, newContentState, "split-block");
