@@ -260,7 +260,7 @@ const createMarkdownPlugin = (_config = {}) => {
 
     blockRendererFn(
       block,
-      { setReadOnly, setEditorState, getEditorState, getEditorRef }
+      { setReadOnly, getReadOnly, setEditorState, getEditorState, getEditorRef }
     ) {
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
@@ -282,6 +282,7 @@ const createMarkdownPlugin = (_config = {}) => {
               setEditorState,
               renderLanguageSelect: config.renderLanguageSelect,
               languages: config.languages,
+              getReadOnly,
               setReadOnly,
               language: block.getData().get("language"),
               getEditorState,

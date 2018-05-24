@@ -47,6 +47,8 @@ class CodeBlock extends PureComponent {
       focusKey: blockKey,
     });
 
+    this.setState({ isOpen: false });
+
     let content = editorState.getCurrentContent();
     content = Modifier.mergeBlockData(
       content,
@@ -67,6 +69,7 @@ class CodeBlock extends PureComponent {
   cancelClicks = event => event.preventDefault();
 
   onSelectClick = event => {
+    this.setState({ isOpen: true });
     const { setReadOnly } = this.props.blockProps;
     event.stopPropagation();
     setReadOnly(true);
@@ -76,9 +79,7 @@ class CodeBlock extends PureComponent {
   };
 
   onClickOutside = () => {
-    if (!this.state.isOpen) {
-      return;
-    }
+    if (this.state.isOpen === false) return;
     this.setState({
       isOpen: false,
     });
@@ -90,6 +91,8 @@ class CodeBlock extends PureComponent {
 
     setReadOnly(false);
 
+    this.setState({ isOpen: false });
+
     const editorState = getEditorState();
     const selection = editorState.getSelection();
 
@@ -100,6 +103,7 @@ class CodeBlock extends PureComponent {
     const {
       languages,
       renderLanguageSelect,
+      getReadOnly,
       language: _language,
     } = this.props.blockProps;
 
@@ -125,12 +129,13 @@ class CodeBlock extends PureComponent {
           onClickOutside={this.onClickOutside}
           onClick={this.onSelectClick}
         >
-          {renderLanguageSelect({
-            selectedLabel,
-            selectedValue,
-            onChange: this.onChange,
-            options,
-          })}
+          {!getReadOnly() &&
+            renderLanguageSelect({
+              selectedLabel,
+              selectedValue,
+              onChange: this.onChange,
+              options,
+            })}
         </CodeSwitchContainer>
       </div>
     );
