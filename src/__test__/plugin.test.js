@@ -180,7 +180,7 @@ describe("draft-js-markdown-plugin", () => {
           expect(subject()).toBe("not-handled");
         });
 
-        it("resets curent inline style", () => {
+        it("resets current inline style", () => {
           currentRawContentState = {
             entityMap: {},
             blocks: [
@@ -544,6 +544,39 @@ describe("draft-js-markdown-plugin", () => {
                 currentEditorState,
                 " "
               );
+            });
+            it("unstickys inline style", () => {
+              currentRawContentState = {
+                entityMap: {},
+                blocks: [
+                  {
+                    key: "item1",
+                    text: "item1",
+                    type: "unstyled",
+                    depth: 0,
+                    inlineStyleRanges: [
+                      { offset: 0, length: 5, style: "BOLD" },
+                    ],
+                    entityRanges: [],
+                    data: {},
+                  },
+                ],
+              };
+
+              currentSelectionState = currentSelectionState.merge({
+                focusOffset: 5,
+                anchorOffset: 5,
+              });
+
+              expect(subject()).toBe("handled");
+              expect(store.setEditorState).toHaveBeenCalled();
+              newEditorState = store.setEditorState.mock.calls[0][0];
+              const block = newEditorState.getCurrentContent().getLastBlock();
+              const length = block.getLength();
+              expect(block.getInlineStyleAt(length - 1).toJS()).toEqual([]);
+              expect(block.getInlineStyleAt(length - 2).toJS()).toEqual([
+                "BOLD",
+              ]);
             });
           });
         });
