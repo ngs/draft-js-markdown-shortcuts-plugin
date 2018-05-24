@@ -202,6 +202,27 @@ function checkReturnForState(config, editorState, ev) {
   return newEditorState;
 }
 
+const unstickyInlineStyles = (character, editorState) => {
+  const selection = editorState.getSelection();
+  if (!selection.isCollapsed()) return editorState;
+
+  const startOffset = selection.getStartOffset();
+  const content = editorState.getCurrentContent();
+  const block = content.getBlockForKey(selection.getStartKey());
+  const entity = block.getEntityAt(startOffset);
+  if (entity !== null) return editorState;
+
+  // If we're currently in a style, but the next character doesn't have a style (or doesn't exist)
+  // we insert the characters manually without the inline style to "unsticky" them
+  const style = block.getInlineStyleAt(startOffset - 1);
+  if (style.size === 0) return editorState;
+  const nextStyle = block.getInlineStyleAt(startOffset);
+  if (nextStyle.size !== 0) return editorState;
+
+  const newContent = Modifier.insertText(content, selection, character);
+  return EditorState.push(editorState, newContent, "insert-characters");
+};
+
 const defaultConfig = {
   renderLanguageSelect: defaultRenderSelect,
   languages: defaultLanguages,
@@ -346,6 +367,12 @@ const createMarkdownPlugin = (_config = {}) => {
 
       // If we're in a link - don't transform markdown
       if (inLink(editorState)) return "not-handled";
+
+      const unsticky = unstickyInlineStyles(character, editorState);
+      if (editorState !== unsticky) {
+        setEditorState(unsticky);
+        return "handled";
+      }
 
       const newEditorState = checkCharacterForState(
         config,
