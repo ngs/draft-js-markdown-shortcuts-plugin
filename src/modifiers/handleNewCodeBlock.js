@@ -1,5 +1,6 @@
 import changeCurrentBlockType from "./changeCurrentBlockType";
 import insertEmptyBlock from "./insertEmptyBlock";
+import splitBlockAndChange from "./splitBlockAndChange";
 import { CODE_BLOCK_REGEX } from "../constants";
 
 const handleNewCodeBlock = editorState => {
@@ -19,7 +20,18 @@ const handleNewCodeBlock = editorState => {
     if (language) {
       data.language = language;
     }
-    return changeCurrentBlockType(editorState, "code-block", "", data);
+    const editorStateWithCodeBlock = changeCurrentBlockType(
+      editorState,
+      "code-block",
+      "",
+      data
+    );
+    return splitBlockAndChange(
+      editorStateWithCodeBlock,
+      undefined,
+      undefined,
+      false
+    );
   }
   const type = currentBlock.getType();
   if (type === "code-block" && isLast) {

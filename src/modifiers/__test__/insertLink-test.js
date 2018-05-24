@@ -1,4 +1,5 @@
 import Draft, { EditorState, SelectionState } from "draft-js";
+import { ENTITY_TYPE } from "../../constants";
 import insertLink from "../insertLink";
 
 describe("insertLink", () => {
@@ -23,6 +24,7 @@ describe("insertLink", () => {
       0: {
         data: {
           href: "http://cultofthepartyparrot.com/parrots/aussieparrot.gif",
+          url: "http://cultofthepartyparrot.com/parrots/aussieparrot.gif",
           title: "party",
         },
         mutability: "MUTABLE",
@@ -69,7 +71,7 @@ describe("insertLink", () => {
     ];
     matchArr.index = 4;
     matchArr.input = text;
-    const newEditorState = insertLink(editorState, matchArr);
+    const newEditorState = insertLink(editorState, matchArr, ENTITY_TYPE.LINK);
     expect(newEditorState).not.toEqual(editorState);
     expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       afterRawContentState

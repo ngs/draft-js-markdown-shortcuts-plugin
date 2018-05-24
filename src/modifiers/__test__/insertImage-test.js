@@ -1,5 +1,13 @@
 import Draft, { EditorState, SelectionState } from "draft-js";
+import { ENTITY_TYPE } from "../../constants";
 import insertImage from "../insertImage";
+
+jest.mock("draft-js/lib/generateRandomKey", () => {
+  let count = 0;
+  return () => {
+    return `key${count++}`;
+  };
+});
 
 describe("insertImage", () => {
   const markup =
@@ -20,6 +28,35 @@ describe("insertImage", () => {
     ],
   };
   const afterRawContentState = {
+    blocks: [
+      {
+        data: {},
+        depth: 0,
+        entityRanges: [],
+        inlineStyleRanges: [],
+        key: "item1",
+        text: "foo ",
+        type: "unstyled",
+      },
+      {
+        data: {},
+        depth: 0,
+        entityRanges: [{ key: 0, length: 1, offset: 0 }],
+        inlineStyleRanges: [],
+        key: "key0",
+        text: " ",
+        type: "atomic",
+      },
+      {
+        data: {},
+        depth: 0,
+        entityRanges: [],
+        inlineStyleRanges: [],
+        key: "key4",
+        text: "  baz",
+        type: "unstyled",
+      },
+    ],
     entityMap: {
       0: {
         data: {
@@ -31,24 +68,8 @@ describe("insertImage", () => {
         type: "IMG",
       },
     },
-    blocks: [
-      {
-        key: "item1",
-        text: "foo \u200B  baz",
-        type: "unstyled",
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [
-          {
-            key: 0,
-            length: 1,
-            offset: 4,
-          },
-        ],
-        data: {},
-      },
-    ],
   };
+
   const selection = new SelectionState({
     anchorKey: "item1",
     anchorOffset: 6,
@@ -71,7 +92,11 @@ describe("insertImage", () => {
     ];
     matchArr.index = 4;
     matchArr.input = text;
-    const newEditorState = insertImage(editorState, matchArr);
+    const newEditorState = insertImage(
+      editorState,
+      matchArr,
+      ENTITY_TYPE.IMAGE
+    );
     expect(newEditorState).not.toEqual(editorState);
     expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
       afterRawContentState

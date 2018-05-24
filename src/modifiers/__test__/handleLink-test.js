@@ -1,5 +1,6 @@
 import sinon from "sinon";
 import Draft, { EditorState, SelectionState } from "draft-js";
+import { ENTITY_TYPE } from "../../constants";
 import handleLink from "../handleLink";
 
 describe("handleLink", () => {
@@ -78,7 +79,7 @@ describe("handleLink", () => {
     describe(condition, () => {
       it("returns new editor state", () => {
         const editorState = createEditorState(text);
-        const newEditorState = handleLink(editorState, " ");
+        const newEditorState = handleLink(editorState, " ", ENTITY_TYPE.LINK);
         expect(newEditorState).not.toEqual(editorState);
         expect(Draft.convertToRaw(newEditorState.getCurrentContent())).toEqual(
           afterRawContentState
@@ -90,7 +91,7 @@ describe("handleLink", () => {
   describe("if does not match", () => {
     it("returns old editor state", () => {
       const editorState = createEditorState("yo");
-      const newEditorState = handleLink(editorState, " ");
+      const newEditorState = handleLink(editorState, " ", ENTITY_TYPE.LINK);
       expect(newEditorState).toEqual(editorState);
       expect(fakeInsertLink).not.toHaveBeenCalled();
     });

@@ -4,7 +4,11 @@ import {
   CheckableListItemUtils,
 } from "draft-js-checkable-list-item";
 
-import { defaultInlineWhitelist, defaultBlockWhitelist } from "../constants";
+import {
+  defaultInlineWhitelist,
+  defaultBlockWhitelist,
+  ENTITY_TYPE,
+} from "../constants";
 
 import { Map, List } from "immutable";
 import createMarkdownPlugin from "../";
@@ -224,37 +228,6 @@ describe("draft-js-markdown-plugin", () => {
           expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
         });
 
-        it("adds list item and transforms markdown", () => {
-          // createMarkdownPlugin.__Rewire__("leaveList", modifierSpy); // eslint-disable-line no-underscore-dangle
-          currentRawContentState = {
-            entityMap: {},
-            blocks: [
-              {
-                key: "item1",
-                text: "**some bold text**",
-                type: "unordered-list-item",
-                depth: 0,
-                inlineStyleRanges: [],
-                entityRanges: [],
-                data: {},
-              },
-            ],
-          };
-          currentSelectionState = currentSelectionState.merge({
-            focusOffset: 18,
-            anchorOffset: 18,
-          });
-          expect(subject()).toBe("handled");
-          // expect(modifierSpy).toHaveBeenCalledTimes(1);
-          expect(store.setEditorState).toHaveBeenCalledTimes(1);
-          newEditorState = store.setEditorState.mock.calls[0][0];
-          const newRawContentState = Draft.convertToRaw(
-            newEditorState.getCurrentContent()
-          );
-          expect(newRawContentState.blocks.length).toBe(2);
-          expect(newEditorState.getCurrentInlineStyle().size).toBe(0);
-        });
-
         const emptyBlockTypes = [
           "blockquote",
           "header-one",
@@ -333,7 +306,6 @@ describe("draft-js-markdown-plugin", () => {
               event = new window.KeyboardEvent("keydown", props);
             });
             it("inserts new empty block", () => {
-              createMarkdownPlugin.__Rewire__("insertEmptyBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
               const text = "Hello";
               currentRawContentState = {
                 entityMap: {},
@@ -349,9 +321,8 @@ describe("draft-js-markdown-plugin", () => {
                   },
                 ],
               };
-              expect(subject()).toBe("handled");
-              expect(modifierSpy).toHaveBeenCalledTimes(1);
-              expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
+              expect(subject()).toBe("not-handled");
+              expect(store.setEditorState).not.toHaveBeenCalled();
             });
           });
         });
@@ -516,14 +487,33 @@ describe("draft-js-markdown-plugin", () => {
             ],
           };
         });
-        ["handleImage", "handleLink"].forEach(modifier => {
+        ["handleImage"].forEach(modifier => {
           describe(modifier, () => {
             beforeEach(() => {
               createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
             });
             it("returns handled", () => {
               expect(subject()).toBe("handled");
-              expect(modifierSpy).toHaveBeenCalledWith(currentEditorState, " ");
+              expect(modifierSpy).toHaveBeenCalledWith(
+                currentEditorState,
+                " ",
+                ENTITY_TYPE.IMAGE
+              );
+            });
+          });
+        });
+        ["handleLink"].forEach(modifier => {
+          describe(modifier, () => {
+            beforeEach(() => {
+              createMarkdownPlugin.__Rewire__(modifier, modifierSpy); // eslint-disable-line no-underscore-dangle
+            });
+            it("returns handled", () => {
+              expect(subject()).toBe("handled");
+              expect(modifierSpy).toHaveBeenCalledWith(
+                currentEditorState,
+                " ",
+                ENTITY_TYPE.LINK
+              );
             });
           });
         });
@@ -614,6 +604,27 @@ describe("draft-js-markdown-plugin", () => {
 
             expect(subject()).toBe("not-handled");
           });
+        });
+        it("handles new code block on space", () => {
+          createMarkdownPlugin.__Rewire__("handleNewCodeBlock", modifierSpy); // eslint-disable-line no-underscore-dangle
+          currentRawContentState = {
+            entityMap: {},
+            blocks: [
+              {
+                key: "item1",
+                text: "```",
+                type: "unstyled",
+                depth: 0,
+                inlineStyleRanges: [],
+                entityRanges: [],
+                data: {},
+              },
+            ],
+          };
+          character = " ";
+          expect(subject()).toBe("handled");
+          expect(modifierSpy).toHaveBeenCalledTimes(1);
+          expect(store.setEditorState).toHaveBeenCalledWith(newEditorState);
         });
       });
       describe("handlePastedText", () => {
