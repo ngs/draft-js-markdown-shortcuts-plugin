@@ -209,7 +209,7 @@ const unstickyInlineStyles = (character, editorState) => {
   const startOffset = selection.getStartOffset();
   const content = editorState.getCurrentContent();
   const block = content.getBlockForKey(selection.getStartKey());
-  const entity = block.getEntityAt(startOffset);
+  const entity = block.getEntityAt(startOffset - 1);
   if (entity !== null) return editorState;
 
   // If we're currently in a style, but the next character doesn't have a style (or doesn't exist)
