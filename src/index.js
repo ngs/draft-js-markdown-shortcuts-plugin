@@ -416,13 +416,19 @@ const createMarkdownPlugin = (_config = {}) => {
       }
     },
     handlePastedText(text, html, editorState, { setEditorState }) {
+      let newEditorState = editorState;
+      let buffer = [];
+
       if (html) {
         return "not-handled";
       }
+
       // If we're in a code block don't add markdown to it
-      if (inCodeBlock(editorState)) return "not-handled";
-      let newEditorState = editorState;
-      let buffer = [];
+      if (inCodeBlock(editorState)) {
+        setEditorState(insertText(editorState, text));
+        return "handled";
+      }
+
       for (let i = 0; i < text.length; i++) {
         // eslint-disable-line no-plusplus
         if (INLINE_STYLE_CHARACTERS.indexOf(text[i]) >= 0) {
@@ -464,6 +470,7 @@ const createMarkdownPlugin = (_config = {}) => {
         setEditorState(newEditorState);
         return "handled";
       }
+
       return "not-handled";
     },
   };
