@@ -136,7 +136,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           expect(modifierSpy).to.have.been.calledOnce();
           expect(store.setEditorState).to.have.been.calledWith(newEditorState);
         });
-        const testInsertNewBlock = (type) => () => {
+        const testInsertNewBlock = (type, rawSelectionState, expects) => () => {
           createMarkdownShortcutsPlugin.__Rewire__('insertEmptyBlock', modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
             entityMap: {},
@@ -150,23 +150,9 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               data: {}
             }]
           };
-          currentSelectionState = new SelectionState({
-            anchorKey: 'item1',
-            anchorOffset: 5,
-            focusKey: 'item1',
-            focusOffset: 5,
-            isBackward: false,
-            hasFocus: true
-          });
-          expect(subject()).to.equal('handled');
-          expect(modifierSpy).to.have.been.calledOnce();
-          expect(store.setEditorState).to.have.been.calledWith(newEditorState);
+          currentSelectionState = new SelectionState(rawSelectionState);
+          expects();
         };
-        ['one', 'two', 'three', 'four', 'five', 'six'].forEach((level) => {
-          describe(`on header-${level}`, () => {
-            it('inserts new empty block on end of header return', testInsertNewBlock(`header-${level}`));
-          });
-        });
         ['ctrlKey', 'shiftKey', 'metaKey', 'altKey'].forEach((key) => {
           describe(`${key} is pressed`, () => {
             beforeEach(() => {
@@ -174,7 +160,48 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               props[key] = true;
               event = new window.KeyboardEvent('keydown', props);
             });
-            it('inserts new empty block', testInsertNewBlock('blockquote'));
+            const baseRawSelectionState = {
+              anchorKey: 'item1',
+              focusKey: 'item1',
+              isBackward: false,
+              hasFocus: true
+            };
+            it(
+              'inserts new empty block',
+              testInsertNewBlock(
+                'blockquote',
+                { ...baseRawSelectionState, anchorOffset: 5, focusOffset: 5 },
+                () => {
+                  expect(subject()).to.equal('handled');
+                  expect(modifierSpy).to.have.been.calledOnce();
+                  expect(store.setEditorState).to.have.been.calledWith(newEditorState);
+                }
+              )
+            );
+            [
+              {
+                anchorOffset: 1,
+                focusOffset: 1
+              },
+              {
+                anchorOffset: 1,
+                focusOffset: 3
+              }
+            ].forEach((selection) => {
+              const rawSselectionState = { ...baseRawSelectionState, ...selection };
+              it(
+                `does not inserts with ${JSON.stringify(selection)}`,
+                testInsertNewBlock(
+                  'blockquote',
+                  rawSselectionState,
+                  () => {
+                    expect(subject()).to.equal('not-handled');
+                    expect(modifierSpy).not.to.have.been.calledOnce();
+                    expect(store.setEditorState).not.to.have.been.called();
+                  }
+                )
+              );
+            });
           });
         });
         it('handles new code block', () => {

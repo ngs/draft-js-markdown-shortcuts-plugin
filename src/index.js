@@ -50,8 +50,10 @@ function checkReturnForState(editorState, ev) {
     newEditorState = leaveList(editorState);
   }
   if (newEditorState === editorState
-      && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey
-          || (/^header-/.test(type) && selection.isCollapsed() && selection.getEndOffset() === text.length))) {
+    && selection.isCollapsed()
+    && selection.getEndOffset() === text.length
+    && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey)
+  ) {
     newEditorState = insertEmptyBlock(editorState);
   }
   if (newEditorState === editorState && type !== 'code-block' && /^```([\w-]+)?$/.test(text)) {
