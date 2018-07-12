@@ -38,7 +38,7 @@ function checkCharacterForState(editorState, character) {
   return newEditorState;
 }
 
-function checkReturnForState(editorState, ev) {
+function checkReturnForState(editorState, ev, { insertEmptyBlockOnReturnWithModifierKey }) {
   let newEditorState = editorState;
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
@@ -50,6 +50,7 @@ function checkReturnForState(editorState, ev) {
     newEditorState = leaveList(editorState);
   }
   if (newEditorState === editorState
+      && insertEmptyBlockOnReturnWithModifierKey
       && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey
           || (/^header-/.test(type) && selection.isCollapsed() && selection.getEndOffset() === text.length))) {
     newEditorState = insertEmptyBlock(editorState);
@@ -71,7 +72,7 @@ function checkReturnForState(editorState, ev) {
   return newEditorState;
 }
 
-const createMarkdownShortcutsPlugin = (config = {}) => {
+const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithModifierKey: true }) => {
   const store = {};
   return {
     store,
@@ -126,7 +127,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
       return 'not-handled';
     },
     handleReturn(ev, editorState, { setEditorState }) {
-      const newEditorState = checkReturnForState(editorState, ev);
+      const newEditorState = checkReturnForState(editorState, ev, config);
       if (editorState !== newEditorState) {
         setEditorState(newEditorState);
         return 'handled';
@@ -157,7 +158,7 @@ const createMarkdownShortcutsPlugin = (config = {}) => {
           buffer = [];
         } else if (text[i].charCodeAt(0) === 10) {
           newEditorState = replaceText(newEditorState, buffer.join(''));
-          const tmpEditorState = checkReturnForState(newEditorState, {});
+          const tmpEditorState = checkReturnForState(newEditorState, {}, config);
           if (newEditorState === tmpEditorState) {
             newEditorState = insertEmptyBlock(tmpEditorState);
           } else {

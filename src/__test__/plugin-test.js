@@ -45,7 +45,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
 
   [
     [],
-    [{}],
+    [{ insertEmptyBlockOnReturnWithModifierKey: false }]
   ].forEach((args) => {
     beforeEach(() => {
       modifierSpy = sinon.spy(() => newEditorState);
@@ -85,7 +85,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
       subject = null;
     });
 
-    describe(args.length === 0 ? 'without config' : 'with config', () => {
+    describe(args.length === 0 ? 'without config' : 'with `insertEmptyBlockOnReturnWithModifierKey: false` config', () => {
       beforeEach(() => {
         plugin = createMarkdownShortcutsPlugin(...args);
       });
@@ -98,6 +98,16 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
         expect(plugin.store).to.deep.equal(store);
       });
       describe('handleReturn', () => {
+        const expectsHandled = () => {
+          expect(subject()).to.equal('handled');
+          expect(modifierSpy).to.have.been.calledOnce();
+          expect(store.setEditorState).to.have.been.calledWith(newEditorState);
+        };
+        const expectsNotHandled = () => {
+          expect(subject()).to.equal('not-handled');
+          expect(modifierSpy).not.to.have.been.calledOnce();
+          expect(store.setEditorState).not.to.have.been.called();
+        };
         beforeEach(() => {
           subject = () => plugin.handleReturn(event, store.getEditorState(), store);
         });
@@ -114,9 +124,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               data: {}
             }]
           };
-          expect(subject()).to.equal('not-handled');
-          expect(modifierSpy).not.to.have.been.calledOnce();
-          expect(store.setEditorState).not.to.have.been.called();
+          expectsNotHandled();
         });
         it('leaves from list', () => {
           createMarkdownShortcutsPlugin.__Rewire__('leaveList', modifierSpy); // eslint-disable-line no-underscore-dangle
@@ -132,11 +140,9 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               data: {}
             }]
           };
-          expect(subject()).to.equal('handled');
-          expect(modifierSpy).to.have.been.calledOnce();
-          expect(store.setEditorState).to.have.been.calledWith(newEditorState);
+          expectsHandled();
         });
-        const testInsertNewBlock = (type) => () => {
+        const testInsertNewBlock = (type, expects) => () => {
           createMarkdownShortcutsPlugin.__Rewire__('insertEmptyBlock', modifierSpy); // eslint-disable-line no-underscore-dangle
           currentRawContentState = {
             entityMap: {},
@@ -158,13 +164,14 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
             isBackward: false,
             hasFocus: true
           });
-          expect(subject()).to.equal('handled');
-          expect(modifierSpy).to.have.been.calledOnce();
-          expect(store.setEditorState).to.have.been.calledWith(newEditorState);
+          expects();
         };
+        const expects = args[0] && args[0].insertEmptyBlockOnReturnWithModifierKey === false
+          ? expectsNotHandled
+          : expectsHandled;
         ['one', 'two', 'three', 'four', 'five', 'six'].forEach((level) => {
           describe(`on header-${level}`, () => {
-            it('inserts new empty block on end of header return', testInsertNewBlock(`header-${level}`));
+            it('inserts new empty block on end of header return', testInsertNewBlock(`header-${level}`, expects));
           });
         });
         ['ctrlKey', 'shiftKey', 'metaKey', 'altKey'].forEach((key) => {
@@ -174,7 +181,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               props[key] = true;
               event = new window.KeyboardEvent('keydown', props);
             });
-            it('inserts new empty block', testInsertNewBlock('blockquote'));
+            it('inserts new empty block', testInsertNewBlock('blockquote', expects));
           });
         });
         it('handles new code block', () => {
