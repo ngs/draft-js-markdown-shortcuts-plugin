@@ -1,0 +1,114 @@
+version: 2
+
+references:
+  base: &base
+    docker:
+      - image: circleci/node:8.11.3
+
+    environment:
+      MOCHA_FILE: mocha-test-results/test-results.xml
+
+    restore_cache: &restore_yarn_cache
+      restore_cache:
+        keys:
+        - v1-yarn-cache-{{ checksum "yarn.lock" }}
+
+    save_cache: &save_yarn_cache
+      save_cache:
+        paths:
+        - ~/.cache/yarn
+        key: v1-yarn-cache-{{ checksum "yarn.lock" }}
+
+    restore_cache: &restore_npm_cache
+      restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "yarn.lock" }}
+
+    save_cache: &save_npm_cache
+      save_cache:
+        paths:
+        - node_modules
+        key: v1-dependencies-{{ checksum "yarn.lock" }}
+
+jobs:
+  lint:
+    <<: *base
+    steps:
+    - checkout
+    - <<: *restore_yarn_cache
+    - <<: *restore_npm_cache
+    - run: yarn
+    - <<: *save_yarn_cache
+    - <<: *save_npm_cache
+    - run:
+        name: Run eslint
+        command: npm run eslint -- --max-warnings 0
+
+  tests:
+    <<: *base
+    steps:
+    - checkout
+    - <<: *restore_npm_cache
+    - run: npm test
+    - run:
+        name: Send coverage to Coveralls
+        command: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+    - store_test_results:
+        path: mocha-test-results
+    - store_artifacts:
+        path: lib
+        destination: lib
+    - store_artifacts:
+        path: coverage
+        destination: coverage
+
+  publish:
+    <<: *base
+    steps:
+    - checkout
+    - <<: *restore_npm_cache
+    # - run: .circleci/check-tag.sh
+    # - run: .circleci/export-api-key.sh
+    - run: npm publish
+
+
+  deploy_demo:
+    <<: *base
+    steps:
+    - checkout
+    - <<: *restore_npm_cache
+    - run: .circleci/setup-git-user.sh
+    - run: npm run build:demo
+    - run: npm run deploy:demo
+    - store_artifacts:
+        path: demo/public
+        destination: demo
+
+workflows:
+  version: 2
+  pkg:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              ignore: gh-pages
+
+      - tests:
+          requires:
+            - lint
+
+      - publish:
+          requires:
+            - tests
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+      - deploy_demo:
+          requires:
+            - tests
+          filters:
+            branches:
+              only: [master, /deploy-.+/]
