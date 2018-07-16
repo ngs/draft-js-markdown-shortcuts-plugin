@@ -17,7 +17,8 @@
     "test:coverage": "node_modules/.bin/nyc --require babel-core/register npm run test:mocha",
     "test:mocha": "mocha --opts .mocha.opts $(find src -name '*-test.js')",
     "test:watch": "npm test | npm run watch",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "postinstall": "opencollective postinstall"
   },
   "watch": {
     "test": {
@@ -112,6 +113,11 @@
     "decorate-component-with-props": "^1.1.0",
     "draft-js": "~0.10.5",
     "draft-js-checkable-list-item": "^3.0.1",
-    "immutable": "~3.7.4"
+    "immutable": "~3.7.4",
+    "opencollective": "^1.0.3"
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/draft-js-markdown-shortcuts-plugin"
   }
 }
