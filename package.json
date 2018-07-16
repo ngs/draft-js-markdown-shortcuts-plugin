@@ -6,15 +6,20 @@
   "scripts": {
     "eslint": "node_modules/.bin/eslint .",
     "build": "npm run clean && npm run build:js",
-    "build:demo": "NODE_ENV=production webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
-    "build:js": "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",
-    "clean": "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
-    "deploy:demo": "COMMIT=$(git rev-parse --short HEAD) && BRANCH=gh-pages && GIT_URL=$(git remote get-url origin) && DIR=.deploy; rm -rf $DIR; (git clone $GIT_URL -b $BRANCH $DIR || (git init $DIR && cd $DIR && git remote add origin $GIT_URL && git checkout -b $BRANCH)) && rm -rf ${DIR}/* && cp -R ${DIR}/../demo/public/* $DIR && cd $DIR && git add -A && git commit -m \"Built artifacts of ${COMMIT} [ci skip]\" && git push origin $BRANCH",
+    "build:demo":
+      "NODE_ENV=production webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
+    "build:js":
+      "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",
+    "clean":
+      "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
+    "deploy:demo":
+      "COMMIT=$(git rev-parse --short HEAD) && BRANCH=gh-pages && GIT_URL=$(git config --get remote.origin.url) && DIR=.deploy; rm -rf $DIR; (git clone $GIT_URL -b $BRANCH $DIR || (git init $DIR && cd $DIR && git remote add origin $GIT_URL && git checkout -b $BRANCH)) && rm -rf ${DIR}/* && cp -R ${DIR}/../demo/public/* $DIR && cd $DIR && git add -A && git commit -m \"Built artifacts of ${COMMIT}\" && git push origin $BRANCH",
     "prepublish": "npm run build",
     "start": "npm run start:dev",
     "start:dev": "node_modules/.bin/babel-node ./demo/server.js",
     "test": "npm run test:coverage",
-    "test:coverage": "node_modules/.bin/nyc --require babel-core/register npm run test:mocha",
+    "test:coverage":
+      "node_modules/.bin/nyc --require babel-core/register npm run test:mocha",
     "test:mocha": "mocha --opts .mocha.opts $(find src -name '*-test.js')",
     "test:watch": "npm test | npm run watch",
     "watch": "npm-watch",
@@ -22,27 +27,21 @@
   },
   "watch": {
     "test": {
-      "patterns": [
-        "src/**/*.js"
-      ]
+      "patterns": ["src/**/*.js"]
     }
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngs/draft-js-markdown-shortcuts-plugin.git"
   },
-  "keywords": [
-    "draftjs",
-    "editor",
-    "plugin",
-    "markdown"
-  ],
+  "keywords": ["draftjs", "editor", "plugin", "markdown"],
   "author": "Atsushi Nagase",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ngs/draft-js-markdown-shortcuts-plugin/issues"
   },
-  "homepage": "https://github.com/ngs/draft-js-markdown-shortcuts-plugin#readme",
+  "homepage":
+    "https://github.com/ngs/draft-js-markdown-shortcuts-plugin#readme",
   "devDependencies": {
     "autoprefixer": "^6.5.3",
     "babel-cli": "^6.18.0",
@@ -102,13 +101,12 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
-    "draft-js-plugins-editor": "^2.0.0 || ~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
+    "draft-js-plugins-editor":
+      "^2.0.0 || ~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
     "react": "^16.0.0 || ^15.0.0",
     "react-dom": "^16.0.0 || ^15.0.0"
   },
-  "contributors": [
-    "Atsushi Nagase <a@ngs.io>"
-  ],
+  "contributors": ["Atsushi Nagase <a@ngs.io>"],
   "dependencies": {
     "decorate-component-with-props": "^1.1.0",
     "draft-js": "~0.10.5",
