@@ -6,14 +6,12 @@
   "scripts": {
     "eslint": "node_modules/.bin/eslint .",
     "build": "npm run clean && npm run build:js",
-    "build:demo":
-      "NODE_ENV=production webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
+    "build:demo": ".circleci/build-demo.sh",
     "build:js":
       "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",
     "clean":
       "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
-    "deploy:demo":
-      "COMMIT=$(git rev-parse --short HEAD) && BRANCH=gh-pages && GIT_URL=$(git config --get remote.origin.url) && DIR=.deploy; rm -rf $DIR; (git clone $GIT_URL -b $BRANCH $DIR || (git init $DIR && cd $DIR && git remote add origin $GIT_URL && git checkout -b $BRANCH)) && rm -rf ${DIR}/* && cp -R ${DIR}/../demo/public/* $DIR  && rm -rf ${DIR}/.circleci && cp -R ${DIR}/../demo/publicTemplate/.circleci $DIR && cd $DIR && git add -A && git commit -m \"Built artifacts of ${COMMIT}\" && git push origin $BRANCH",
+    "deploy:demo": ".circleci/deploy-demo.sh",
     "prepublish": "npm run build",
     "start": "npm run start:dev",
     "start:dev": "node_modules/.bin/babel-node ./demo/server.js",
