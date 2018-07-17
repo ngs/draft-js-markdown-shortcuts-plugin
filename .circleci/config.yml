@@ -8,23 +8,23 @@ references:
     environment:
       MOCHA_FILE: mocha-test-results/test-results.xml
 
-    restore_cache: &restore_yarn_cache
+    restore_yarn_cache: &restore_yarn_cache
       restore_cache:
         keys:
         - v1-yarn-cache-{{ checksum "yarn.lock" }}
 
-    save_cache: &save_yarn_cache
+    save_yarn_cache: &save_yarn_cache
       save_cache:
         paths:
         - ~/.cache/yarn
         key: v1-yarn-cache-{{ checksum "yarn.lock" }}
 
-    restore_cache: &restore_npm_cache
+    restore_npm_cache: &restore_npm_cache
       restore_cache:
         keys:
         - v1-dependencies-{{ checksum "yarn.lock" }}
 
-    save_cache: &save_npm_cache
+    save_npm_cache: &save_npm_cache
       save_cache:
         paths:
         - node_modules
@@ -67,8 +67,8 @@ jobs:
     steps:
     - checkout
     - <<: *restore_npm_cache
-    # - run: .circleci/check-tag.sh
-    # - run: .circleci/export-api-key.sh
+    - run: .circleci/check-tag.sh
+    - run: .circleci/export-api-key.sh
     - run: npm publish
 
 
@@ -89,13 +89,17 @@ workflows:
   pkg:
     jobs:
       - lint:
-          filters:
+          filters: &base_filters
             branches:
               ignore: gh-pages
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
       - tests:
           requires:
             - lint
+          filters:
+            <<: *base_filters
 
       - publish:
           requires:
