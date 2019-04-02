@@ -379,6 +379,14 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
             expect(subject()).to.equal('not-handled');
           });
         });
+        describe('non-string empty value in clipboard', () => {
+          beforeEach(() => {
+            pastedText = null;
+          });
+          it('returns not-handled', () => {
+            expect(subject()).to.equal('not-handled');
+          });
+        });
         describe('pasted just text', () => {
           beforeEach(() => {
             pastedText = 'hello';

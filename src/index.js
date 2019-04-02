@@ -149,6 +149,11 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       if (html) {
         return 'not-handled';
       }
+
+      if (!text) {
+        return 'not-handled';
+      }
+
       let newEditorState = editorState;
       let buffer = [];
       for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
