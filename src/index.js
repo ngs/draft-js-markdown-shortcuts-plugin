@@ -134,7 +134,7 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       }
       return 'not-handled';
     },
-    handleBeforeInput(character, editorState, { setEditorState }) {
+    handleBeforeInput(character, editorState, eventTimeStamp, { setEditorState }) {
       if (character.match(/[A-z0-9_*~`]/)) {
         return 'not-handled';
       }
