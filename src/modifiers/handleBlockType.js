@@ -28,7 +28,7 @@ const handleBlockType = (editorState, character) => {
   const line = [text.slice(0, position), character, text.slice(position)].join('');
   const blockType = RichUtils.getCurrentBlockType(editorState);
   for (let i = 1; i <= 6; i += 1) {
-    if (line.indexOf(`${sharps(i)} `) === 0) {
+    if (line.indexOf(`${sharps(i)} `) === 0 && blockType !== 'code-block') {
       return changeCurrentBlockType(editorState, blockTypes[i], line.replace(/^#+\s/, ''));
     }
   }
