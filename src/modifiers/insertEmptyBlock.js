@@ -13,20 +13,17 @@ const insertEmptyBlock = (editorState, blockType = 'unstyled', data = {}) => {
     key: emptyBlockKey,
     text: '',
     type: blockType,
-    data: Map().merge(data)
+    data: Map().merge(data),
   });
   const blockMap = contentState.getBlockMap();
-  const blocksBefore = blockMap.toSeq().takeUntil((value) => value === currentBlock);
-  const blocksAfter = blockMap.toSeq().skipUntil((value) => value === currentBlock).rest();
+  const blocksBefore = blockMap.toSeq().takeUntil(value => value === currentBlock);
+  const blocksAfter = blockMap
+    .toSeq()
+    .skipUntil(value => value === currentBlock)
+    .rest();
   const augmentedBlocks = [
-    [
-      currentBlock.getKey(),
-      currentBlock,
-    ],
-    [
-      emptyBlockKey,
-      emptyBlock,
-    ],
+    [currentBlock.getKey(), currentBlock],
+    [emptyBlockKey, emptyBlock],
   ];
   const newBlocks = blocksBefore.concat(augmentedBlocks, blocksAfter).toOrderedMap();
   const focusKey = emptyBlockKey;
@@ -41,11 +38,7 @@ const insertEmptyBlock = (editorState, blockType = 'unstyled', data = {}) => {
       isBackward: false,
     }),
   });
-  return EditorState.push(
-    editorState,
-    newContentState,
-    'split-block'
-  );
+  return EditorState.push(editorState, newContentState, 'split-block');
 };
 
 export default insertEmptyBlock;

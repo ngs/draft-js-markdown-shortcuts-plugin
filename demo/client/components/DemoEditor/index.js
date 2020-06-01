@@ -13,18 +13,14 @@ import prismPlugin from '../../plugins/prism';
 
 window.Draft = Draft;
 
-const plugins = [
-  prismPlugin,
-  createMarkdownShortcutsPlugin()
-];
+const plugins = [prismPlugin, createMarkdownShortcutsPlugin()];
 
 const contentState = ContentState.createFromText('');
 const initialEditorState = EditorState.createWithContent(contentState);
 
 export default class DemoEditor extends Component {
-
   state = {
-    editorState: initialEditorState
+    editorState: initialEditorState,
   };
 
   componentDidMount = () => {
@@ -32,9 +28,9 @@ export default class DemoEditor extends Component {
     if (editor) {
       setTimeout(editor.focus.bind(editor), 1000);
     }
-  }
+  };
 
-  onChange = (editorState) => {
+  onChange = editorState => {
     window.editorState = editorState;
     window.rawContent = convertToRaw(editorState.getCurrentContent());
 
@@ -45,7 +41,9 @@ export default class DemoEditor extends Component {
 
   render() {
     const { editorState } = this.state;
-    const placeholder = editorState.getCurrentContent().hasText() ? null : <div className={styles.placeholder}>Write something here...</div>;
+    const placeholder = editorState.getCurrentContent().hasText() ? null : (
+      <div className={styles.placeholder}>Write something here...</div>
+    );
     return (
       <div className={styles.root}>
         {placeholder}
@@ -55,7 +53,9 @@ export default class DemoEditor extends Component {
             onChange={this.onChange}
             plugins={plugins}
             spellCheck
-            ref={(element) => { this.editor = element; }}
+            ref={element => {
+              this.editor = element;
+            }}
           />
         </div>
       </div>

@@ -12,24 +12,11 @@ const changeCurrentInlineStyle = (editorState, matchArr, style) => {
   const focusOffset = index + matchArr[0].length;
   const wordSelection = SelectionState.createEmpty(key).merge({
     anchorOffset: index + matchArr[0].indexOf(matchArr[1]),
-    focusOffset
+    focusOffset,
   });
-  let newContentState = Modifier.replaceText(
-    currentContent,
-    wordSelection,
-    matchArr[2],
-    newStyle
-  );
-  newContentState = Modifier.insertText(
-    newContentState,
-    newContentState.getSelectionAfter(),
-    matchArr[4]
-  );
-  const newEditorState = EditorState.push(
-    editorState,
-    newContentState,
-    'change-inline-style'
-  );
+  let newContentState = Modifier.replaceText(currentContent, wordSelection, matchArr[2], newStyle);
+  newContentState = Modifier.insertText(newContentState, newContentState.getSelectionAfter(), matchArr[4]);
+  const newEditorState = EditorState.push(editorState, newContentState, 'change-inline-style');
   return EditorState.forceSelection(newEditorState, newContentState.getSelectionAfter());
 };
 

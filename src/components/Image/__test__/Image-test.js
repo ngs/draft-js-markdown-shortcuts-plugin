@@ -13,13 +13,17 @@ describe('<Image />', () => {
     const contentState = ContentState.createFromText('').createEntity('IMG', 'MUTABLE', {
       alt: 'alt',
       src: 'http://cultofthepartyparrot.com/parrots/aussieparrot.gif',
-      title: 'parrot'
+      title: 'parrot',
     });
     const entityKey = contentState.getLastCreatedEntityKey();
     expect(
-      shallow(<Image entityKey={entityKey} contentState={contentState}>&nbsp;</Image>).html()
+      shallow(
+        <Image entityKey={entityKey} contentState={contentState}>
+          &nbsp;
+        </Image>,
+      ).html(),
     ).to.equal(
-      '<span> <img src="http://cultofthepartyparrot.com/parrots/aussieparrot.gif" alt="alt" title="parrot"/></span>'
+      '<span> <img src="http://cultofthepartyparrot.com/parrots/aussieparrot.gif" alt="alt" title="parrot"/></span>',
     );
   });
 });

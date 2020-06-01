@@ -16,11 +16,7 @@ const changeCurrentBlockType = (editorState, type, text, blockMetadata = {}) => 
     blockMap: blockMap.set(key, newBlock),
     selectionAfter: newSelection,
   });
-  return EditorState.push(
-    editorState,
-    newContentState,
-    'change-block-type'
-  );
+  return EditorState.push(editorState, newContentState, 'change-block-type');
 };
 
 export default changeCurrentBlockType;

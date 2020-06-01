@@ -18,19 +18,20 @@ module.exports = {
         loaders: ['babel'],
         exclude: /node_modules/,
         include: path.join(__dirname, 'client'),
-      }, {
+      },
+      {
         test: /\.js$/,
         loaders: ['babel'],
-        include: [
-          path.join(__dirname),
-          path.join(__dirname, '..', 'src'),
-          path.join(__dirname, 'client')
-        ],
-      }, {
+        include: [path.join(__dirname), path.join(__dirname, '..', 'src'), path.join(__dirname, 'client')],
+      },
+      {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss-loader'),
+        loader: ExtractTextPlugin.extract(
+          'style-loader',
+          'css-loader?modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss-loader',
+        ),
         include: path.join(__dirname, 'client', 'components'),
-      }
+      },
     ],
   },
   postcss: [autoprefixer({ browsers: ['> 1%'] })],

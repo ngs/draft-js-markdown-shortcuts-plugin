@@ -12,13 +12,15 @@ describe('<Link />', () => {
   it('renders anchor tag', () => {
     const contentState = ContentState.createFromText('').createEntity('LINK', 'MUTABLE', {
       href: 'http://cultofthepartyparrot.com/',
-      title: 'parrot'
+      title: 'parrot',
     });
     const entityKey = contentState.getLastCreatedEntityKey();
     expect(
-      shallow(<Link entityKey={entityKey} contentState={contentState}><b>Hello</b></Link>).html()
-    ).to.equal(
-      '<a href="http://cultofthepartyparrot.com/" title="parrot"><b>Hello</b></a>'
-    );
+      shallow(
+        <Link entityKey={entityKey} contentState={contentState}>
+          <b>Hello</b>
+        </Link>,
+      ).html(),
+    ).to.equal('<a href="http://cultofthepartyparrot.com/" title="parrot"><b>Hello</b></a>');
   });
 });

@@ -1,6 +1,9 @@
 import React from 'react';
 import {
-  blockRenderMap as checkboxBlockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
+  blockRenderMap as checkboxBlockRenderMap,
+  CheckableListItem,
+  CheckableListItemUtils,
+  CHECKABLE_LIST_ITEM,
 } from 'draft-js-checkable-list-item';
 
 import { Map } from 'immutable';
@@ -49,10 +52,15 @@ function checkReturnForState(editorState, ev, { insertEmptyBlockOnReturnWithModi
   if (/-list-item$/.test(type) && text === '') {
     newEditorState = leaveList(editorState);
   }
-  if (newEditorState === editorState
-      && insertEmptyBlockOnReturnWithModifierKey
-      && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey
-          || (/^header-/.test(type) && selection.isCollapsed() && selection.getEndOffset() === text.length))) {
+  if (
+    newEditorState === editorState &&
+    insertEmptyBlockOnReturnWithModifierKey &&
+    (ev.ctrlKey ||
+      ev.shiftKey ||
+      ev.metaKey ||
+      ev.altKey ||
+      (/^header-/.test(type) && selection.isCollapsed() && selection.getEndOffset() === text.length))
+  ) {
     newEditorState = insertEmptyBlock(editorState);
   }
   if (newEditorState === editorState && type !== 'code-block' && /^```([\w-]+)?$/.test(text)) {
@@ -79,13 +87,10 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
     blockRenderMap: Map({
       'code-block': {
         element: 'code',
-        wrapper: <pre spellCheck={'false'} />
-      }
+        wrapper: <pre spellCheck={'false'} />,
+      },
     }).merge(checkboxBlockRenderMap),
-    decorators: [
-      createLinkDecorator(config, store),
-      createImageDecorator(config, store)
-    ],
+    decorators: [createLinkDecorator(config, store), createImageDecorator(config, store)],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;
@@ -106,9 +111,7 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
           return {
             component: CheckableListItem,
             props: {
-              onChangeChecked: () => setEditorState(
-                CheckableListItemUtils.toggleChecked(getEditorState(), block)
-              ),
+              onChangeChecked: () => setEditorState(CheckableListItemUtils.toggleChecked(getEditorState(), block)),
               checked: !!block.getData().get('checked'),
             },
           };
@@ -151,7 +154,8 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       }
       let newEditorState = editorState;
       let buffer = [];
-      for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
+      for (let i = 0; i < text.length; i += 1) {
+        // eslint-disable-line no-plusplus
         if (text[i].match(/[^A-z0-9_*~`]/)) {
           newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
           newEditorState = checkCharacterForState(newEditorState, text[i]);
@@ -178,7 +182,7 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
         return 'handled';
       }
       return 'not-handled';
-    }
+    },
   };
 };
 

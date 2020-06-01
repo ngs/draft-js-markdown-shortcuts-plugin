@@ -13,31 +13,35 @@ describe('handleImage', () => {
     handleImage.__ResetDependency__('insertImage'); // eslint-disable-line no-underscore-dangle
   });
 
-  const createEditorState = (text) => {
+  const createEditorState = text => {
     afterRawContentState = {
       entityMap: {},
-      blocks: [{
-        key: 'item1',
-        text: 'Test',
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {}
-      }]
+      blocks: [
+        {
+          key: 'item1',
+          text: 'Test',
+          type: 'unstyled',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: {},
+        },
+      ],
     };
 
     beforeRawContentState = {
       entityMap: {},
-      blocks: [{
-        key: 'item1',
-        text,
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {}
-      }]
+      blocks: [
+        {
+          key: 'item1',
+          text,
+          type: 'unstyled',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: {},
+        },
+      ],
     };
 
     selection = new SelectionState({
@@ -46,7 +50,7 @@ describe('handleImage', () => {
       focusKey: 'item1',
       focusOffset: text.length - 1,
       isBackward: false,
-      hasFocus: true
+      hasFocus: true,
     });
 
     const contentState = Draft.convertFromRaw(beforeRawContentState);
@@ -64,15 +68,14 @@ describe('handleImage', () => {
   [
     ['if matches src only', '![](http://cultofthepartyparrot.com/parrots/aussieparrot.gif)'],
     ['if matches src and alt', '![alt](http://cultofthepartyparrot.com/parrots/aussieparrot.gif)'],
-    ['if matches src, alt and title', '![alt](http://cultofthepartyparrot.com/parrots/aussieparrot.gif "party")']
+    ['if matches src, alt and title', '![alt](http://cultofthepartyparrot.com/parrots/aussieparrot.gif "party")'],
   ].forEach(([condition, text]) => {
     describe(condition, () => {
       it('returns new editor state', () => {
         const editorState = createEditorState(text);
         const newEditorState = handleImage(editorState, ' ');
         expect(newEditorState).not.to.equal(editorState);
-        expect(Draft.convertToRaw(newEditorState.getCurrentContent()))
-          .to.deep.equal(afterRawContentState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(afterRawContentState);
         expect(fakeInsertImage).to.have.callCount(1);
       });
     });

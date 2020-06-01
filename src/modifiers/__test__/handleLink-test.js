@@ -13,31 +13,35 @@ describe('handleLink', () => {
     handleLink.__ResetDependency__('../insertLink'); // eslint-disable-line no-underscore-dangle
   });
 
-  const createEditorState = (text) => {
+  const createEditorState = text => {
     afterRawContentState = {
       entityMap: {},
-      blocks: [{
-        key: 'item1',
-        text: 'Test',
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {}
-      }]
+      blocks: [
+        {
+          key: 'item1',
+          text: 'Test',
+          type: 'unstyled',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: {},
+        },
+      ],
     };
 
     beforeRawContentState = {
       entityMap: {},
-      blocks: [{
-        key: 'item1',
-        text,
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {}
-      }]
+      blocks: [
+        {
+          key: 'item1',
+          text,
+          type: 'unstyled',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: {},
+        },
+      ],
     };
 
     selection = new SelectionState({
@@ -46,7 +50,7 @@ describe('handleLink', () => {
       focusKey: 'item1',
       focusOffset: text.length - 1,
       isBackward: false,
-      hasFocus: true
+      hasFocus: true,
     });
 
     const contentState = Draft.convertFromRaw(beforeRawContentState);
@@ -63,15 +67,14 @@ describe('handleLink', () => {
 
   [
     ['if href only', '[hello](http://cultofthepartyparrot.com/)'],
-    ['if href and title', '[hello](http://cultofthepartyparrot.com/ "world")']
+    ['if href and title', '[hello](http://cultofthepartyparrot.com/ "world")'],
   ].forEach(([condition, text]) => {
     describe(condition, () => {
       it('returns new editor state', () => {
         const editorState = createEditorState(text);
         const newEditorState = handleLink(editorState, ' ');
         expect(newEditorState).not.to.equal(editorState);
-        expect(Draft.convertToRaw(newEditorState.getCurrentContent()))
-          .to.deep.equal(afterRawContentState);
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(afterRawContentState);
         expect(fakeInsertLink).to.have.callCount(1);
       });
     });

@@ -15,9 +15,9 @@ describe('imageStrategy', () => {
         data: {
           alt: 'alt',
           src: 'http://cultofthepartyparrot.com/parrots/aussieparrot.gif',
-          title: 'parrot'
-        }
-      }
+          title: 'parrot',
+        },
+      },
     },
     blocks: [
       {
@@ -30,12 +30,12 @@ describe('imageStrategy', () => {
           {
             offset: 0,
             length: 1,
-            key: 0
-          }
+            key: 0,
+          },
         ],
-        data: {}
-      }
-    ]
+        data: {},
+      },
+    ],
   });
   it('callbacks range', () => {
     const block = contentState.getBlockForKey('dtehj');

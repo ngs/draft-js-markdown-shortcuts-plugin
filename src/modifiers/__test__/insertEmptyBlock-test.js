@@ -17,29 +17,34 @@ describe('insertEmptyBlock', () => {
       text: 'asdf',
       type: 'unstyled',
       depth: 0,
-      inlineStyleRanges: [{
-        length: 2,
-        offset: 1,
-        style: 'ITALIC'
-      }],
+      inlineStyleRanges: [
+        {
+          length: 2,
+          offset: 1,
+          style: 'ITALIC',
+        },
+      ],
       entityRanges: [],
-      data: { foo: 'bar' }
+      data: { foo: 'bar' },
     };
     const beforeRawContentState = {
       entityMap: {},
-      blocks: [firstBlock]
+      blocks: [firstBlock],
     };
     const afterRawContentState = {
       entityMap: {},
-      blocks: [firstBlock, {
-        key: 'item2',
-        text: '',
-        type,
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data
-      }]
+      blocks: [
+        firstBlock,
+        {
+          key: 'item2',
+          text: '',
+          type,
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data,
+        },
+      ],
     };
     const contentState = Draft.convertFromRaw(beforeRawContentState);
     const selection = new SelectionState({
@@ -48,19 +53,14 @@ describe('insertEmptyBlock', () => {
       focusKey: 'item1',
       focusOffset: 4,
       isBackward: false,
-      hasFocus: true
+      hasFocus: true,
     });
-    const editorState = EditorState.forceSelection(
-      EditorState.createWithContent(contentState), selection);
+    const editorState = EditorState.forceSelection(EditorState.createWithContent(contentState), selection);
 
     it('creates new code block', () => {
       const newEditorState = insertEmptyBlock(editorState, ...args);
       expect(newEditorState).not.to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(
-        afterRawContentState
-      );
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(afterRawContentState);
     });
   };
 

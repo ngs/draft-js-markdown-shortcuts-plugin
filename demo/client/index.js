@@ -10,11 +10,16 @@ import DemoEditor from './components/DemoEditor';
 if (typeof document !== 'undefined') {
   render(
     <div>
-      <Ribbon href="https://github.com/ngs/draft-js-markdown-shortcuts-plugin/" target="_blank" position="right" color="black">
+      <Ribbon
+        href="https://github.com/ngs/draft-js-markdown-shortcuts-plugin/"
+        target="_blank"
+        position="right"
+        color="black"
+      >
         Fork me on GitHub
       </Ribbon>
       <DemoEditor />
     </div>,
-    document.getElementById('root')
+    document.getElementById('root'),
   );
 }

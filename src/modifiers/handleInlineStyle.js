@@ -4,7 +4,7 @@ const inlineMatchers = {
   BOLD: /(?:^|\s|\n|[^A-z0-9_*~`])(\*{2}|_{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
   ITALIC: /(?:^|\s|\n|[^A-z0-9_*~`])(\*{1}|_{1})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
   CODE: /(?:^|\s|\n|[^A-z0-9_*~`])(`)((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
-  STRIKETHROUGH: /(?:^|\s|\n|[^A-z0-9_*~`])(~{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g
+  STRIKETHROUGH: /(?:^|\s|\n|[^A-z0-9_*~`])(~{2})((?!\1).*?)(\1)($|\s|\n|[^A-z0-9_*~`])/g,
 };
 
 const handleInlineStyle = (editorState, character) => {
@@ -12,7 +12,7 @@ const handleInlineStyle = (editorState, character) => {
   const text = editorState.getCurrentContent().getBlockForKey(key).getText();
   const line = `${text}${character}`;
   let newEditorState = editorState;
-  Object.keys(inlineMatchers).some((k) => {
+  Object.keys(inlineMatchers).some(k => {
     const re = inlineMatchers[k];
     let matchArr;
     do {

@@ -2,7 +2,7 @@ import { CHECKABLE_LIST_ITEM } from 'draft-js-checkable-list-item';
 import { RichUtils } from 'draft-js';
 import changeCurrentBlockType from './changeCurrentBlockType';
 
-const sharps = (len) => {
+const sharps = len => {
   let ret = '';
   while (ret.length < len) {
     ret += '#';
@@ -10,15 +10,7 @@ const sharps = (len) => {
   return ret;
 };
 
-const blockTypes = [
-  null,
-  'header-one',
-  'header-two',
-  'header-three',
-  'header-four',
-  'header-five',
-  'header-six'
-];
+const blockTypes = [null, 'header-one', 'header-two', 'header-three', 'header-four', 'header-five', 'header-six'];
 
 const handleBlockType = (editorState, character) => {
   const currentSelection = editorState.getSelection();

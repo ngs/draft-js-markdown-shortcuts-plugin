@@ -11,15 +11,17 @@ describe('utils test', () => {
 
   const newRawContentState = {
     entityMap: {},
-    blocks: [{
-      key: 'item1',
-      text: 'altered!!',
-      type: 'unstyled',
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [],
-      data: {}
-    }]
+    blocks: [
+      {
+        key: 'item1',
+        text: 'altered!!',
+        type: 'unstyled',
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        data: {},
+      },
+    ],
   };
 
   it('should addText', () => {
@@ -42,7 +44,7 @@ describe('utils test', () => {
       anchorKey: lastBlock.getKey(),
       anchorOffset: 0,
       focusKey: lastBlock.getKey(),
-      focusOffset: lastBlock.getText().length
+      focusOffset: lastBlock.getText().length,
     });
     newEditorState = EditorState.forceSelection(newEditorState, newSelection);
 

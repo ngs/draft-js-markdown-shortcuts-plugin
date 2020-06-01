@@ -5,15 +5,17 @@ import changeCurrentBlockType from '../changeCurrentBlockType';
 describe('changeCurrentBlockType', () => {
   const rawContentState = (text, type, data = {}) => ({
     entityMap: {},
-    blocks: [{
-      key: 'item1',
-      text,
-      type,
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [],
-      data
-    }]
+    blocks: [
+      {
+        key: 'item1',
+        text,
+        type,
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        data,
+      },
+    ],
   });
   const selectionState = new SelectionState({
     anchorKey: 'item1',
@@ -21,34 +23,26 @@ describe('changeCurrentBlockType', () => {
     focusKey: 'item1',
     focusOffset: 0,
     isBackward: false,
-    hasFocus: true
+    hasFocus: true,
   });
   const createEditorState = (...args) => {
     const contentState = Draft.convertFromRaw(rawContentState(...args));
-    return EditorState.forceSelection(
-      EditorState.createWithContent(contentState),
-      selectionState);
+    return EditorState.forceSelection(EditorState.createWithContent(contentState), selectionState);
   };
   it('changes block type', () => {
     const editorState = createEditorState('Yo', 'unstyled');
-    const newEditorState = changeCurrentBlockType(
-      editorState, 'header-one', 'Hello world', { foo: 'bar' });
+    const newEditorState = changeCurrentBlockType(editorState, 'header-one', 'Hello world', { foo: 'bar' });
     expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(
-      rawContentState('Hello world', 'header-one', { foo: 'bar' })
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(
+      rawContentState('Hello world', 'header-one', { foo: 'bar' }),
     );
   });
   it('changes block type even if data is null', () => {
     const editorState = createEditorState('Yo', 'unstyled');
-    const newEditorState = changeCurrentBlockType(
-      editorState, 'header-one', 'Hello world', null);
+    const newEditorState = changeCurrentBlockType(editorState, 'header-one', 'Hello world', null);
     expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(
-      rawContentState('Hello world', 'header-one', {})
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(
+      rawContentState('Hello world', 'header-one', {}),
     );
   });
 });

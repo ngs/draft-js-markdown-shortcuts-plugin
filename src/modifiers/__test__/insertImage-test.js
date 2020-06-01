@@ -7,15 +7,17 @@ describe('insertImage', () => {
   const text = `foo ${markup} baz`;
   const beforeRawContentState = {
     entityMap: {},
-    blocks: [{
-      key: 'item1',
-      text,
-      type: 'unstyled',
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [],
-      data: {}
-    }]
+    blocks: [
+      {
+        key: 'item1',
+        text,
+        type: 'unstyled',
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        data: {},
+      },
+    ],
   };
   const afterRawContentState = {
     entityMap: {
@@ -23,25 +25,29 @@ describe('insertImage', () => {
         data: {
           alt: 'bar',
           src: 'http://cultofthepartyparrot.com/parrots/aussieparrot.gif',
-          title: 'party'
+          title: 'party',
         },
         mutability: 'IMMUTABLE',
-        type: 'IMG'
-      }
+        type: 'IMG',
+      },
     },
-    blocks: [{
-      key: 'item1',
-      text: 'foo \u200B  baz',
-      type: 'unstyled',
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [{
-        key: 0,
-        length: 1,
-        offset: 4
-      }],
-      data: {}
-    }]
+    blocks: [
+      {
+        key: 'item1',
+        text: 'foo \u200B  baz',
+        type: 'unstyled',
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [
+          {
+            key: 0,
+            length: 1,
+            offset: 4,
+          },
+        ],
+        data: {},
+      },
+    ],
   };
   const selection = new SelectionState({
     anchorKey: 'item1',
@@ -49,21 +55,16 @@ describe('insertImage', () => {
     focusKey: 'item1',
     focusOffset: 6,
     isBackward: false,
-    hasFocus: true
+    hasFocus: true,
   });
   const contentState = Draft.convertFromRaw(beforeRawContentState);
-  const editorState = EditorState.forceSelection(
-    EditorState.createWithContent(contentState), selection);
+  const editorState = EditorState.forceSelection(EditorState.createWithContent(contentState), selection);
   it('converts block type', () => {
     const matchArr = [markup, 'bar', 'http://cultofthepartyparrot.com/parrots/aussieparrot.gif', 'party'];
     matchArr.index = 4;
     matchArr.input = text;
     const newEditorState = insertImage(editorState, matchArr);
     expect(newEditorState).not.to.equal(editorState);
-    expect(
-      Draft.convertToRaw(newEditorState.getCurrentContent())
-    ).to.deep.equal(
-      afterRawContentState
-    );
+    expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(afterRawContentState);
   });
 });

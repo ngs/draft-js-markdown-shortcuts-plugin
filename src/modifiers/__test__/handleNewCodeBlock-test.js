@@ -8,27 +8,31 @@ describe('handleNewCodeBlock', () => {
     const testNewCodeBlock = (text, data) => () => {
       const beforeRawContentState = {
         entityMap: {},
-        blocks: [{
-          key: 'item1',
-          text,
-          type: 'unstyled',
-          depth: 0,
-          inlineStyleRanges: [],
-          entityRanges: [],
-          data: {}
-        }]
+        blocks: [
+          {
+            key: 'item1',
+            text,
+            type: 'unstyled',
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
       };
       const afterRawContentState = {
         entityMap: {},
-        blocks: [{
-          key: 'item1',
-          text: '',
-          type: 'code-block',
-          depth: 0,
-          inlineStyleRanges: [],
-          entityRanges: [],
-          data
-        }]
+        blocks: [
+          {
+            key: 'item1',
+            text: '',
+            type: 'code-block',
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data,
+          },
+        ],
       };
       const contentState = Draft.convertFromRaw(beforeRawContentState);
       const selection = new SelectionState({
@@ -37,18 +41,13 @@ describe('handleNewCodeBlock', () => {
         focusKey: 'item1',
         focusOffset: text.length,
         isBackward: false,
-        hasFocus: true
+        hasFocus: true,
       });
-      const editorState = EditorState.forceSelection(
-        EditorState.createWithContent(contentState), selection);
+      const editorState = EditorState.forceSelection(EditorState.createWithContent(contentState), selection);
       it('creates new code block', () => {
         const newEditorState = handleNewCodeBlock(editorState);
         expect(newEditorState).not.to.equal(editorState);
-        expect(
-          Draft.convertToRaw(newEditorState.getCurrentContent())
-        ).to.deep.equal(
-          afterRawContentState
-        );
+        expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(afterRawContentState);
       });
     };
 
@@ -65,35 +64,40 @@ describe('handleNewCodeBlock', () => {
     });
     const beforeRawContentState = {
       entityMap: {},
-      blocks: [{
-        key: 'item1',
-        text: 'console.info("hello")',
-        type: 'code-block',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: { language: 'js' }
-      }]
+      blocks: [
+        {
+          key: 'item1',
+          text: 'console.info("hello")',
+          type: 'code-block',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: { language: 'js' },
+        },
+      ],
     };
     const afterRawContentState = {
       entityMap: {},
-      blocks: [{
-        key: 'item1',
-        text: 'console.info("hello")',
-        type: 'code-block',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: { language: 'js' }
-      }, {
-        key: 'item2',
-        text: '',
-        type: 'code-block',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: { language: 'js' }
-      }]
+      blocks: [
+        {
+          key: 'item1',
+          text: 'console.info("hello")',
+          type: 'code-block',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: { language: 'js' },
+        },
+        {
+          key: 'item2',
+          text: '',
+          type: 'code-block',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: { language: 'js' },
+        },
+      ],
     };
     const contentState = Draft.convertFromRaw(beforeRawContentState);
     it('adds new line inside code block', () => {
@@ -103,17 +107,12 @@ describe('handleNewCodeBlock', () => {
         focusKey: 'item1',
         focusOffset: 21,
         isBackward: false,
-        hasFocus: true
+        hasFocus: true,
       });
-      const editorState = EditorState.forceSelection(
-        EditorState.createWithContent(contentState), selection);
+      const editorState = EditorState.forceSelection(EditorState.createWithContent(contentState), selection);
       const newEditorState = handleNewCodeBlock(editorState);
       expect(newEditorState).not.to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(
-        afterRawContentState
-      );
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(afterRawContentState);
     });
     it('does not add new line even inside code block', () => {
       const selection = new SelectionState({
@@ -122,32 +121,29 @@ describe('handleNewCodeBlock', () => {
         focusKey: 'item1',
         focusOffset: 10,
         isBackward: false,
-        hasFocus: true
+        hasFocus: true,
       });
-      const editorState = EditorState.forceSelection(
-        EditorState.createWithContent(contentState), selection);
+      const editorState = EditorState.forceSelection(EditorState.createWithContent(contentState), selection);
       const newEditorState = handleNewCodeBlock(editorState);
       expect(newEditorState).to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(
-        beforeRawContentState
-      );
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(beforeRawContentState);
     });
   });
 
   describe('in unstyled block without three backquotes', () => {
     const rawContentState = {
       entityMap: {},
-      blocks: [{
-        key: 'item1',
-        text: '``',
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {}
-      }]
+      blocks: [
+        {
+          key: 'item1',
+          text: '``',
+          type: 'unstyled',
+          depth: 0,
+          inlineStyleRanges: [],
+          entityRanges: [],
+          data: {},
+        },
+      ],
     };
     const contentState = Draft.convertFromRaw(rawContentState);
     const selection = new SelectionState({
@@ -156,18 +152,13 @@ describe('handleNewCodeBlock', () => {
       focusKey: 'item1',
       focusOffset: 2,
       isBackward: false,
-      hasFocus: true
+      hasFocus: true,
     });
-    const editorState = EditorState.forceSelection(
-      EditorState.createWithContent(contentState), selection);
+    const editorState = EditorState.forceSelection(EditorState.createWithContent(contentState), selection);
     it('noop', () => {
       const newEditorState = handleNewCodeBlock(editorState);
       expect(newEditorState).to.equal(editorState);
-      expect(
-        Draft.convertToRaw(newEditorState.getCurrentContent())
-      ).to.deep.equal(
-        rawContentState
-      );
+      expect(Draft.convertToRaw(newEditorState.getCurrentContent())).to.deep.equal(rawContentState);
     });
   });
 });
