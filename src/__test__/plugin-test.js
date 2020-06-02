@@ -387,6 +387,14 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               expect(modifierSpy).to.have.been.calledWith(currentEditorState, 'hello');
             });
           });
+          describe('non-string empty value in clipboard', () => {
+            beforeEach(() => {
+              pastedText = null;
+            });
+            it('returns not-handled', () => {
+              expect(subject()).to.equal('not-handled');
+            });
+          });
           describe('pasted just text with new line code', () => {
             beforeEach(() => {
               pastedText = 'hello\nworld';
