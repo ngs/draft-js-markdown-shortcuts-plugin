@@ -105,13 +105,14 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       return null;
     },
 
-    blockRendererFn(block, { setEditorState, getEditorState }) {
+    blockRendererFn(block) {
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
           return {
             component: CheckableListItem,
             props: {
-              onChangeChecked: () => setEditorState(CheckableListItemUtils.toggleChecked(getEditorState(), block)),
+              onChangeChecked: () =>
+                store.setEditorState(CheckableListItemUtils.toggleChecked(getEditorState(), block)),
               checked: !!block.getData().get('checked'),
             },
           };
@@ -120,35 +121,35 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
           return null;
       }
     },
-    onTab(ev, { getEditorState, setEditorState }) {
-      const editorState = getEditorState();
+    onTab(ev) {
+      const editorState = store.getEditorState();
       const newEditorState = adjustBlockDepth(editorState, ev);
       if (newEditorState !== editorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
     },
-    handleReturn(ev, editorState, { setEditorState }) {
+    handleReturn(ev, editorState) {
       const newEditorState = checkReturnForState(editorState, ev, config);
       if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
     },
-    handleBeforeInput(character, editorState, eventTimeStamp, { setEditorState }) {
+    handleBeforeInput(character, editorState) {
       if (character.match(/[A-z0-9_*~`]/)) {
         return 'not-handled';
       }
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
     },
-    handlePastedText(text, html, editorState, { setEditorState }) {
+    handlePastedText(text, html, editorState) {
       if (html) {
         return 'not-handled';
       }
@@ -183,7 +184,7 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       }
 
       if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
