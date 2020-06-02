@@ -20,8 +20,8 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
-import styles from './styles.css';
 import createMarkdownShortcutsPlugin from '../../../..'; // eslint-disable-line
+import styled from 'styled-components';
 
 const prismPlugin = createPrismPlugin({
   prism: Prism,
@@ -58,12 +58,12 @@ export default class DemoEditor extends Component {
   render() {
     const { editorState } = this.state;
     const placeholder = editorState.getCurrentContent().hasText() ? null : (
-      <div className={styles.placeholder}>Write something here...</div>
+      <Placeholder>Write something here...</Placeholder>
     );
     return (
-      <div className={styles.root}>
+      <Root>
         {placeholder}
-        <div className={styles.editor} onClick={this.focus} onKeyDown={this.focus}>
+        <EditorContainer onClick={this.focus} onKeyDown={this.focus}>
           <Editor
             editorState={editorState}
             onChange={this.onChange}
@@ -73,8 +73,29 @@ export default class DemoEditor extends Component {
               this.editor = element;
             }}
           />
-        </div>
-      </div>
+        </EditorContainer>
+      </Root>
     );
   }
 }
+
+const Root = styled.div`
+  background: #fff;
+  height: 100%;
+  position: relative;
+`;
+
+const Placeholder = styled.div`
+  color: #ccc;
+  font-size: 1em;
+  position: absolute;
+  width: 95%;
+  top: 0;
+  left: 2.5%;
+`;
+
+const EditorContainer = styled.div`
+  margin: 2.5% auto 0 auto;
+  height: 95%;
+  width: 95%;
+`;

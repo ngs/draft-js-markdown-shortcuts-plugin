@@ -16,14 +16,6 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
       },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
-      },
     ],
-  },
-  devServer: {
-    contentBase: [path.join(__dirname, 'public'), path.join(__dirname, 'publicTemplate')],
-    port: process.env.PORT || 3001,
   },
 };

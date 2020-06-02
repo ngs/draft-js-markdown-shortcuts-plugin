@@ -12,7 +12,7 @@
     "prepare": "npm run build",
     "prepublish": "npm run build",
     "start": "npm run start:dev",
-    "start:dev": "node_modules/.bin/babel-node ./demo/server.js",
+    "start:dev": "webpack-dev-server --config demo/webpack.config.dev.js",
     "test": "npm run test:coverage",
     "test:coverage": "node_modules/.bin/nyc --require @babel/register npm run test:mocha",
     "test:mocha": "BABEL_ENV=test mocha",
@@ -22,14 +22,21 @@
   },
   "watch": {
     "test": {
-      "patterns": ["src/**/*.js"]
+      "patterns": [
+        "src/**/*.js"
+      ]
     }
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngs/draft-js-markdown-shortcuts-plugin.git"
   },
-  "keywords": ["draftjs", "editor", "plugin", "markdown"],
+  "keywords": [
+    "draftjs",
+    "editor",
+    "plugin",
+    "markdown"
+  ],
   "author": "Atsushi Nagase",
   "license": "MIT",
   "bugs": {
@@ -91,6 +98,7 @@
     "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
     "style-loader": "^1.2.1",
+    "styled-components": "^5.1.1",
     "url-loader": "^4.1.0",
     "webpack": "~4.43.0",
     "webpack-cli": "^3.3.11",
@@ -101,7 +109,9 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
-  "contributors": ["Atsushi Nagase <a@ngs.io>"],
+  "contributors": [
+    "Atsushi Nagase <a@ngs.io>"
+  ],
   "dependencies": {
     "decorate-component-with-props": "^1.1.0",
     "draft-js": "~0.11.5",
