@@ -86,6 +86,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
       () => {
         beforeEach(() => {
           plugin = createMarkdownShortcutsPlugin(...args);
+          plugin.initialize(store);
         });
 
         it('is loaded', () => {

@@ -112,7 +112,7 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
             component: CheckableListItem,
             props: {
               onChangeChecked: () =>
-                store.setEditorState(CheckableListItemUtils.toggleChecked(getEditorState(), block)),
+                store.setEditorState(CheckableListItemUtils.toggleChecked(store.getEditorState(), block)),
               checked: !!block.getData().get('checked'),
             },
           };
