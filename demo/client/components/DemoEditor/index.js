@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Editor from 'draft-js-plugins-editor';
 
-import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin'; // eslint-disable-line
 import Draft, {
   convertToRaw,
   // convertFromRaw,
@@ -22,6 +21,7 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
 import styles from './styles.css';
+import createMarkdownShortcutsPlugin from '../../../..'; // eslint-disable-line
 
 const prismPlugin = createPrismPlugin({
   prism: Prism,
