@@ -1,10 +1,12 @@
 import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
+import { JSDOM, VirtualConsole } from 'jsdom';
 import Draft, { EditorState, SelectionState } from 'draft-js';
 import adjustBlockDepth from '../adjustBlockDepth';
 
 chai.use(sinonChai);
+const { window } = new JSDOM('<html />', { virtualConsole: new VirtualConsole().sendTo(console) });
 
 describe('adjustBlockDepth', () => {
   const createEvent = () => {

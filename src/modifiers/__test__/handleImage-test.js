@@ -85,7 +85,7 @@ describe('handleImage', () => {
       const editorState = createEditorState('yo');
       const newEditorState = handleImage(editorState, ' ');
       expect(newEditorState).to.equal(editorState);
-      expect(fakeInsertImage).not.to.have.been.called();
+      expect(fakeInsertImage).not.to.have.been.called;
     });
   });
 });

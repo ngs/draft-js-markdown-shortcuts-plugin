@@ -84,7 +84,7 @@ describe('handleLink', () => {
       const editorState = createEditorState('yo');
       const newEditorState = handleLink(editorState, ' ');
       expect(newEditorState).to.equal(editorState);
-      expect(fakeInsertLink).not.to.have.been.called();
+      expect(fakeInsertLink).not.to.have.been.called;
     });
   });
 });

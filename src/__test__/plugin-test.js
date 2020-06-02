@@ -1,10 +1,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { JSDOM, VirtualConsole } from 'jsdom';
 import Draft, { EditorState, SelectionState, ContentBlock } from 'draft-js';
 import { CheckableListItem, CheckableListItemUtils } from 'draft-js-checkable-list-item';
 
 import { Map, List } from 'immutable';
-import createMarkdownShortcutsPlugin from '../';
+import createMarkdownShortcutsPlugin from '..';
+
+const { window } = new JSDOM('<html />', { virtualConsole: new VirtualConsole().sendTo(console) });
 
 describe('draft-js-markdown-shortcuts-plugin', () => {
   afterEach(() => {
@@ -99,13 +102,13 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
         describe('handleReturn', () => {
           const expectsHandled = () => {
             expect(subject()).to.equal('handled');
-            expect(modifierSpy).to.have.been.calledOnce();
+            expect(modifierSpy).to.have.been.calledOnce;
             expect(store.setEditorState).to.have.been.calledWith(newEditorState);
           };
           const expectsNotHandled = () => {
             expect(subject()).to.equal('not-handled');
-            expect(modifierSpy).not.to.have.been.calledOnce();
-            expect(store.setEditorState).not.to.have.been.called();
+            expect(modifierSpy).not.to.have.been.calledOnce;
+            expect(store.setEditorState).not.to.have.been.called;
           };
           beforeEach(() => {
             subject = () => plugin.handleReturn(event, store.getEditorState(), store);
@@ -205,7 +208,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               ],
             };
             expect(subject()).to.equal('handled');
-            expect(modifierSpy).to.have.been.calledOnce();
+            expect(modifierSpy).to.have.been.calledOnce;
             expect(store.setEditorState).to.have.been.calledWith(newEditorState);
           });
           it('handle code block closing', () => {
@@ -225,7 +228,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               ],
             };
             expect(subject()).to.equal('handled');
-            expect(modifierSpy).to.have.been.calledOnce();
+            expect(modifierSpy).to.have.been.calledOnce;
           });
           it('insert new line char from code-block', () => {
             createMarkdownShortcutsPlugin.__Rewire__('insertText', modifierSpy); // eslint-disable-line no-underscore-dangle
@@ -244,7 +247,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               ],
             };
             expect(subject()).to.equal('handled');
-            expect(modifierSpy).to.have.been.calledOnce();
+            expect(modifierSpy).to.have.been.calledOnce;
             expect(store.setEditorState).to.have.been.calledWith(newEditorState);
           });
         });
@@ -261,7 +264,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           });
           it('returns null', () => {
             type = 'ordered-list-item';
-            expect(subject()).to.be.null();
+            expect(subject()).to.be.null;
           });
         });
         describe('blockRendererFn', () => {
@@ -293,13 +296,13 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
             expect(renderer).to.be.an('object');
             expect(renderer.component).to.equal(CheckableListItem);
             expect(renderer.props.onChangeChecked).to.be.a('function');
-            expect(renderer.props.checked).to.be.true();
+            expect(renderer.props.checked).to.be.true;
             renderer.props.onChangeChecked();
             expect(spyOnChangeChecked).to.have.been.calledWith(currentEditorState, block);
           });
           it('returns null', () => {
             type = 'ordered-list-item';
-            expect(subject()).to.be.null();
+            expect(subject()).to.be.null;
           });
         });
         describe('onTab', () => {
@@ -366,7 +369,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
               });
               it('returns handled', () => {
                 expect(subject()).to.equal('handled');
-                expect(modifierSpy).to.have.been.called();
+                expect(modifierSpy).to.have.been.called;
               });
             });
           });
