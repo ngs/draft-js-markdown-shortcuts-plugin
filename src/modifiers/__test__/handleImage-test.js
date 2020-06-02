@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions: 0 */
 import sinon from 'sinon';
 import { expect } from 'chai';
 import Draft, { EditorState, SelectionState } from 'draft-js';

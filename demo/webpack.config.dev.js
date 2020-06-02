@@ -1,8 +1,8 @@
 /* eslint-disable no-var */
 var path = require('path');
 var webpack = require('webpack');
-var webpackBaseConfig = require('./webpack.config.base');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpackBaseConfig = require('./webpack.config.base');
 
 // Set up dev host and HMR host. For the dev host this is pretty self
 // explanatory: We use a different live-reload server to serve our static JS

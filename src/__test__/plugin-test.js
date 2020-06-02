@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions: 0 */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { JSDOM, VirtualConsole } from 'jsdom';

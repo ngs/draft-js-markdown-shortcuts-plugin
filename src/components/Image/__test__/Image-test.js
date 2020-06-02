@@ -5,7 +5,7 @@ import { shallow, configure } from 'enzyme';
 import chai, { expect } from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 
-import Image from '../';
+import Image from "..";
 
 configure({ adapter: new Adapter() });
 chai.use(chaiEnzyme());

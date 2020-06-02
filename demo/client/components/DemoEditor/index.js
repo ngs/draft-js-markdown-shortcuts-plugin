@@ -31,13 +31,13 @@ window.Draft = Draft;
 
 const plugins = [prismPlugin, createMarkdownShortcutsPlugin()];
 
-const contentState = ContentState.createFromText('');
-const initialEditorState = EditorState.createWithContent(contentState);
-
 export default class DemoEditor extends Component {
-  state = {
-    editorState: initialEditorState,
-  };
+  constructor(props) {
+    super(props);
+    const contentState = ContentState.createFromText('');
+    const editorState = EditorState.createWithContent(contentState);
+    this.state = { editorState };
+  }
 
   componentDidMount = () => {
     const { editor } = this;
@@ -63,7 +63,7 @@ export default class DemoEditor extends Component {
     return (
       <div className={styles.root}>
         {placeholder}
-        <div className={styles.editor} onClick={this.focus}>
+        <div className={styles.editor} onClick={this.focus} onKeyDown={this.focus}>
           <Editor
             editorState={editorState}
             onChange={this.onChange}

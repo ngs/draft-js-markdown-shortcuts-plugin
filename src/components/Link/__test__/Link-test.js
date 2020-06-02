@@ -1,3 +1,4 @@
+/* eslint jsx-a11y/anchor-is-valid: 0 */
 import React from 'react';
 import { ContentState } from 'draft-js';
 import Adapter from 'enzyme-adapter-react-16';
@@ -5,7 +6,7 @@ import { shallow, configure } from 'enzyme';
 import chai, { expect } from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 
-import Link from '../';
+import Link from '..';
 
 configure({ adapter: new Adapter() });
 chai.use(chaiEnzyme());

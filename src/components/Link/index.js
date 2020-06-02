@@ -1,10 +1,11 @@
 import React from 'react';
 
 const Link = props => {
-  const { href, title } = props.contentState.getEntity(props.entityKey).getData();
+  const { contentState, children, entityKey } = props;
+  const { href, title } = contentState.getEntity(entityKey).getData();
   return (
     <a href={href} title={title}>
-      {props.children}
+      {children}
     </a>
   );
 };
