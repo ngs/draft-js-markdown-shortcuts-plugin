@@ -6,7 +6,7 @@
   "scripts": {
     "eslint": "node_modules/.bin/eslint .",
     "build": "npm run clean && npm run build:js",
-    "build:demo": ".circleci/build-demo.sh",
+    "build:demo": "NODE_ENV=production npx webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
     "build:js": "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",
     "clean": "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
     "deploy:demo": ".circleci/deploy-demo.sh",
@@ -22,21 +22,14 @@
   },
   "watch": {
     "test": {
-      "patterns": [
-        "src/**/*.js"
-      ]
+      "patterns": ["src/**/*.js"]
     }
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngs/draft-js-markdown-shortcuts-plugin.git"
   },
-  "keywords": [
-    "draftjs",
-    "editor",
-    "plugin",
-    "markdown"
-  ],
+  "keywords": ["draftjs", "editor", "plugin", "markdown"],
   "author": "Atsushi Nagase",
   "license": "MIT",
   "bugs": {
@@ -99,7 +92,7 @@
     "static-site-generator-webpack-plugin": "^3.1.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.13.3",
+    "webpack": "~1.13.3",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.13.2"
   },
@@ -108,9 +101,7 @@
     "react": "^16.0.0 || ^15.0.0",
     "react-dom": "^16.0.0 || ^15.0.0"
   },
-  "contributors": [
-    "Atsushi Nagase <a@ngs.io>"
-  ],
+  "contributors": ["Atsushi Nagase <a@ngs.io>"],
   "dependencies": {
     "decorate-component-with-props": "^1.1.0",
     "draft-js": "~0.10.5",

@@ -1,0 +1,24 @@
+name: Run tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: 12
+    - run: npm install
+    - uses: a-b-r-o-w-n/eslint-action@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: npm test
+    - uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/upload-artifact@v2
+      with:
+        path: lib
+    - uses: actions/upload-artifact@v2
+      with:
+        path: coverage

@@ -1,0 +1,24 @@
+name: Publish to npm
+on:
+  push:
+    tags:
+    - v[0-9].[0-9]+.[0-9]+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: 12
+    - name: Check tag version
+      run: |
+        VERSION=$(npm show . version)
+        if [ "refs/tags/v${VERSION}" != $GITHUB_REF ]; then
+          echo "Ref ${GITHUB_REF} not match"
+          exit 1
+        fi
+    - run: npm install
+    - run: npm publish
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
