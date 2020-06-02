@@ -2,3 +2,4 @@
 lib/**
 scripts/**
 coverage/**
+postcss.config.js
