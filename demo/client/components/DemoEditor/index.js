@@ -20,8 +20,8 @@ import 'prismjs/components/prism-perl';
 import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-swift';
 import createPrismPlugin from 'draft-js-prism-plugin';
-import createMarkdownShortcutsPlugin from '../../../..'; // eslint-disable-line
 import styled from 'styled-components';
+import createMarkdownShortcutsPlugin from '../../../..'; // eslint-disable-line
 
 const prismPlugin = createPrismPlugin({
   prism: Prism,
