@@ -13,7 +13,7 @@ jobs:
         node-version: 12
     - name: Check tag version
       run: |
-        VERSION=$(npm show . version)
+        VERSION=$(node -e 'console.info(require("./package.json").version)')
         if [ "refs/tags/v${VERSION}" != $GITHUB_REF ]; then
           echo "Ref ${GITHUB_REF} not match"
           exit 1
