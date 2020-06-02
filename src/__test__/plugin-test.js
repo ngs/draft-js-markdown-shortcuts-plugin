@@ -322,7 +322,7 @@ describe('draft-js-markdown-shortcuts-plugin', () => {
           let character;
           beforeEach(() => {
             character = ' ';
-            subject = () => plugin.handleBeforeInput(character, store.getEditorState(), store);
+            subject = () => plugin.handleBeforeInput(character, store.getEditorState(), new Date().getTime(), store);
           });
           ['handleBlockType', 'handleImage', 'handleLink', 'handleInlineStyle'].forEach(modifier => {
             describe(modifier, () => {

@@ -9,7 +9,7 @@
     "build:demo": "NODE_ENV=production npx webpack --config demo/webpack.config.prod.js && rm -rf demo/public/css && cp -R demo/publicTemplate/* demo/public/",
     "build:js": "BABEL_DISABLE_CACHE=1 BABEL_ENV=production NODE_ENV=production node_modules/.bin/babel --out-dir='lib' --ignore='**/__test__/*' src",
     "clean": "node_modules/.bin/rimraf lib; node_modules/.bin/rimraf demo/public",
-    "deploy:demo": ".circleci/deploy-demo.sh",
+    "prepare": "npm run build",
     "prepublish": "npm run build",
     "start": "npm run start:dev",
     "start:dev": "node_modules/.bin/babel-node ./demo/server.js",
@@ -97,9 +97,9 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "peerDependencies": {
-    "draft-js-plugins-editor": "^2.0.0 || ~2.0.0-rc.1 || 2.0.0-rc2 || 2.0.0-rc1 || 2.0.0-beta12",
-    "react": "^16.0.0 || ^15.0.0",
-    "react-dom": "^16.0.0 || ^15.0.0"
+    "draft-js-plugins-editor": "^3.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   },
   "contributors": ["Atsushi Nagase <a@ngs.io>"],
   "dependencies": {
