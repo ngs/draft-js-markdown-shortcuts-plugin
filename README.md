@@ -35,9 +35,12 @@ import { EditorState } from 'draft-js';
 const plugins = [createMarkdownShortcutsPlugin()];
 
 export default class DemoEditor extends Component {
-  state = {
-    editorState: EditorState.createEmpty(),
-  };
+  constructor(props) {
+    super(props);
+    state = {
+      editorState: EditorState.createEmpty(),
+    };
+  }
 
   onChange = editorState => {
     this.setState({
