@@ -1,5 +1,0 @@
---compilers js:babel-core/register
---recursive
---require raf/polyfill
---require testHelper.js
---reporter mocha-multi-reporters --reporter-options configFile=.mocha-multi-reporters.json

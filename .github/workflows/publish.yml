@@ -1,0 +1,25 @@
+name: Publish to npm
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: 12
+    - name: Check tag version
+      run: |
+        TAG_NAME=${{ github.event.release.tag_name }}
+        VERSION=$(node -e 'console.info(require("./package.json").version)')
+        if [ "v${VERSION}" != $TAG_NAME ]; then
+          echo "Ref ${TAG_NAME} not match with v${VERSION}"
+          exit 1
+        fi
+    - run: npm install
+    - name: publish
+      run: |
+        echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        npm publish

@@ -1,6 +1,9 @@
 import React from 'react';
 import {
-  blockRenderMap as checkboxBlockRenderMap, CheckableListItem, CheckableListItemUtils, CHECKABLE_LIST_ITEM
+  blockRenderMap as checkboxBlockRenderMap,
+  CheckableListItem,
+  CheckableListItemUtils,
+  CHECKABLE_LIST_ITEM,
 } from 'draft-js-checkable-list-item';
 
 import { Map } from 'immutable';
@@ -49,10 +52,15 @@ function checkReturnForState(editorState, ev, { insertEmptyBlockOnReturnWithModi
   if (/-list-item$/.test(type) && text === '') {
     newEditorState = leaveList(editorState);
   }
-  if (newEditorState === editorState
-      && insertEmptyBlockOnReturnWithModifierKey
-      && (ev.ctrlKey || ev.shiftKey || ev.metaKey || ev.altKey
-          || (/^header-/.test(type) && selection.isCollapsed() && selection.getEndOffset() === text.length))) {
+  if (
+    newEditorState === editorState &&
+    insertEmptyBlockOnReturnWithModifierKey &&
+    (ev.ctrlKey ||
+      ev.shiftKey ||
+      ev.metaKey ||
+      ev.altKey ||
+      (/^header-/.test(type) && selection.isCollapsed() && selection.getEndOffset() === text.length))
+  ) {
     newEditorState = insertEmptyBlock(editorState);
   }
   if (newEditorState === editorState && type !== 'code-block' && /^```([\w-]+)?$/.test(text)) {
@@ -79,13 +87,10 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
     blockRenderMap: Map({
       'code-block': {
         element: 'code',
-        wrapper: <pre spellCheck={'false'} />
-      }
+        wrapper: <pre spellCheck="false" />,
+      },
     }).merge(checkboxBlockRenderMap),
-    decorators: [
-      createLinkDecorator(config, store),
-      createImageDecorator(config, store)
-    ],
+    decorators: [createLinkDecorator(config, store), createImageDecorator(config, store)],
     initialize({ setEditorState, getEditorState }) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;
@@ -100,15 +105,14 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       return null;
     },
 
-    blockRendererFn(block, { setEditorState, getEditorState }) {
+    blockRendererFn(block) {
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM: {
           return {
             component: CheckableListItem,
             props: {
-              onChangeChecked: () => setEditorState(
-                CheckableListItemUtils.toggleChecked(getEditorState(), block)
-              ),
+              onChangeChecked: () =>
+                store.setEditorState(CheckableListItemUtils.toggleChecked(store.getEditorState(), block)),
               checked: !!block.getData().get('checked'),
             },
           };
@@ -117,41 +121,47 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
           return null;
       }
     },
-    onTab(ev, { getEditorState, setEditorState }) {
-      const editorState = getEditorState();
+    onTab(ev) {
+      const editorState = store.getEditorState();
       const newEditorState = adjustBlockDepth(editorState, ev);
       if (newEditorState !== editorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
     },
-    handleReturn(ev, editorState, { setEditorState }) {
+    handleReturn(ev, editorState) {
       const newEditorState = checkReturnForState(editorState, ev, config);
       if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
     },
-    handleBeforeInput(character, editorState, { setEditorState }) {
+    handleBeforeInput(character, editorState) {
       if (character.match(/[A-z0-9_*~`]/)) {
         return 'not-handled';
       }
       const newEditorState = checkCharacterForState(editorState, character);
       if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
     },
-    handlePastedText(text, html, editorState, { setEditorState }) {
+    handlePastedText(text, html, editorState) {
       if (html) {
         return 'not-handled';
       }
+
+      if (!text) {
+        return 'not-handled';
+      }
+
       let newEditorState = editorState;
       let buffer = [];
-      for (let i = 0; i < text.length; i++) { // eslint-disable-line no-plusplus
+      for (let i = 0; i < text.length; i += 1) {
+        // eslint-disable-line no-plusplus
         if (text[i].match(/[^A-z0-9_*~`]/)) {
           newEditorState = replaceText(newEditorState, buffer.join('') + text[i]);
           newEditorState = checkCharacterForState(newEditorState, text[i]);
@@ -174,11 +184,11 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       }
 
       if (editorState !== newEditorState) {
-        setEditorState(newEditorState);
+        store.setEditorState(newEditorState);
         return 'handled';
       }
       return 'not-handled';
-    }
+    },
   };
 };
 

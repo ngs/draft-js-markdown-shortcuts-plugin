@@ -2,7 +2,7 @@ import { CHECKABLE_LIST_ITEM } from 'draft-js-checkable-list-item';
 import { RichUtils } from 'draft-js';
 import changeCurrentBlockType from './changeCurrentBlockType';
 
-const sharps = (len) => {
+const sharps = len => {
   let ret = '';
   while (ret.length < len) {
     ret += '#';
@@ -10,15 +10,7 @@ const sharps = (len) => {
   return ret;
 };
 
-const blockTypes = [
-  null,
-  'header-one',
-  'header-two',
-  'header-three',
-  'header-four',
-  'header-five',
-  'header-six'
-];
+const blockTypes = [null, 'header-one', 'header-two', 'header-three', 'header-four', 'header-five', 'header-six'];
 
 const handleBlockType = (editorState, character) => {
   const currentSelection = editorState.getSelection();
@@ -28,7 +20,7 @@ const handleBlockType = (editorState, character) => {
   const line = [text.slice(0, position), character, text.slice(position)].join('');
   const blockType = RichUtils.getCurrentBlockType(editorState);
   for (let i = 1; i <= 6; i += 1) {
-    if (line.indexOf(`${sharps(i)} `) === 0) {
+    if (line.indexOf(`${sharps(i)} `) === 0 && blockType !== 'code-block') {
       return changeCurrentBlockType(editorState, blockTypes[i], line.replace(/^#+\s/, ''));
     }
   }

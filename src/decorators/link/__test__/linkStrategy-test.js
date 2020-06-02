@@ -14,9 +14,9 @@ describe('linkStrategy', () => {
         mutability: 'MUTABLE',
         data: {
           href: 'http://cultofthepartyparrot.com/',
-          title: 'parrot'
-        }
-      }
+          title: 'parrot',
+        },
+      },
     },
     blocks: [
       {
@@ -29,12 +29,12 @@ describe('linkStrategy', () => {
           {
             offset: 7,
             length: 5,
-            key: 0
-          }
+            key: 0,
+          },
         ],
-        data: {}
-      }
-    ]
+        data: {},
+      },
+    ],
   });
   it('callbacks range', () => {
     const block = contentState.getBlockForKey('dtehj');

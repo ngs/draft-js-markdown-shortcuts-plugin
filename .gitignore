@@ -40,3 +40,6 @@ lib
 demo/public
 .deploy
 test-results.xml
+.node-version
+yarn.lock
+package-lock.json

@@ -26,9 +26,9 @@ const prismPlugin = {
       },
       render({ type, children }) {
         return <span className={`prism-token token ${type}`}>{children}</span>;
-      }
-    })
-  ]
+      },
+    }),
+  ],
 };
 
 export default prismPlugin;

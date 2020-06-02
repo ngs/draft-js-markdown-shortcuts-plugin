@@ -1,7 +1,7 @@
 import changeCurrentBlockType from './changeCurrentBlockType';
 import insertEmptyBlock from './insertEmptyBlock';
 
-const handleNewCodeBlock = (editorState) => {
+const handleNewCodeBlock = editorState => {
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
   const key = selection.getStartKey();

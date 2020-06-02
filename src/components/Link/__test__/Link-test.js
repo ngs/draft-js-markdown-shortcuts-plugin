@@ -1,24 +1,29 @@
+/* eslint jsx-a11y/anchor-is-valid: 0 */
 import React from 'react';
 import { ContentState } from 'draft-js';
-import { shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { shallow, configure } from 'enzyme';
 import chai, { expect } from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 
-import Link from '../';
+import Link from '..';
 
+configure({ adapter: new Adapter() });
 chai.use(chaiEnzyme());
 
 describe('<Link />', () => {
   it('renders anchor tag', () => {
     const contentState = ContentState.createFromText('').createEntity('LINK', 'MUTABLE', {
       href: 'http://cultofthepartyparrot.com/',
-      title: 'parrot'
+      title: 'parrot',
     });
     const entityKey = contentState.getLastCreatedEntityKey();
     expect(
-      shallow(<Link entityKey={entityKey} contentState={contentState}><b>Hello</b></Link>).html()
-    ).to.equal(
-      '<a href="http://cultofthepartyparrot.com/" title="parrot"><b>Hello</b></a>'
-    );
+      shallow(
+        <Link entityKey={entityKey} contentState={contentState}>
+          <b>Hello</b>
+        </Link>,
+      ).html(),
+    ).to.equal('<a href="http://cultofthepartyparrot.com/" title="parrot"><b>Hello</b></a>');
   });
 });

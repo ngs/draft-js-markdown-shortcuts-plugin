@@ -6,9 +6,9 @@
     "mocha": true,
     "node": true
   },
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier"],
   "rules": {
-    "arrow-parens": ["error", "always"],
+    "arrow-parens": ["error", "as-needed"],
     "max-len": 0,
     "comma-dangle": 0,
     "new-cap": 0,
