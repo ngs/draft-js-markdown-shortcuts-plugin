@@ -105,7 +105,8 @@
   "dependencies": {
     "decorate-component-with-props": "^1.1.0",
     "draft-js": "~0.10.5",
-    "draft-js-checkable-list-item": "^3.0.1",
+    "draft-js-checkable-list-item": "^2.0.5",
+    "draft-js-prism-plugin": "^0.1.1",
     "immutable": "~3.7.4",
     "opencollective": "^1.0.3"
   },
