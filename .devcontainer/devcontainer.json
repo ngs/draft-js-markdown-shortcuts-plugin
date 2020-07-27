@@ -1,6 +1,6 @@
 {
-  "name": "middleman-ogp",
+  "name": "draft-js-markdown-shortcuts-plugin",
   "image": "node:12.18.2",
-  "extensions": ["esbenp.prettier-vscode", ""],
+  "extensions": ["esbenp.prettier-vscode"],
   "postCreateCommand": "yarn install"
 }
