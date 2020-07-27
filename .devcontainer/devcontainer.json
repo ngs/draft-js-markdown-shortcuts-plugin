@@ -2,5 +2,5 @@
   "name": "middleman-ogp",
   "image": "node:12.18.2",
   "extensions": ["esbenp.prettier-vscode", ""],
-  "postCreateCommand": "npm i -g yarn && yarn"
+  "postCreateCommand": "yarn install"
 }
