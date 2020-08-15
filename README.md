@@ -37,7 +37,7 @@ const plugins = [createMarkdownShortcutsPlugin()];
 export default class DemoEditor extends Component {
   constructor(props) {
     super(props);
-    state = {
+    this.state = {
       editorState: EditorState.createEmpty(),
     };
   }
