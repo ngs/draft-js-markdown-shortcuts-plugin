@@ -121,14 +121,16 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
           return null;
       }
     },
-    onTab(ev) {
-      const editorState = store.getEditorState();
-      const newEditorState = adjustBlockDepth(editorState, ev);
-      if (newEditorState !== editorState) {
-        store.setEditorState(newEditorState);
-        return 'handled';
+    keyBindingFn(ev) {
+      if(ev.key === 'Tab'){
+        const editorState = store.getEditorState();
+        const newEditorState = adjustBlockDepth(editorState, ev);
+        if (newEditorState !== editorState) {
+          store.setEditorState(newEditorState);
+          return 'handled';
+        }
+        return 'not-handled';    
       }
-      return 'not-handled';
     },
     handleReturn(ev, editorState) {
       const newEditorState = checkReturnForState(editorState, ev, config);
