@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Editor from 'draft-js-plugins-editor';
+import React, {Component} from 'react';
+import Editor from '@draft-js-plugins/editor';
 
 import Draft, {
   convertToRaw,
@@ -36,11 +36,11 @@ export default class DemoEditor extends Component {
     super(props);
     const contentState = ContentState.createFromText('');
     const editorState = EditorState.createWithContent(contentState);
-    this.state = { editorState };
+    this.state = {editorState};
   }
 
   componentDidMount = () => {
-    const { editor } = this;
+    const {editor} = this;
     if (editor) {
       setTimeout(editor.focus.bind(editor), 1000);
     }
@@ -56,7 +56,7 @@ export default class DemoEditor extends Component {
   };
 
   render() {
-    const { editorState } = this.state;
+    const {editorState} = this.state;
     const placeholder = editorState.getCurrentContent().hasText() ? null : (
       <Placeholder>Write something here...</Placeholder>
     );
