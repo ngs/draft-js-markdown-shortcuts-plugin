@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Editor from 'draft-js-plugins-editor';
+import React, {useCallback, useState} from 'react';
+import Editor from '@draft-js-plugins/editor';
 
 import Draft, {
   convertToRaw,
@@ -23,79 +23,112 @@ import createPrismPlugin from 'draft-js-prism-plugin';
 import styled from 'styled-components';
 import createMarkdownShortcutsPlugin from '../../../..'; // eslint-disable-line
 
+function CustomLink({contentState, children, entityKey}) {
+  const {href, title} = contentState.getEntity(entityKey).getData();
+  return (
+    <a href={href} title={title} rel="noopener noreferrer" target="_blank" style={{color: 'red'}}>
+      {children}
+    </a>
+  );
+}
+
 const prismPlugin = createPrismPlugin({
   prism: Prism,
 });
 
 window.Draft = Draft;
 
-const plugins = [prismPlugin, createMarkdownShortcutsPlugin()];
+const defaultPlugins = [prismPlugin, createMarkdownShortcutsPlugin()];
+const customElementsPlugins = [prismPlugin, createMarkdownShortcutsPlugin({linkComponent: CustomLink})];
 
-export default class DemoEditor extends Component {
-  constructor(props) {
-    super(props);
-    const contentState = ContentState.createFromText('');
-    const editorState = EditorState.createWithContent(contentState);
-    this.state = { editorState };
-  }
-
-  componentDidMount = () => {
-    const { editor } = this;
-    if (editor) {
-      setTimeout(editor.focus.bind(editor), 1000);
-    }
-  };
-
-  onChange = editorState => {
-    window.editorState = editorState;
-    window.rawContent = convertToRaw(editorState.getCurrentContent());
-
-    this.setState({
-      editorState,
-    });
-  };
-
-  render() {
-    const { editorState } = this.state;
-    const placeholder = editorState.getCurrentContent().hasText() ? null : (
-      <Placeholder>Write something here...</Placeholder>
-    );
-    return (
-      <Root>
-        {placeholder}
-        <EditorContainer onClick={this.focus} onKeyDown={this.focus}>
-          <Editor
-            editorState={editorState}
-            onChange={this.onChange}
-            plugins={plugins}
-            spellCheck
-            ref={element => {
-              this.editor = element;
-            }}
-          />
-        </EditorContainer>
-      </Root>
-    );
-  }
+export default function DemoEditor() {
+  return (
+    <>
+      <Example
+        autoFocus
+        description={<h3>Default settings</h3>}
+        plugins={defaultPlugins}
+      />
+      <Example
+        description={<CustomElementsDescription />}
+        plugins={customElementsPlugins}
+      />
+    </>
+  );
 }
 
-const Root = styled.div`
+const Example = ({autoFocus, description, plugins}) => {
+  const [editorState, setEditorState] = useState(() => {
+    const contentState = ContentState.createFromText('take me to [google](http://google.com/)');
+    return EditorState.createWithContent(contentState);
+  })
+
+
+  const onChange = useCallback(newEditorState => {
+    window.editorState = newEditorState;
+    window.rawContent = convertToRaw(newEditorState.getCurrentContent());
+
+    setEditorState(newEditorState);
+  }, []);
+
+  return (
+    <ExampleContainer>
+      <Description>
+        {description}
+      </Description>
+      <EditorContainer>
+        <Editor
+          autoFocus={autoFocus}
+          editorState={editorState}
+          onChange={onChange}
+          placeholder="Write something here..."
+          plugins={plugins}
+          spellCheck
+        />
+      </EditorContainer>
+    </ExampleContainer>
+  )
+}
+
+const CustomElementsDescription = () => {
+  return (
+    <>
+      <h3>Custom elements</h3>
+      <p>
+        You can have custom links and images passing your own components through the
+        {' '}
+        <Option>linkComponent</Option>
+        {' '}
+        and
+        {' '}
+        <Option>imageComponent</Option>
+        {' '}
+        options, respectively.
+      </p>
+    </>
+  );
+}
+
+
+const ExampleContainer = styled.div`
   background: #fff;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
   position: relative;
 `;
 
-const Placeholder = styled.div`
-  color: #ccc;
-  font-size: 1em;
-  position: absolute;
-  width: 95%;
-  top: 0;
-  left: 2.5%;
+const EditorContainer = styled.div`
+  border: 1px solid #ccc;
+  flex-grow: 1;
+  padding: 10px;
 `;
 
-const EditorContainer = styled.div`
-  margin: 2.5% auto 0 auto;
-  height: 95%;
-  width: 95%;
+const Description = styled.div`
+  flex-grow: 0;
+  margin-bottom: 10px;
+`;
+
+const Option = styled.pre`
+  display: inline-block;
 `;

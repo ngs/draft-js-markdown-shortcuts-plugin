@@ -6,7 +6,7 @@ import {
   CHECKABLE_LIST_ITEM,
 } from 'draft-js-checkable-list-item';
 
-import { Map } from 'immutable';
+import {Map} from 'immutable';
 
 import adjustBlockDepth from './modifiers/adjustBlockDepth';
 import handleBlockType from './modifiers/handleBlockType';
@@ -20,7 +20,9 @@ import insertText from './modifiers/insertText';
 import changeCurrentBlockType from './modifiers/changeCurrentBlockType';
 import createLinkDecorator from './decorators/link';
 import createImageDecorator from './decorators/image';
-import { replaceText } from './utils';
+import {replaceText} from './utils';
+import Link from './components/Link';
+import Image from './components/Image';
 
 function checkCharacterForState(editorState, character) {
   let newEditorState = handleBlockType(editorState, character);
@@ -41,7 +43,7 @@ function checkCharacterForState(editorState, character) {
   return newEditorState;
 }
 
-function checkReturnForState(editorState, ev, { insertEmptyBlockOnReturnWithModifierKey }) {
+function checkReturnForState(editorState, ev, {insertEmptyBlockOnReturnWithModifierKey}) {
   let newEditorState = editorState;
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
@@ -80,7 +82,17 @@ function checkReturnForState(editorState, ev, { insertEmptyBlockOnReturnWithModi
   return newEditorState;
 }
 
-const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithModifierKey: true }) => {
+const createMarkdownShortcutsPlugin = ({
+  insertEmptyBlockOnReturnWithModifierKey = true,
+  linkComponent = Link,
+  imageComponent = Image,
+} = {}) => {
+  const config = {
+    insertEmptyBlockOnReturnWithModifierKey,
+    linkComponent,
+    imageComponent,
+  };
+
   const store = {};
   return {
     store,
@@ -91,7 +103,7 @@ const createMarkdownShortcutsPlugin = (config = { insertEmptyBlockOnReturnWithMo
       },
     }).merge(checkboxBlockRenderMap),
     decorators: [createLinkDecorator(config, store), createImageDecorator(config, store)],
-    initialize({ setEditorState, getEditorState }) {
+    initialize({setEditorState, getEditorState}) {
       store.setEditorState = setEditorState;
       store.getEditorState = getEditorState;
     },

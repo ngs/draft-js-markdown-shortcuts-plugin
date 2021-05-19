@@ -42,4 +42,3 @@ demo/public
 test-results.xml
 .node-version
 yarn.lock
-package-lock.json
