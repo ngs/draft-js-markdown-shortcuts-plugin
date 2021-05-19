@@ -54,6 +54,16 @@ export default class DemoEditor extends Component {
 }
 ```
 
+## Options
+
+`createMarkdownShortcutsPlugin` can take three options, all optional:
+
+| key                                       | default                                  |
+| ---                                       | ---                                      |
+| `insertEmptyBlockOnReturnWithModifierKey` | `true`                                   |
+| `linkComponent`                           | [Link](./src/components/Link/index.js)   |
+| `imageComponent`                          | [Image](./src/components/Image/index.js) |
+
 ## License
 
 MIT. See [LICENSE]
